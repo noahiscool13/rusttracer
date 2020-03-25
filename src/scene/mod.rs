@@ -2,7 +2,10 @@ use crate::util::triangle::Triangle;
 use crate::util::vector::Vector;
 use tobj::Material;
 use lazy_static::lazy_static;
-use std::fmt::{Display, Formatter, Error};
+use crate::scene::texture::{TextureAtlas, TextureError};
+use std::path::Path;
+
+pub mod texture;
 
 lazy_static! {
     pub static ref DEFAULT_MATERIAL: Material = Material {
@@ -35,7 +38,7 @@ impl Face {
     pub fn material<'a>(&self, scene: &'a Scene) -> &'a Material {
         match self {
             Face::TOBJ { modelindex, faceindex: _ } => {
-                if let Scene::TOBJ((models, materials)) = scene {
+                if let InternalScene::TOBJ((models, materials)) = &scene.internalscene {
                     let mesh = &models[*modelindex].mesh;
                     if let Some(id) = mesh.material_id {
                         &materials[id]
@@ -52,7 +55,7 @@ impl Face {
     pub fn positions(&self, scene: &Scene) -> (Vector, Vector, Vector) {
         match self {
             Face::TOBJ { modelindex, faceindex } => {
-                if let Scene::TOBJ((models, _)) = scene {
+                if let InternalScene::TOBJ((models, _)) = &scene.internalscene {
                     let mesh = &models[*modelindex].mesh;
 
                     let a = mesh.indices[faceindex * 3 + 0];
@@ -96,14 +99,42 @@ impl Face {
     }
 }
 
-pub enum Scene {
+enum InternalScene {
     TOBJ((Vec<tobj::Model>, Vec<tobj::Material>)),
 }
 
+pub struct Scene {
+    internalscene: InternalScene,
+    pub textureatlas: TextureAtlas,
+}
+
 impl Scene {
+    pub fn new_tobj(tobj: (Vec<tobj::Model>, Vec<tobj::Material>), basepath: impl AsRef<Path>) -> Result<Self, TextureError> {
+        let mut atlas = TextureAtlas::new();
+        for i in &tobj.1 {
+            if !i.diffuse_texture.is_empty() {
+                atlas.add_texture_file(&i.diffuse_texture)?
+            }
+            if !i.ambient_texture.is_empty() {
+                atlas.add_texture_file(&i.ambient_texture)?
+            }
+            if !i.dissolve_texture.is_empty() {
+                atlas.add_texture_file(&i.dissolve_texture)?
+            }
+            if !i.specular_texture.is_empty() {
+                atlas.add_texture_file(&i.specular_texture)?
+            }
+        }
+
+        Ok(Self {
+            internalscene: InternalScene::TOBJ(tobj),
+            textureatlas: atlas,
+        })
+    }
+
     pub fn triangles<'a>(&'a self) -> impl Iterator<Item=Triangle> + 'a {
-        match self {
-            Scene::TOBJ((models, _)) => {
+        match &self.internalscene {
+            InternalScene::TOBJ((models, _)) => {
                 models.iter()
                     .enumerate()
                     .flat_map(|(modelindex, model)| {

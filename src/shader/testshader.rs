@@ -21,4 +21,8 @@ impl<'s> Shader<'s> for TestShader<'s> {
         // let col =(255f64*(dif+spec)*0.5f64).floor() as u8;
         return Color{r: (intersection.t * 30f64) as u8, g:(intersection.uv.0 * 120f64) as u8, b: (intersection.uv.1 * 120f64) as u8};
     }
+
+    fn get_scene(&self) -> &'s Scene {
+        self.scene
+    }
 }
