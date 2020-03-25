@@ -24,7 +24,7 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r> + Sync> RayTracer<'r, DS, S
                 let ray = camera.generate_ray(x, y);
 
                 if let Some(intersection) = datastructure.intersects(&ray) {
-                    row[x] = shader.shade(&intersection);
+                    row[x] = shader.shade(&intersection, camera);
                 } else {
                     row[x] = Color::default();
                 }
