@@ -1,6 +1,7 @@
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 use crate::scene::Face;
+use std::f64::EPSILON;
 
 #[derive(Debug)]
 pub struct Intersection<'i> {
@@ -12,6 +13,6 @@ pub struct Intersection<'i> {
 
 impl<'i> Intersection<'i> {
     pub fn hit_pos(&self) -> Vector {
-        self.ray.origin + self.ray.direction*self.t
+        self.ray.origin + self.ray.direction*(self.t-EPSILON)
     }
 }
