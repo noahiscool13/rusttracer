@@ -72,9 +72,21 @@ impl Vector {
         )
     }
 
-    // TODO rotations
     pub fn rotated(&self, rotation: Vector) -> Vector {
-        rotation
+
+        let nt = if rotation.x.abs() > rotation.y.abs() {
+            Vector(rotation.z, 0, -rotation.x) / (rotation.x.powi(2) + rotation.z.powi(2)).sqrt()
+        } else {
+            Vector(0, -rotation.z, -rotation.y) / (rotation.y.powi(2) + rotation.z.powi(2)).sqrt()
+        };
+
+        let nb = rotation.cross(nt);
+
+        let x = self.x * Nb.x + self.y * rotation.x + self.z * nt.x;
+        let y = self.x * Nb.y + self.y * rotation.y + self.z * nt.y;
+        let z = self.x * Nb.z + self.y * rotation.z + self.z * nt.z;
+
+        Vector::new(x,y,z)
     }
 }
 
