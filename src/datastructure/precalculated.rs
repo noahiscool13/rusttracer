@@ -59,7 +59,7 @@ impl<'d> DataStructure<'d> for PrecalculatedDatastructure<'d> {
         let mut min = None;
 
         for triangle in &self.triangles {
-            if let Some(intersection) = self.intersects_triangle(ray, triangle) {
+            if let Some(intersection) = self.intersects_triangle(ray, &triangle) {
                 min = match min {
                     None => Some(intersection),
                     Some(i) if intersection.t < i.t => Some(intersection),

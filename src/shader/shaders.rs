@@ -1,6 +1,3 @@
-use crate::util::vector::Vector;
-use crate::scene::{Face, Scene};
-
 // pub fn ambient(face: &Face, scene: &Scene, scene_light: Vector) -> f64 {
 //     Vector::from_arr(face.material(scene).ambient) * scene_light
 // }

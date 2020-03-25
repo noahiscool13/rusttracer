@@ -1,7 +1,6 @@
 use crate::shader::Shader;
 use crate::datastructure::intersection::Intersection;
 use crate::util::color::Color;
-use crate::util::vector::Vector;
 use crate::scene::Scene;
 
 pub struct TestShader<'s> {
