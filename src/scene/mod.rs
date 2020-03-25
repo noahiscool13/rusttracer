@@ -2,8 +2,9 @@ use crate::util::triangle::Triangle;
 use crate::util::vector::Vector;
 use tobj::Material;
 use lazy_static::lazy_static;
+use std::fmt::{Display, Formatter, Error};
 
-lazy_static!{
+lazy_static! {
     pub static ref DEFAULT_MATERIAL: Material = Material {
         name: Default::default(),
         ambient: [0f32, 0f32, 0f32],
@@ -33,7 +34,7 @@ pub enum Face {
 impl Face {
     pub fn material<'a>(&self, scene: &'a Scene) -> &'a Material {
         match self {
-            Face::TOBJ {modelindex, faceindex} => {
+            Face::TOBJ { modelindex, faceindex: _ } => {
                 if let Scene::TOBJ((models, materials)) = scene {
                     let mesh = &models[*modelindex].mesh;
                     if let Some(id) = mesh.material_id {
@@ -48,10 +49,10 @@ impl Face {
         }
     }
 
-    pub fn positions(&self, scene: &Scene) -> (Vector, Vector, Vector){
+    pub fn positions(&self, scene: &Scene) -> (Vector, Vector, Vector) {
         match self {
             Face::TOBJ { modelindex, faceindex } => {
-                if let Scene::TOBJ((models, materials)) = scene {
+                if let Scene::TOBJ((models, _)) = scene {
                     let mesh = &models[*modelindex].mesh;
 
                     let a = mesh.indices[faceindex * 3 + 0];
@@ -91,7 +92,7 @@ impl Face {
         // TODO: depends on illum model
         let (a, b, c) = self.positions(scene);
 
-        (c-a).cross(c-b)
+        (c - a).cross(c - b).unit()
     }
 }
 
@@ -102,7 +103,7 @@ pub enum Scene {
 impl Scene {
     pub fn triangles<'a>(&'a self) -> impl Iterator<Item=Triangle> + 'a {
         match self {
-            Scene::TOBJ((models, materials)) => {
+            Scene::TOBJ((models, _)) => {
                 models.iter()
                     .enumerate()
                     .flat_map(|(modelindex, model)| {
@@ -130,8 +131,8 @@ impl Scene {
                                             Vector::new(cx, cy, cz),
                                             Face::TOBJ {
                                                 modelindex,
-                                                faceindex
-                                            }
+                                                faceindex,
+                                            },
                                         )
                                     }
                                     _ => unreachable!()

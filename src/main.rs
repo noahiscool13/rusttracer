@@ -2,13 +2,10 @@ use crate::renderer::Renderer;
 use std::process;
 use crate::util::camera::Camera;
 use crate::scene::Scene;
-use crate::shader::testshader::TestShader;
 use crate::raytracer::rayon::RayonRaytracer;
-use crate::raytracer::basic::BasicRaytracer;
 use crate::datastructure::precalculated::PrecalculatedDatastructure;
 use crate::util::vector::Vector;
-use crate::datastructure::basic::BasicDataStructure;
-use crate::util::ray::Ray;
+use crate::shader::mtlshader::MtlShader;
 
 mod datastructure;
 mod raytracer;
@@ -24,7 +21,7 @@ fn main() {
         process::exit(1);
     }));
 
-    let renderer: Renderer<PrecalculatedDatastructure, RayonRaytracer, TestShader> = Renderer::new(&scene);
+    let renderer: Renderer<PrecalculatedDatastructure, RayonRaytracer, MtlShader> = Renderer::new(&scene);
 
 
     let camera = Camera::new(Vector::new(0f64, 1f64, 3f64), 1000, 1000, 60f64);

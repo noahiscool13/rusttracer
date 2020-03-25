@@ -1,4 +1,16 @@
 use std::ops::{Add, Sub, Mul};
+use crate::util::color::Color;
+
+trait Clamp01 {
+    fn clamp01(self) -> Self;
+}
+
+
+impl Clamp01 for f64 {
+    fn clamp01(self) -> Self {
+        self.min(1.).max(0.)
+    }
+}
 
 #[derive(PartialEq, Debug, Clone, Copy, Default)]
 pub struct Vector {
@@ -13,7 +25,12 @@ impl Vector {
         Self { x, y, z }
     }
 
-    pub fn from_arr([a,b,c]: [f32; 3]) -> Self {
+    /// Makes a vector from one value, making the x, y and z coponent the same
+    pub fn repeated(a: f64) -> Self {
+        Self { x: a, y: a, z: a }
+    }
+
+    pub fn from_arr([a, b, c]: [f32; 3]) -> Self {
         Self::new(a as f64, b as f64, c as f64)
     }
 
@@ -58,6 +75,16 @@ impl Vector {
     // TODO rotations
     pub fn rotated(&self, rotation: Vector) -> Vector {
         rotation
+    }
+}
+
+impl Into<Color> for Vector {
+    fn into(self) -> Color {
+        Color {
+            r: (self.x.clamp01() * 255.) as u8,
+            g: (self.y.clamp01() * 255.) as u8,
+            b: (self.z.clamp01() * 255.) as u8,
+        }
     }
 }
 
@@ -126,7 +153,8 @@ impl Mul<Vector> for Vector {
 
 #[cfg(test)]
 mod tests {
-    use crate::vector::Vector;
+    use crate::util::vector::Vector;
+    use crate::util::color::Color;
 
     #[test]
     fn test_add() {
@@ -136,5 +164,17 @@ mod tests {
         let c = a + b;
 
         assert_eq!(c, Vector::new(6f64, 5f64, 5f64));
+    }
+
+    #[test]
+    fn test_to_color_1() {
+        let a: Vector = Vector::new(5., -5., 0.5);
+        let c: Color = a.into();
+
+        assert_eq!(c, Color {
+            r: 255,
+            g: 0,
+            b: 127
+        });
     }
 }

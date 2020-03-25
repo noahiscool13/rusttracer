@@ -7,12 +7,11 @@ use crate::scene::Scene;
 
 const EPSILON: f64 = 0.00001;
 
-pub struct PrecalculatedDatastructure<'d> {
-    data: &'d Scene,
+pub struct PrecalculatedDatastructure {
     triangles: Vec<Triangle>,
 }
 
-impl<'d> PrecalculatedDatastructure<'d> {
+impl PrecalculatedDatastructure {
 
     fn intersects_triangle<'a>(&self, ray: &'a Ray, triangle: &Triangle) -> Option<Intersection<'a>> {
         let edge1 = triangle.b - triangle.a;
@@ -50,9 +49,9 @@ impl<'d> PrecalculatedDatastructure<'d> {
     }
 }
 
-impl<'d> DataStructure<'d> for PrecalculatedDatastructure<'d> {
+impl<'d> DataStructure<'d> for PrecalculatedDatastructure {
     fn new(scene: &'d Scene) -> Self {
-        Self {data: scene, triangles: scene.triangles().collect()}
+        Self {triangles: scene.triangles().collect()}
     }
 
     fn intersects<'a>(&self, ray: &'a Ray) -> Option<Intersection<'a>> {

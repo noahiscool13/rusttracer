@@ -20,7 +20,7 @@ impl<'r, DS: DataStructure<'r>, S: Shader<'r>> RayTracer<'r, DS, S> for BasicRay
                 let ray = camera.generate_ray(x, y);
 
                 if let Some(intersection) = datastructure.intersects(&ray) {
-                    output.set_at(x, y, shader.shade(&intersection, camera));
+                    output.set_at(x, y, shader.shade(&intersection));
                 } else {
                     output.set_at(x, y, Color::default());
                 }

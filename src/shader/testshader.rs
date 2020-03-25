@@ -2,7 +2,6 @@ use crate::shader::Shader;
 use crate::datastructure::intersection::Intersection;
 use crate::util::color::Color;
 use crate::scene::Scene;
-use crate::util::camera::Camera;
 
 pub struct TestShader<'s> {
     scene: &'s Scene
@@ -15,9 +14,7 @@ impl<'s> Shader<'s> for TestShader<'s> {
         }
     }
 
-    fn shade(&self, intersection: &Intersection, camera: &Camera) -> Color {
-        let hit_pos = intersection.hit_pos();
-
+    fn shade(&self, intersection: &Intersection) -> Color {
 
         // let dif = diffuse(&intersection.face, self.scene, hit_pos, Vector::new(0f64, 0.5f64, 5f64));
         // let spec = specular(&intersection.face, self.scene, Vector::new(0f64,0.5f64,5f64),ray.origin);
