@@ -7,10 +7,12 @@ use crate::util::color::Color;
 use rayon::iter::IntoParallelRefMutIterator;
 use rayon::iter::IndexedParallelIterator;
 use rayon::iter::ParallelIterator;
+use crate::util::vector::Vector;
 
-pub struct RayonRaytracer {}
 
-impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, DS, S> for RayonRaytracer {
+pub struct MSTracer {}
+
+impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, DS, S> for MSTracer {
     fn new() -> Self {
         Self {}
     }
@@ -21,12 +23,14 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
 
         output.par_iter_mut().enumerate().for_each(|(y, row)| {
             for x in 0..camera.width {
-                let ray = camera.generate_ray(x, y);
+                let mut out = Vector::repeated(0f64);
+                for _ in 0..100 {
+                    let ray = camera.generate_ray(x, y);
 
-                if let Some(intersection) = datastructure.intersects(&ray) {
-                    row[x] = shader.shade(&intersection, datastructure).into();
-                } else {
-                    row[x] = Color::default();
+                    if let Some(intersection) = datastructure.intersects(&ray) {
+                        out = out + shader.shade(&intersection, datastructure);
+                    }
+                    row[x] = (out / 100f64).into();
                 }
             }
         });

@@ -5,6 +5,7 @@ use crate::shader::Shader;
 
 pub mod basic;
 pub mod rayon;
+pub mod mstrace;
 
 pub trait RayTracer<'r, DS: DataStructure<'r>, S: Shader<'r, DS>> {
     fn new() -> Self;
