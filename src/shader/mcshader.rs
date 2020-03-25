@@ -13,18 +13,18 @@ pub struct McShader<'s> {
 
 impl <'s> McShader<'s> {
     pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, intersection: &Intersection, depth:usize, datastructure: &DS) -> Vector{
-        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
-        let brightness = Vector::repeated(0f64);
-
+//        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
+//        let brightness = Vector::repeated(0f64);
+//
         let hit_pos = intersection.hit_pos();
-
-        let part_amb = ambient(&intersection.face, self.scene) * Vector::repeated(0.1);
+//
+//        let part_amb = ambient(&intersection.face, self.scene) * Vector::repeated(0.1);
         let part_emi = emittance(&intersection.face, self.scene);
-        let part_diff = diffuse(&intersection.face, self.scene, hit_pos, pointlight) * brightness;
-        let part_spec = specular(&intersection.face, self.scene, hit_pos, pointlight, intersection.ray.origin) * brightness;
-
-
-        let direct = part_amb + part_emi + part_diff + part_spec;
+//        let part_diff = diffuse(&intersection.face, self.scene, hit_pos, pointlight) * brightness;
+//        let part_spec = specular(&intersection.face, self.scene, hit_pos, pointlight, intersection.ray.origin) * brightness;
+//
+//
+//        let direct = part_amb + part_emi + part_diff + part_spec;
 
         let indirect =
             if depth > 0 {
@@ -40,7 +40,7 @@ impl <'s> McShader<'s> {
                 Vector::repeated(0f64)
             };
 
-        let total = direct + indirect;
+        let total =  indirect + part_emi;
 
         return total.into();
     }
