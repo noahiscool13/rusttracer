@@ -1,5 +1,14 @@
 use std::ops::{Add, Sub, Mul};
 use crate::util::color::Color;
+use std::f64;
+
+use rand::{thread_rng, rngs::ThreadRng, Rng};
+use std::cell::RefCell;
+use std::borrow::{Borrow, BorrowMut};
+
+thread_local! {
+    pub static RNG: RefCell<ThreadRng> = RefCell::new(thread_rng());
+}
 
 trait Clamp01 {
     fn clamp01(self) -> Self;
@@ -87,6 +96,13 @@ impl Vector {
         let z = self.x * Nb.z + self.y * rotation.z + self.z * nt.z;
 
         Vector::new(x,y,z)
+    }
+
+    pub fn point_on_hemisphere() -> Vector{
+        let theta = RNG.borrow_mut().gen() * 2f64 * f64::consts::PI;
+        let phi = (1f64-2f64*RNG.borrow_mut().gen()).acos();
+
+        Vector(phi.sin()*theta.cos(),(phi.sin()*theta.sin()).abs(),phi.cos())
     }
 }
 
