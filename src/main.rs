@@ -15,8 +15,7 @@ mod scene;
 mod shader;
 
 fn main() {
-
-    let scene = Scene::TOBJ(tobj::load_obj("scenes/monte-carlo.obj".as_ref()).unwrap_or_else(|err| {
+    let scene = Scene::TOBJ(tobj::load_obj("scenes/glowstone.obj".as_ref()).unwrap_or_else(|err| {
         eprintln!("Couldn't open file: {}", err);
         process::exit(1);
     }));
