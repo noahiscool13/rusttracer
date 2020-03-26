@@ -9,6 +9,7 @@ pub mod shaders;
 pub mod testshader;
 pub mod mtlshader;
 pub mod mcshader;
+pub mod vmcshader;
 
 // TODO: recursive shading
 pub trait Shader<'s, DS: DataStructure<'s>> {
