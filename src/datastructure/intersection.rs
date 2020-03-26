@@ -1,13 +1,13 @@
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
-use crate::scene::Face;
+use crate::scene::triangle::Triangle;
 
 #[derive(Debug)]
 pub struct Intersection<'i> {
     pub ray: &'i Ray,
     pub uv: (f64, f64),
     pub t: f64,
-    pub face: Face
+    pub triangle: &'i Triangle<'i>
 }
 
 impl<'i> Intersection<'i> {

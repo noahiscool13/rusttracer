@@ -1,24 +1,25 @@
 use std::collections::HashMap;
 use std::path::Path;
 use crate::scene::texture::{Texture, TextureError};
+use std::pin::Pin;
 
-pub struct TextureAtlas {
+pub struct TextureAtlasBuilder {
     atlas: HashMap<String, Texture>
 }
 
-impl TextureAtlas {
+impl TextureAtlasBuilder {
     pub fn new() -> Self {
         Self {
             atlas: HashMap::new()
         }
     }
 
-    pub fn add_texture_file(&mut self, filename: impl AsRef<Path>) -> Result<(), TextureError> {
+    pub fn add_texture_file(&mut self, filename: impl AsRef<Path>, basepath: impl AsRef<Path>) -> Result<(), TextureError> {
         Ok(self.add_texture(filename.as_ref()
                                 .to_str()
                                 .ok_or(TextureError::FileName)?
                                 .into(),
-                            Texture::new(filename)?
+                            Texture::new(basepath.as_ref().join(filename))?,
         ))
     }
 
@@ -26,16 +27,48 @@ impl TextureAtlas {
         self.atlas.insert(name, texture);
     }
 
-    pub fn get_texture(&self, name: &String) -> Option<&Texture> {
-        self.atlas.get(name)
+
+    pub fn build<'t>(self) -> TextureAtlas<'t> {
+        let mut atlas = HashMap::new();
+        let atlassize = self.atlas.len();
+
+        let mut textures = {
+            let mut vec = Vec::with_capacity(atlassize);
+            unsafe {vec.set_len(atlassize)};
+            Pin::from(vec.into_boxed_slice())
+        };
+
+        let mut names = Vec::with_capacity(atlassize);
+
+        for (index, (key, value)) in self.atlas.into_iter().enumerate() {
+            textures[index] = value;
+            names.push(key);
+        }
+
+        for (index, name) in names.into_iter().enumerate() {
+            // Safe because textures is pinned.
+            let ptr: &'t Texture = unsafe {
+                std::mem::transmute(&textures[index])
+            };
+
+            atlas.insert(name, ptr);
+        }
+
+
+        TextureAtlas {
+            atlas,
+            textures,
+        }
     }
+}
 
-    pub fn get_or_add_texture(&mut self, filename: impl AsRef<Path>) -> Result<&Texture, TextureError>  {
-        let strname = filename.as_ref()
-            .to_str()
-            .ok_or(TextureError::FileName)?
-            .into();
+pub struct TextureAtlas<'t> {
+    pub(self) atlas: HashMap<String, &'t Texture>,
+    pub(self) textures: Pin<Box<[Texture]>>,
+}
 
-        Ok(self.atlas.entry(strname).or_insert(Texture::new(filename)?))
+impl<'t> TextureAtlas<'t> {
+    pub fn get_texture(&self, name: &String) -> Option<&'t Texture> {
+        self.atlas.get(name).map(|&i| i)
     }
 }
