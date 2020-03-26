@@ -10,5 +10,5 @@ pub mod vmcshader;
 
 // TODO: recursive shading
 pub trait Shader<'s, DS: DataStructure<'s>> {
-    fn shade(&self, ray: Ray, datastructure : &DS) -> Vector;
+    fn shade(&self, ray: &Ray, datastructure : &DS) -> Vector;
 }

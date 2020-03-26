@@ -7,7 +7,7 @@ use crate::datastructure::DataStructure;
 pub struct McShader;
 
 impl McShader {
-    pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, ray : Ray, depth:usize, datastructure: &DS) -> Vector{
+    pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, ray : &Ray, depth:usize, datastructure: &DS) -> Vector{
 //        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
 //        let brightness = Vector::repeated(0f64);
 
@@ -31,7 +31,7 @@ impl McShader {
             if depth > 0 {
                 let bounce_direction = Vector::point_on_hemisphere().rotated(intersection.triangle.normal());
                 let bounce_ray = Ray::new(hit_pos,bounce_direction);
-                let indirect_light = self.shade_internal(bounce_ray,depth-1,datastructure);
+                let indirect_light = self.shade_internal(&bounce_ray,depth-1,datastructure);
                 indirect_light * diffuse(&intersection , hit_pos, hit_pos+bounce_direction)
             } else {
                 Vector::repeated(0f64)
@@ -45,7 +45,7 @@ impl McShader {
 
 impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for McShader {
 
-    fn shade(&self, ray: Ray, datastructure: &DS) -> Vector {
+    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
         self.shade_internal(ray,4, datastructure)
     }
 }

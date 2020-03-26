@@ -7,7 +7,7 @@ pub struct TestShader {}
 
 impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for TestShader {
 
-    fn shade(&self, ray: Ray, datastructure: &DS) -> Vector {
+    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
 
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection

@@ -17,7 +17,7 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
         output.par_iter_mut().enumerate().for_each(|(y, row)| {
             for x in 0..camera.width {
                 let ray = camera.generate_ray(x as f64, y as f64);
-                row[x] = shader.shade(ray, datastructure).into();
+                row[x] = shader.shade(&ray, datastructure).into();
             }
         });
 
