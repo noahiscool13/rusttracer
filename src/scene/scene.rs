@@ -81,18 +81,25 @@ impl<'s> SceneBuilder<'s> {
         };
         let mut textureatlasbuilder = TextureAtlasBuilder::new();
 
-        for i in &tobjmaterials {
-            if !i.diffuse_texture.is_empty() {
-                textureatlasbuilder.add_texture_file(&i.diffuse_texture, &self.texturepath)?
+        for material in &tobjmaterials {
+            if !material.diffuse_texture.is_empty() {
+                textureatlasbuilder.add_texture_file(&material.diffuse_texture, &self.texturepath)?
             }
-            if !i.ambient_texture.is_empty() {
-                textureatlasbuilder.add_texture_file(&i.ambient_texture, &self.texturepath)?
+            if !material.ambient_texture.is_empty() {
+                textureatlasbuilder.add_texture_file(&material.ambient_texture, &self.texturepath)?
             }
-            if !i.dissolve_texture.is_empty() {
-                textureatlasbuilder.add_texture_file(&i.dissolve_texture, &self.texturepath)?
+            if !material.dissolve_texture.is_empty() {
+                textureatlasbuilder.add_texture_file(&material.dissolve_texture, &self.texturepath)?
             }
-            if !i.specular_texture.is_empty() {
-                textureatlasbuilder.add_texture_file(&i.specular_texture, &self.texturepath)?
+            if !material.specular_texture.is_empty() {
+                textureatlasbuilder.add_texture_file(&material.specular_texture, &self.texturepath)?
+            }
+
+            let default_emittance_texture_name = "".into();
+            let emittance_texture_name = material.unknown_param.get("map_Ke").unwrap_or(&default_emittance_texture_name);
+
+            if !emittance_texture_name.is_empty() {
+                textureatlasbuilder.add_texture_file(emittance_texture_name, &self.texturepath)?
             }
         }
 

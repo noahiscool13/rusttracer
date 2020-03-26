@@ -20,7 +20,7 @@ mod shader;
 
 fn main() {
 
-    let tobj = tobj::load_obj("scenes/monte-carlo.obj".as_ref()).unwrap_or_else(|err| {
+    let tobj = tobj::load_obj("scenes/glowstone.obj".as_ref()).unwrap_or_else(|err| {
         eprintln!("Couldn't open obj file: {}", err);
         process::exit(1);
     });
@@ -36,6 +36,6 @@ fn main() {
     let renderer: Renderer<PrecalculatedDatastructure, JMSTracer, McShader> = Renderer::new(&scene);
 
 
-    let camera = Camera::new(Vector::new(0f64, 1f64, 3f64), 1000, 1000, 60f64);
+    let camera = Camera::new(Vector::new(0f64, 1.5f64, 3f64), 1000, 1000, 60f64);
     renderer.render(&camera).to_bmp().save("render.bmp").expect("Couldn't save");
 }

@@ -16,7 +16,8 @@ pub enum TextureError {
 }
 
 pub struct Texture {
-    image: RgbImage
+    image: RgbImage,
+    size: (usize, usize),
 }
 
 impl Debug for Texture {
@@ -27,13 +28,20 @@ impl Debug for Texture {
 
 impl Texture {
     pub fn new(filename: impl AsRef<Path>) -> Result<Self, TextureError> {
+        let image = image::open(filename).map_err(TextureError::ImageError)?;
+        let dimensions = image.dimensions();
+
         Ok(Self {
-            image: image::open(filename).map_err(TextureError::ImageError)?.to_rgb(),
+            image: image.to_rgb(),
+            size: (dimensions.0 as usize, dimensions.1 as usize)
         })
     }
 
     pub fn at(&self, coord: TextureCoordinate) -> Vector {
-        let rgb = self.image.get_pixel(coord.u as u32, coord.v as u32);
+        let x = (coord.u * self.size.0 as f64) as u32;
+        let y = (self.size.1 - (coord.v * self.size.1 as f64) as usize) as u32;
+
+        let rgb = self.image.get_pixel(x, y);
 
         Vector::new(rgb.0[0] as f64 / 255., rgb.0[1] as f64 / 255., rgb.0[2] as f64 / 255.)
     }

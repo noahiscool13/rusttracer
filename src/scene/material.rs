@@ -20,6 +20,7 @@ lazy_static! {
         illumination_model: None,
 
         emittance: Vector::default(),
+        emittance_texture: None,
     };
 }
 
@@ -63,6 +64,8 @@ pub struct Material<'m> {
     pub illumination_model: Option<u8>,
 
     pub emittance: Vector,
+    pub emittance_texture: Option<&'m Texture>,
+
 }
 
 impl<'m> Material<'m> {
@@ -75,6 +78,8 @@ impl<'m> Material<'m> {
 
     pub(super) unsafe fn from_tobj_material<'a>(material: tobj::Material, textureatlas: &'a TextureAtlas<'a>) -> Self {
         let default_emittance = "0.0 0.0 0.0".into();
+        let default_emittance_texture_name = "".into();
+
         let stremittance = material.unknown_param.get("Ke").unwrap_or(&default_emittance);
         let emittancevec: Vec<f64> = stremittance.split(" ")
             .map(|i| i.parse())
@@ -86,6 +91,8 @@ impl<'m> Material<'m> {
         } else {
             Vector::new(emittancevec[0], emittancevec[1], emittancevec[2])
         };
+
+        let emittance_texture_name = material.unknown_param.get("map_Ke").unwrap_or(&default_emittance_texture_name);
 
         Self {
             name: material.name,
@@ -103,6 +110,7 @@ impl<'m> Material<'m> {
             illumination_model: material.illumination_model,
 
             emittance,
+            emittance_texture: mem::transmute::<_, Option<&'m Texture>>(textureatlas.get_texture(&emittance_texture_name)),
         }
     }
 }
