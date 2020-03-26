@@ -70,12 +70,6 @@ pub struct Material<'m> {
 
 impl<'m> Material<'m> {
 
-    fn detach_pt<'a>() {
-
-    }
-
-
-
     pub(super) unsafe fn from_tobj_material<'a>(material: tobj::Material, textureatlas: &'a TextureAtlas<'a>) -> Self {
         let default_emittance = "0.0 0.0 0.0".into();
         let default_emittance_texture_name = "".into();

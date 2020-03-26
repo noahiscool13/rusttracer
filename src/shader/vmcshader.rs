@@ -1,24 +1,18 @@
 use crate::shader::Shader;
-use crate::datastructure::intersection::Intersection;
-use crate::util::color::Color;
-use crate::shader::shaders::{ambient, emittance, diffuse, specular};
+use crate::shader::shaders::{emittance, diffuse};
 use crate::util::vector::Vector;
 use crate::util::ray::Ray;
 use crate::datastructure::DataStructure;
 use rand::{thread_rng, Rng};
-use crate::scene::scene::Scene;
 
 const AIR_DENS : f64 = 0.3f64;
 
-pub struct VMcShader<'s> {
-    scene: &'s Scene<'s>
-}
+pub struct VMcShader;
 
-impl <'s> VMcShader<'s> {
+impl VMcShader {
     pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, ray : Ray, depth:usize, datastructure: &DS) -> Vector{
 //        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
 //        let brightness = Vector::repeated(0f64);
-        let mut rng = thread_rng();
 
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
@@ -30,7 +24,7 @@ impl <'s> VMcShader<'s> {
 
         let dist = (ray.origin-hit_pos).length();
 
-        let breakdist = -(rng.gen::<f64>()).ln()/AIR_DENS;
+        let breakdist = -(thread_rng().gen::<f64>()).ln()/AIR_DENS;
 
         if breakdist<dist {
             let hit_point = ray.origin+ray.direction*breakdist;
@@ -62,13 +56,7 @@ impl <'s> VMcShader<'s> {
     }
 }
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for VMcShader<'s> {
-    fn new(scene: &'s Scene) -> Self {
-        Self {
-            scene
-        }
-    }
-
+impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for VMcShader {
     fn shade(&self, ray: Ray, datastructure: &DS) -> Vector {
         self.shade_internal(ray,4, datastructure)
     }

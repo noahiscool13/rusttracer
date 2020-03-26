@@ -35,7 +35,7 @@ impl OutputBuffer {
     }
 
     pub fn with_size(width: usize, height: usize) -> Self{
-        let mut res = Self::default();
+        let mut res = Self::new();
         res.presize(width, height);
         res
     }

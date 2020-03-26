@@ -9,6 +9,5 @@ pub mod mstrace;
 pub mod jmstrace;
 
 pub trait RayTracer<'r, DS: DataStructure<'r>, S: Shader<'r, DS>> {
-    fn new() -> Self;
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer;
 }

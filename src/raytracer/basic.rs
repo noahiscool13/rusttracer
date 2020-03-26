@@ -3,15 +3,10 @@ use crate::util::outputbuffer::OutputBuffer;
 use crate::datastructure::DataStructure;
 use crate::util::camera::Camera;
 use crate::shader::Shader;
-use crate::util::color::Color;
 
-pub struct BasicRaytracer {}
+pub struct BasicRaytracer;
 
 impl<'r, DS: DataStructure<'r>, S: Shader<'r, DS>> RayTracer<'r, DS, S> for BasicRaytracer {
-    fn new() -> Self {
-        Self {}
-    }
-
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
 

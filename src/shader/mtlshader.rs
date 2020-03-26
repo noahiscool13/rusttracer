@@ -1,23 +1,12 @@
 use crate::shader::Shader;
-use crate::datastructure::intersection::Intersection;
-use crate::util::color::Color;
 use crate::util::vector::Vector;
-use crate::scene::scene::Scene;
 use crate::shader::shaders::{ambient, emittance, diffuse, specular};
 use crate::datastructure::DataStructure;
 use crate::util::ray::Ray;
 
-pub struct MtlShader<'s> {
-    scene: &'s Scene<'s>
-}
+pub struct MtlShader {}
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader<'s> {
-    fn new(scene: &'s Scene<'s>) -> Self {
-        Self {
-            scene
-        }
-    }
-
+impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader {
     fn shade(&self, ray:Ray, datastructure: &DS) -> Vector {
 
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
