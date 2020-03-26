@@ -9,7 +9,7 @@ use rayon::iter::ParallelIterator;
 use crate::util::vector::Vector;
 use rand::{thread_rng, Rng};
 
-const SPP : usize = 1;
+const SPP : usize = 15;
 
 pub struct JMSTracer;
 
