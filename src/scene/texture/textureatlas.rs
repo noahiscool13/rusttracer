@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::path::Path;
 use crate::scene::texture::{Texture, TextureError};
 use std::pin::Pin;
+use bmp::Image;
+use image::DynamicImage;
 
 pub struct TextureAtlasBuilder {
     atlas: HashMap<String, Texture>
@@ -34,7 +36,10 @@ impl TextureAtlasBuilder {
 
         let mut textures = {
             let mut vec = Vec::with_capacity(atlassize);
-            unsafe {vec.set_len(atlassize)};
+            vec.resize_with(atlassize, || Texture {
+                image: DynamicImage::new_rgb8(0, 0).to_rgb(),
+                size: (0, 0)
+            });
             Pin::from(vec.into_boxed_slice())
         };
 

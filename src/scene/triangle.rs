@@ -1,7 +1,6 @@
 use crate::scene::scene::{Mesh};
 use crate::util::vector::Vector;
 use crate::scene::material::Material;
-use crate::scene::texture::Texture;
 use crate::scene::texturecoordinate::TextureCoordinate;
 
 #[derive(Debug, Clone)]

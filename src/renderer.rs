@@ -13,12 +13,12 @@ pub struct Renderer<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shad
 }
 
 impl<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shader<'r, DS>> Renderer<'r, DS, RT, S> {
-    pub fn new(scene: &'r Scene<'r>) -> Self {
+    pub fn new(scene: &'r Scene<'r>, tracer: RT, shader: S) -> Self {
         Self {
             scene,
             datastructure: DS::new(scene),
-            tracer: RT::new(),
-            shader: Shader::new(scene)
+            tracer,
+            shader,
         }
     }
 

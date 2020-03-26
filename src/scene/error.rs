@@ -10,5 +10,3 @@ impl From<TextureError> for SceneError {
         SceneError::TextureError(t)
     }
 }
-
-type SceneResult<T> = Result<T, SceneError>;

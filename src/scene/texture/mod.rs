@@ -1,4 +1,4 @@
-use image::{DynamicImage, ImageError, GenericImageView, RgbImage};
+use image::{ImageError, GenericImageView, RgbImage};
 use std::path::Path;
 
 mod textureatlas;

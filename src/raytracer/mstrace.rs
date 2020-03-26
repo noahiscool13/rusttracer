@@ -3,7 +3,6 @@ use crate::util::outputbuffer::OutputBuffer;
 use crate::datastructure::DataStructure;
 use crate::util::camera::Camera;
 use crate::shader::Shader;
-use crate::util::color::Color;
 use rayon::iter::IntoParallelRefMutIterator;
 use rayon::iter::IndexedParallelIterator;
 use rayon::iter::ParallelIterator;
@@ -11,13 +10,9 @@ use crate::util::vector::Vector;
 
 const SPP : usize = 30000;
 
-pub struct MSTracer {}
+pub struct MSTracer;
 
 impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, DS, S> for MSTracer {
-    fn new() -> Self {
-        Self {}
-    }
-
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
 
