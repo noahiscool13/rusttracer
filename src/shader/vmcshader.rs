@@ -23,7 +23,14 @@ impl <'s> VMcShader<'s> {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
         } else {
-            return Vector::repeated(0f64)
+            if depth > 0 {
+                let breakdist = -(rng.gen::<f64>()).ln() / AIR_DENS;
+                let hit_point = ray.origin + ray.direction * breakdist;
+                let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
+                return self.shade_internal(scatter_ray, depth - 1, datastructure);
+            } else {
+                return Vector::repeated(0f64);
+            }
         };
 //
         let hit_pos = intersection.hit_pos();
@@ -35,7 +42,11 @@ impl <'s> VMcShader<'s> {
         if breakdist<dist {
             let hit_point = ray.origin+ray.direction*breakdist;
             let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
-            return self.shade_internal(scatter_ray,depth,datastructure);
+            if depth > 0 {
+            return self.shade_internal(scatter_ray,depth-1,datastructure);
+            } else {
+                return Vector::repeated(0f64);
+            }
         }
 //
 //        let part_amb = ambient(&intersection.face, self.scene) * Vector::repeated(0.1);
@@ -70,6 +81,6 @@ impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for VMcShader<'s> {
     }
 
     fn shade(&self, ray: Ray, datastructure: &DS) -> Vector {
-        self.shade_internal(ray,4, datastructure)
+        self.shade_internal(ray,6, datastructure)
     }
 }

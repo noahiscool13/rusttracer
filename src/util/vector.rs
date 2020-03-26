@@ -107,7 +107,7 @@ impl Vector {
         let theta = rng.gen::<f64>() * 2f64 * f64::consts::PI;
         let phi= (2f64*rng.gen::<f64>()-1f64).acos()-f64::consts::PI/2f64;
 
-        Vector::new(phi.sin()*theta.cos(),(phi.sin()*theta.sin()).abs(),phi.cos())
+        Vector::new(phi.cos()*theta.cos(),(phi.cos()*theta.sin()),phi.cos())
     }
 }
 
