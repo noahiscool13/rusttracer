@@ -3,6 +3,7 @@ use crate::datastructure::intersection::Intersection;
 use crate::scene::Scene;
 use crate::datastructure::DataStructure;
 use crate::util::vector::Vector;
+use crate::util::ray::Ray;
 
 pub mod shaders;
 pub mod testshader;
@@ -13,5 +14,5 @@ pub mod mcshader;
 pub trait Shader<'s, DS: DataStructure<'s>> {
     fn new(scene: &'s Scene) -> Self;
 
-    fn shade(&self, intersection: &Intersection, datastructure : &DS) -> Vector;
+    fn shade(&self, ray: Ray, datastructure : &DS) -> Vector;
 }

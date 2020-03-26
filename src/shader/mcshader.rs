@@ -12,9 +12,15 @@ pub struct McShader<'s> {
 }
 
 impl <'s> McShader<'s> {
-    pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, intersection: &Intersection, depth:usize, datastructure: &DS) -> Vector{
+    pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, ray : Ray, depth:usize, datastructure: &DS) -> Vector{
 //        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
 //        let brightness = Vector::repeated(0f64);
+
+        let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
+            intersection
+        } else {
+            return Vector::repeated(0f64)
+        };
 //
         let hit_pos = intersection.hit_pos();
 //
@@ -30,12 +36,8 @@ impl <'s> McShader<'s> {
             if depth > 0 {
                 let bounce_direction = Vector::point_on_hemisphere().rotated(intersection.face.normal(self.scene));
                 let bounce_ray = Ray::new(hit_pos,bounce_direction);
-                if let Some(bounce_intersection) = datastructure.intersects(&bounce_ray) {
-                    let indirect_light = self.shade_internal(&bounce_intersection,depth-1,datastructure);
-                    indirect_light * diffuse(&intersection.face, self.scene, hit_pos, bounce_intersection.hit_pos())
-                } else {
-                    Vector::repeated(0f64)
-                }
+                let indirect_light = self.shade_internal(bounce_ray,depth-1,datastructure);
+                indirect_light * diffuse(&intersection.face, self.scene, hit_pos, hit_pos+bounce_direction)
             } else {
                 Vector::repeated(0f64)
             };
@@ -53,7 +55,7 @@ impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for McShader<'s> {
         }
     }
 
-    fn shade(&self, intersection: &Intersection, datastructure: &DS) -> Vector {
-        self.shade_internal(intersection,4, datastructure)
+    fn shade(&self, ray: Ray, datastructure: &DS) -> Vector {
+        self.shade_internal(ray,4, datastructure)
     }
 }

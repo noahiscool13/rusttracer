@@ -5,6 +5,7 @@ use crate::util::color::Color;
 use crate::shader::shaders::{ambient, emittance, diffuse, specular};
 use crate::util::vector::Vector;
 use crate::datastructure::DataStructure;
+use crate::util::ray::Ray;
 
 pub struct MtlShader<'s> {
     scene: &'s Scene
@@ -17,7 +18,14 @@ impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader<'s> {
         }
     }
 
-    fn shade(&self, intersection: &Intersection, _: &DS) -> Vector {
+    fn shade(&self, ray:Ray, datastructure: &DS) -> Vector {
+
+        let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
+            intersection
+        } else {
+            return Vector::repeated(0f64)
+        };
+
         let pointlight = Vector::new(0f64, 0.2f64, 1f64);
         let brightness = Vector::repeated(1f64);
 

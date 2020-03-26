@@ -10,7 +10,7 @@ use rayon::iter::ParallelIterator;
 use crate::util::vector::Vector;
 use rand::{thread_rng, Rng};
 
-const SPP : usize = 300;
+const SPP : usize = 15;
 
 pub struct JMSTracer {}
 
@@ -29,13 +29,12 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
                 let mut out = Vector::repeated(0f64);
                 let mut rng = thread_rng();
                 for _ in 0..SPP {
-                    let ray = camera.generate_ray(x as f64+rng.gen::<f64>(), y as f64+rng.gen::<f64>());
+                    let ray = camera.generate_ray(x as f64 + rng.gen::<f64>(), y as f64 + rng.gen::<f64>());
 
-                    if let Some(intersection) = datastructure.intersects(&ray) {
-                        out = out + shader.shade(&intersection, datastructure);
-                    }
-                    row[x] = (out / SPP as f64).into();
+                    out = out + shader.shade(ray, datastructure);
+
                 }
+                row[x] = (out / SPP as f64).into();
             }
 
             println!("Finished row {}", y);
