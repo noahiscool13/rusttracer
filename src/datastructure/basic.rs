@@ -1,21 +1,21 @@
 use crate::datastructure::DataStructure;
 use crate::util::ray::Ray;
 use crate::datastructure::intersection::Intersection;
-use crate::util::triangle::Triangle;
 use std::f64;
-use crate::scene::Scene;
+use crate::scene::scene::Scene;
+use crate::scene::triangle::Triangle;
 
 const EPSILON: f64 = 0.00001;
 
 pub struct BasicDataStructure<'d> {
-    data: &'d Scene,
+    data: &'d Scene<'d>,
 }
 
 impl<'d> BasicDataStructure<'d> {
 
-    fn intersects_triangle<'a>(&self, ray: &'a Ray, triangle: &Triangle) -> Option<Intersection<'a>> {
-        let edge1 = triangle.b - triangle.a;
-        let edge2 = triangle.c - triangle.a;
+    fn intersects_triangle<'a>(&self, ray: &'a Ray, triangle: &'a Triangle) -> Option<Intersection<'a>> {
+        let edge1 = triangle.b() - triangle.a();
+        let edge2 = triangle.c() - triangle.a();
 
         let h = ray.direction.cross(edge2);
         let a = edge1.dot(h);
@@ -26,7 +26,7 @@ impl<'d> BasicDataStructure<'d> {
 
         let f = 1f64 / a;
 
-        let s = ray.origin - triangle.a;
+        let s = ray.origin - triangle.a();
         let u = f * s.dot(h);
 
         let q = s.cross(edge1);
@@ -45,16 +45,16 @@ impl<'d> BasicDataStructure<'d> {
             return None;
         }
 
-        Some(Intersection { uv: (u, v), t, ray, face: triangle.face})
+        Some(Intersection { uv: (u, v), t, ray, triangle})
     }
 }
 
 impl<'d> DataStructure<'d> for BasicDataStructure<'d> {
-    fn new(scene: &'d Scene) -> Self {
+    fn new(scene: &'d Scene<'d>) -> Self {
         Self {data: scene}
     }
 
-    fn intersects<'a>(&self, ray: &'a Ray) -> Option<Intersection<'a>> {
+    fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
         let mut min = None;
 
         for triangle in self.data.triangles() {

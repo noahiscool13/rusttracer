@@ -1,16 +1,16 @@
 use crate::shader::Shader;
 use crate::datastructure::intersection::Intersection;
 use crate::util::color::Color;
-use crate::scene::Scene;
+use crate::scene::scene::Scene;
 use crate::datastructure::DataStructure;
 use crate::util::vector::Vector;
 
 pub struct TestShader<'s> {
-    scene: &'s Scene
+    scene: &'s Scene<'s>
 }
 
 impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for TestShader<'s> {
-    fn new(scene: &'s Scene) -> Self {
+    fn new(scene: &'s Scene<'s>) -> Self {
         Self {
             scene
         }
