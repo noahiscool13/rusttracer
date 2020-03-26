@@ -9,7 +9,7 @@ use rayon::iter::IndexedParallelIterator;
 use rayon::iter::ParallelIterator;
 use crate::util::vector::Vector;
 
-const SPP : usize = 10;
+const SPP : usize = 30000;
 
 pub struct MSTracer {}
 
@@ -34,6 +34,8 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
                     row[x] = (out / SPP as f64).into();
                 }
             }
+
+            println!("Finished row {}", y);
         });
 
         output
