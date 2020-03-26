@@ -1,4 +1,3 @@
-use crate::scene::Scene;
 use crate::shader::Shader;
 use crate::datastructure::intersection::Intersection;
 use crate::util::color::Color;
@@ -6,9 +5,10 @@ use crate::shader::shaders::{ambient, emittance, diffuse, specular};
 use crate::util::vector::Vector;
 use crate::util::ray::Ray;
 use crate::datastructure::DataStructure;
+use crate::scene::scene::Scene;
 
 pub struct McShader<'s> {
-    scene: &'s Scene
+    scene: &'s Scene<'s>
 }
 
 impl <'s> McShader<'s> {
@@ -25,7 +25,7 @@ impl <'s> McShader<'s> {
         let hit_pos = intersection.hit_pos();
 //
 //        let part_amb = ambient(&intersection.face, self.scene) * Vector::repeated(0.1);
-        let part_emi = emittance(&intersection.face, self.scene);
+        let part_emi = emittance(&intersection);
 //        let part_diff = diffuse(&intersection.face, self.scene, hit_pos, pointlight) * brightness;
 //        let part_spec = specular(&intersection.face, self.scene, hit_pos, pointlight, intersection.ray.origin) * brightness;
 //
@@ -34,10 +34,10 @@ impl <'s> McShader<'s> {
 
         let indirect =
             if depth > 0 {
-                let bounce_direction = Vector::point_on_hemisphere().rotated(intersection.face.normal(self.scene));
+                let bounce_direction = Vector::point_on_hemisphere().rotated(intersection.triangle.normal());
                 let bounce_ray = Ray::new(hit_pos,bounce_direction);
                 let indirect_light = self.shade_internal(bounce_ray,depth-1,datastructure);
-                indirect_light * diffuse(&intersection.face, self.scene, hit_pos, hit_pos+bounce_direction)
+                indirect_light * diffuse(&intersection , hit_pos, hit_pos+bounce_direction)
             } else {
                 Vector::repeated(0f64)
             };
