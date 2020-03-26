@@ -10,7 +10,7 @@ const AIR_DENS : f64 = 0.1f64;
 pub struct VMcShader;
 
 impl VMcShader {
-    pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, ray : Ray, depth:usize, datastructure: &DS) -> Vector{
+    pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, ray : &Ray, depth:usize, datastructure: &DS) -> Vector{
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
         } else {
@@ -18,7 +18,7 @@ impl VMcShader {
                 let breakdist = -(thread_rng().gen::<f64>()).ln() / AIR_DENS;
                 let hit_point = ray.origin + ray.direction * breakdist;
                 let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
-                return self.shade_internal(scatter_ray, depth - 1, datastructure);
+                return self.shade_internal(&scatter_ray, depth - 1, datastructure);
             } else {
                 return Vector::repeated(0f64);
             }
@@ -34,7 +34,7 @@ impl VMcShader {
             let hit_point = ray.origin+ray.direction*breakdist;
             let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
             if depth > 0 {
-            return self.shade_internal(scatter_ray,depth-1,datastructure);
+            return self.shade_internal(&scatter_ray,depth-1,datastructure);
             } else {
                 return Vector::repeated(0f64);
             }
@@ -52,7 +52,7 @@ impl VMcShader {
             if depth > 0 {
                 let bounce_direction = Vector::point_on_hemisphere().rotated(intersection.triangle.normal());
                 let bounce_ray = Ray::new(hit_pos,bounce_direction);
-                let indirect_light = self.shade_internal(bounce_ray,depth-1,datastructure);
+                let indirect_light = self.shade_internal(&bounce_ray,depth-1,datastructure);
                 indirect_light * diffuse(&intersection, hit_pos, hit_pos+bounce_direction)
             } else {
                 Vector::repeated(0f64)
@@ -65,7 +65,7 @@ impl VMcShader {
 }
 
 impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for VMcShader {
-    fn shade(&self, ray: Ray, datastructure: &DS) -> Vector {
+    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
         self.shade_internal(ray,6, datastructure)
     }
 }

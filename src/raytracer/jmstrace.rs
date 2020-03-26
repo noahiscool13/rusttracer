@@ -25,7 +25,7 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
                 for _ in 0..SPP {
                     let ray = camera.generate_ray(x as f64 + thread_rng().gen::<f64>(), y as f64 + thread_rng().gen::<f64>());
 
-                    out = out + shader.shade(ray, datastructure);
+                    out = out + shader.shade(&ray, datastructure);
 
                 }
                 row[x] = (out / SPP as f64).into();
