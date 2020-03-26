@@ -8,6 +8,7 @@ use crate::util::vector::Vector;
 use crate::shader::mtlshader::MtlShader;
 use crate::shader::mcshader::McShader;
 use crate::raytracer::mstrace::MSTracer;
+use crate::raytracer::jmstrace::JMSTracer;
 
 mod datastructure;
 mod raytracer;
@@ -22,7 +23,7 @@ fn main() {
         process::exit(1);
     }));
 
-    let renderer: Renderer<PrecalculatedDatastructure, MSTracer, McShader> = Renderer::new(&scene);
+    let renderer: Renderer<PrecalculatedDatastructure, JMSTracer, McShader> = Renderer::new(&scene);
 
 
     let camera = Camera::new(Vector::new(0f64, 1f64, 3f64), 1000, 1000, 60f64);
