@@ -5,15 +5,12 @@ use crate::util::ray::Ray;
 use crate::datastructure::DataStructure;
 use rand::{thread_rng, Rng};
 
-const AIR_DENS : f64 = 0.3f64;
+const AIR_DENS : f64 = 0.1f64;
 
 pub struct VMcShader;
 
 impl VMcShader {
     pub fn shade_internal<'a, DS : DataStructure<'a>>(&self, ray : Ray, depth:usize, datastructure: &DS) -> Vector{
-//        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
-//        let brightness = Vector::repeated(0f64);
-
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
         } else {

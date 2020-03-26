@@ -8,3 +8,4 @@ This is an extensible raytracer made entirely in rust.
 * [ ] Live raytracing (outputting while raytracing)
 * [ ] Transparency & Translucency
 * [ ] DataStructure(s) (KDtree)
+* [ ] Settings struct
