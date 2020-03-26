@@ -33,6 +33,6 @@ fn main() {
     let renderer = Renderer::<PrecalculatedDatastructure, _, _>::new(&scene, JMSTracer, VMcShader);
 
 
-    let camera = Camera::new(Vector::new(0f64, 1.5f64, 3f64),  1, 1, 60f64);
+    let camera = Camera::new(Vector::new(1.5f64, 2f64, 3f64),  1000, 1000, 60f64);
     renderer.render(&camera).to_bmp().save("render.bmp").expect("Couldn't save");
 }

@@ -18,7 +18,7 @@ impl VMcShader {
             intersection
         } else {
             if depth > 0 {
-                let breakdist = -(rng.gen::<f64>()).ln() / AIR_DENS;
+                let breakdist = -(thread_rng().gen::<f64>()).ln() / AIR_DENS;
                 let hit_point = ray.origin + ray.direction * breakdist;
                 let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
                 return self.shade_internal(scatter_ray, depth - 1, datastructure);
