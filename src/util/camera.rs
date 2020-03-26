@@ -23,7 +23,7 @@ impl Camera {
         Self { pos, width, height, fov, inf_width, inf_height, angle, aspect_ratio}
     }
 
-    pub fn generate_ray(&self, x:usize, y:usize) -> Ray {
+    pub fn generate_ray(&self, x:f64, y:f64) -> Ray {
         let xdir = (2f64 * x as f64 * self.inf_width - 1f64) * self.angle * self.aspect_ratio;
         let ydir = (1f64 - 2f64 * y as f64 * self.inf_height) * self.angle;
 

@@ -5,14 +5,14 @@ use crate::util::camera::Camera;
 use crate::shader::Shader;
 use crate::scene::scene::Scene;
 
-pub struct Renderer<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shader<'r>> {
+pub struct Renderer<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shader<'r, DS>> {
     scene: &'r Scene<'r>,
     datastructure: DS,
     tracer: RT,
     shader: S,
 }
 
-impl<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shader<'r>> Renderer<'r, DS, RT, S> {
+impl<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shader<'r, DS>> Renderer<'r, DS, RT, S> {
     pub fn new(scene: &'r Scene<'r>) -> Self {
         Self {
             scene,

@@ -4,19 +4,20 @@ use crate::util::color::Color;
 use crate::util::vector::Vector;
 use crate::scene::scene::Scene;
 use crate::shader::shaders::{ambient, emittance, diffuse, specular};
+use crate::datastructure::DataStructure;
 
 pub struct MtlShader<'s> {
     scene: &'s Scene<'s>
 }
 
-impl<'s> Shader<'s> for MtlShader<'s> {
+impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader<'s> {
     fn new(scene: &'s Scene<'s>) -> Self {
         Self {
             scene
         }
     }
 
-    fn shade(&self, intersection: &Intersection) -> Color {
+    fn shade(&self, intersection: &Intersection, _: &DS) -> Vector {
         let pointlight = Vector::new(0f64, 0.2f64, 1f64);
         let brightness = Vector::repeated(1f64);
 
@@ -30,7 +31,6 @@ impl<'s> Shader<'s> for MtlShader<'s> {
 
         let total = part_amb + part_emi + part_diff + part_spec;
 
-
-        return total.into();
+        return total;
     }
 }

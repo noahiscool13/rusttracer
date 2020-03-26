@@ -1,5 +1,9 @@
-use std::ops::{Add, Sub, Mul};
+use std::ops::{Add, Sub, Mul, Div};
 use crate::util::color::Color;
+use std::f64;
+use rand::{Rng, thread_rng};
+use rand::prelude::ThreadRng;
+
 
 trait Clamp01 {
     fn clamp01(self) -> Self;
@@ -72,9 +76,29 @@ impl Vector {
         )
     }
 
-    // TODO rotations
     pub fn rotated(&self, rotation: Vector) -> Vector {
-        rotation
+
+        let nt = if rotation.x.abs() > rotation.y.abs() {
+            Vector::new(rotation.z, 0f64, -rotation.x) / (rotation.x.powi(2) + rotation.z.powi(2)).sqrt()
+        } else {
+            Vector::new(0f64, -rotation.z, -rotation.y) / (rotation.y.powi(2) + rotation.z.powi(2)).sqrt()
+        };
+
+        let nb = rotation.cross(nt);
+
+        let x = self.x * nb.x + self.y * rotation.x + self.z * nt.x;
+        let y = self.x * nb.y + self.y * rotation.y + self.z * nt.y;
+        let z = self.x * nb.z + self.y * rotation.z + self.z * nt.z;
+
+        Vector::new(x,y,z)
+    }
+
+    pub fn point_on_hemisphere() -> Vector{
+        let mut rng = thread_rng();
+        let theta = rng.gen::<f64>() * 2f64 * f64::consts::PI;
+        let phi= (1f64-2f64*rng.gen::<f64>()).acos();
+
+        Vector::new(phi.sin()*theta.cos(),(phi.sin()*theta.sin()).abs(),phi.cos())
     }
 }
 
@@ -100,7 +124,6 @@ impl Mul<Vector> for f64 {
     }
 }
 
-
 impl Add for Vector {
     type Output = Vector;
 
@@ -122,6 +145,18 @@ impl Sub for Vector {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
+        }
+    }
+}
+
+impl Div<f64> for Vector {
+    type Output = Vector;
+
+    fn div(self, rhs: f64) -> Self::Output {
+        Self {
+            x: self.x / rhs,
+            y: self.y / rhs,
+            z: self.z / rhs,
         }
     }
 }

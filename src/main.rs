@@ -5,6 +5,9 @@ use crate::raytracer::rayon::RayonRaytracer;
 use crate::datastructure::precalculated::PrecalculatedDatastructure;
 use crate::util::vector::Vector;
 use crate::shader::mtlshader::MtlShader;
+use crate::shader::mcshader::McShader;
+use crate::raytracer::mstrace::MSTracer;
+use crate::raytracer::jmstrace::JMSTracer;
 use crate::scene::scene::SceneBuilder;
 use std::path::Path;
 
@@ -17,7 +20,7 @@ mod shader;
 
 fn main() {
 
-    let tobj = tobj::load_obj("scenes/glowstone.obj".as_ref()).unwrap_or_else(|err| {
+    let tobj = tobj::load_obj("scenes/monte-carlo.obj".as_ref()).unwrap_or_else(|err| {
         eprintln!("Couldn't open obj file: {}", err);
         process::exit(1);
     });
@@ -30,7 +33,7 @@ fn main() {
             process::exit(1);
         });
 
-    let renderer: Renderer<PrecalculatedDatastructure, RayonRaytracer, MtlShader> = Renderer::new(&scene);
+    let renderer: Renderer<PrecalculatedDatastructure, JMSTracer, McShader> = Renderer::new(&scene);
 
 
     let camera = Camera::new(Vector::new(0f64, 1f64, 3f64), 1000, 1000, 60f64);

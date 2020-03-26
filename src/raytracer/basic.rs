@@ -7,7 +7,7 @@ use crate::util::color::Color;
 
 pub struct BasicRaytracer {}
 
-impl<'r, DS: DataStructure<'r>, S: Shader<'r>> RayTracer<'r, DS, S> for BasicRaytracer {
+impl<'r, DS: DataStructure<'r>, S: Shader<'r, DS>> RayTracer<'r, DS, S> for BasicRaytracer {
     fn new() -> Self {
         Self {}
     }
@@ -17,10 +17,10 @@ impl<'r, DS: DataStructure<'r>, S: Shader<'r>> RayTracer<'r, DS, S> for BasicRay
 
         for x in 0..camera.width {
             for y in 0..camera.height {
-                let ray = camera.generate_ray(x, y);
+                let ray = camera.generate_ray(x as f64, y as f64);
 
                 if let Some(intersection) = datastructure.intersects(&ray) {
-                    output.set_at(x, y, shader.shade(&intersection));
+                    output.set_at(x, y, shader.shade(&intersection,datastructure).into());
                 } else {
                     output.set_at(x, y, Color::default());
                 }
