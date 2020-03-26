@@ -3,7 +3,8 @@ use crate::util::color::Color;
 use std::f64;
 use rand::{Rng, thread_rng};
 use rand::prelude::ThreadRng;
-
+use std::borrow::BorrowMut;
+use std::cell::RefCell;
 
 trait Clamp01 {
     fn clamp01(self) -> Self;
@@ -94,9 +95,9 @@ impl Vector {
     }
 
     pub fn point_on_hemisphere() -> Vector{
-        let mut rng = thread_rng();
-        let theta = rng.gen::<f64>() * 2f64 * f64::consts::PI;
-        let phi= (1f64-2f64*rng.gen::<f64>()).acos();
+
+        let theta = thread_rng().gen::<f64>() * 2f64 * f64::consts::PI;
+        let phi= (1f64-2f64*thread_rng().gen::<f64>()).acos();
 
         Vector::new(phi.sin()*theta.cos(),(phi.sin()*theta.sin()).abs(),phi.cos())
     }
