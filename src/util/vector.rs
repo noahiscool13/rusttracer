@@ -101,6 +101,14 @@ impl Vector {
 
         Vector::new(phi.sin()*theta.cos(),(phi.sin()*theta.sin()).abs(),phi.cos())
     }
+
+    pub fn point_on_sphere() -> Vector{
+        let mut rng = thread_rng();
+        let theta = rng.gen::<f64>() * 2f64 * f64::consts::PI;
+        let phi= (2f64*rng.gen::<f64>()-1f64).acos()-f64::consts::PI/2f64;
+
+        Vector::new(phi.sin()*theta.cos(),(phi.sin()*theta.sin()).abs(),phi.cos())
+    }
 }
 
 impl Into<Color> for Vector {

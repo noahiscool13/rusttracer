@@ -27,12 +27,9 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
                 let mut out = Vector::repeated(0f64);
                 for _ in 0..SPP {
                     let ray = camera.generate_ray(x as f64, y as f64);
-
-                    if let Some(intersection) = datastructure.intersects(&ray) {
-                        out = out + shader.shade(&intersection, datastructure);
-                    }
-                    row[x] = (out / SPP as f64).into();
+                    out = out + shader.shade(ray, datastructure);
                 }
+                row[x] = (out / SPP as f64).into();
             }
 
             println!("Finished row {}", y);
