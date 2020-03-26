@@ -21,7 +21,7 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
 
         output.par_iter_mut().enumerate().for_each(|(y, row)| {
             for x in 0..camera.width {
-                let ray = camera.generate_ray(x, y);
+                let ray = camera.generate_ray(x as f64, y as f64);
 
                 if let Some(intersection) = datastructure.intersects(&ray) {
                     row[x] = shader.shade(&intersection, datastructure).into();
