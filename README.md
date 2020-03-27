@@ -11,5 +11,5 @@ This is an extensible raytracer made entirely in rust.
 * [ ] Settings struct
 * [ ] Automatic timing
 * [ ] Time reporting
-* [ ] Logging
-* 
+* [x] Logging
+* [ ] UI
