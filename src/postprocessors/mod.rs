@@ -2,6 +2,7 @@ use crate::util::outputbuffer::OutputBuffer;
 
 pub mod group;
 pub mod identity;
+pub mod gamma;
 
 /// After raytracing, a `PostProcessor` will be applied to the outputbuffer.
 /// There are many options. If multiple postprocessor steps are required,

@@ -74,6 +74,18 @@ impl Vector {
         )
     }
 
+    pub fn powf(&self, exp: f64) -> Vector {
+        Vector::new(
+            self.x.powf(exp),
+            self.y.powf(exp),
+            self.z.powf(exp),
+        )
+    }
+
+    pub fn gamma(&self, exp: f64) -> Vector {
+        self.powf(exp)*(exp+1f64)/2f64
+    }
+
     pub fn rotated(&self, rotation: Vector) -> Vector {
 
         let nt = if rotation.x.abs() > rotation.y.abs() {

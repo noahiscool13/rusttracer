@@ -11,7 +11,7 @@ use rand::{thread_rng, Rng};
 
 use log::info;
 
-const SPP : usize = 10;
+const SPP : usize = 1;
 
 pub struct JMSTracer;
 

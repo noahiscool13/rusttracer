@@ -1,13 +1,14 @@
 use crate::util::color::Color;
 use bmp::{Image, px, Pixel};
 use std::ops::{Deref, DerefMut};
+use crate::util::vector::Vector;
 
 pub struct OutputBuffer {
-    buffer: Vec<Vec<Color>>,
+    buffer: Vec<Vec<Vector>>,
 }
 
 impl Deref for OutputBuffer {
-    type Target = Vec<Vec<Color>>;
+    type Target = Vec<Vec<Vector>>;
 
     fn deref(&self) -> &Self::Target {
         &self.buffer
@@ -40,7 +41,7 @@ impl OutputBuffer {
         res
     }
 
-    pub fn from_buffer(buffer: Vec<Vec<Color>>) -> Self {
+    pub fn from_buffer(buffer: Vec<Vec<Vector>>) -> Self {
         Self { buffer }
     }
 
@@ -53,14 +54,14 @@ impl OutputBuffer {
         let mut img = Image::new(width as u32, height as u32);
 
         for (x, y) in img.coordinates() {
-            let color = &self.buffer[y as usize][x as usize];
+            let color: &Color = &self.buffer[y as usize][x as usize].into();
             img.set_pixel(x, y, px!(color.r, color.g, color.b));
         }
 
         img
     }
 
-    pub fn set_at(&mut self, x: usize, y: usize, color: Color) {
+    pub fn set_at(&mut self, x: usize, y: usize, color: Vector) {
         self.buffer[y][x] = color;
     }
 }

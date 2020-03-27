@@ -30,6 +30,8 @@ impl<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shader<'r, DS>> Ren
     }
 
     pub fn render(&self, camera: &Camera) -> OutputBuffer {
-        self.tracer.raytrace(&self.datastructure, &self.shader, camera)
+        let output = self.tracer.raytrace(&self.datastructure, &self.shader, camera);
+
+        self.postprocessor.process(output)
     }
 }
