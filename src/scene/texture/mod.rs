@@ -8,6 +8,7 @@ use std::fmt::{Debug, Formatter};
 use std::fmt;
 use crate::util::vector::Vector;
 use crate::scene::texturecoordinate::TextureCoordinate;
+use log::error;
 
 #[derive(Debug)]
 pub enum TextureError {
@@ -38,6 +39,9 @@ impl Texture {
     }
 
     pub fn at(&self, coord: TextureCoordinate) -> Vector {
+
+//        error!("u: {}, v: {}", coord.u, coord.v);
+
         let x = (coord.u * self.size.0 as f64) as u32;
         let y = (self.size.1 - (coord.v * self.size.1 as f64) as usize) as u32;
 

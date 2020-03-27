@@ -91,7 +91,7 @@ impl Vector {
         let nt = if rotation.x.abs() > rotation.y.abs() {
             Vector::new(rotation.z, 0f64, -rotation.x) / (rotation.x.powi(2) + rotation.z.powi(2)).sqrt()
         } else {
-            Vector::new(0f64, -rotation.z, -rotation.y) / (rotation.y.powi(2) + rotation.z.powi(2)).sqrt()
+            Vector::new(0f64, -rotation.z, rotation.y) / (rotation.y.powi(2) + rotation.z.powi(2)).sqrt()
         };
 
         let nb = rotation.cross(nt);

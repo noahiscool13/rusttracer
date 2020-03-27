@@ -1,6 +1,7 @@
 use crate::util::vector::Vector;
 use crate::datastructure::intersection::Intersection;
 use crate::scene::texturecoordinate::TextureCoordinate;
+use log::error;
 
 pub fn ambient(intersection: &Intersection) -> Vector {
     let texture = if let Some(texture) = intersection.triangle.mesh.material.ambient_texture {
@@ -33,6 +34,8 @@ pub fn map_uv(intersection: &Intersection) -> TextureCoordinate{
 
     let e1 = texc-texa;
     let e2 = texb-texa;
+
+//    error!("e1: {:?}, e2: {:?}", e1, e2);
 
     texa.to_owned() + (e1 * intersection.uv.1) + (e2 * intersection.uv.0)
 }

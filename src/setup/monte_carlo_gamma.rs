@@ -35,7 +35,7 @@ impl Setup for MonteCarloGamma {
             .with_tracer(JMSTracer)
             .with_postprocessor(&Gamma);
 
-        let camera = Camera::new(Vector::new(0.5, 2.0, 3.),  300, 300, 60f64);
+        let camera = Camera::new(Vector::new(0.5, 2.0, 3.),  600, 600, 60f64);
         renderer.render(&camera).to_bmp().save("render.bmp").expect("Couldn't save");
     }
 }
