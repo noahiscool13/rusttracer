@@ -103,7 +103,7 @@ impl Vector {
         let theta = thread_rng().gen::<f64>() * 2f64 * f64::consts::PI;
         let phi= (2f64*thread_rng().gen::<f64>()-1f64).acos()-f64::consts::PI/2f64;
 
-        Vector::new(phi.cos()*theta.cos(),(phi.cos()*theta.sin()),phi.cos())
+        Vector::new(phi.cos()*theta.cos(),phi.cos()*theta.sin(),phi.cos())
     }
 }
 

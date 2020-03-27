@@ -9,3 +9,7 @@ This is an extensible raytracer made entirely in rust.
 * [ ] Transparency & Translucency
 * [ ] DataStructure(s) (KDtree)
 * [ ] Settings struct
+* [ ] Automatic timing
+* [ ] Time reporting
+* [ ] Logging
+* 

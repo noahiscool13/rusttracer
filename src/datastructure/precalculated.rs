@@ -7,6 +7,7 @@ use crate::scene::triangle::Triangle;
 
 const EPSILON: f64 = 0.00001;
 
+
 pub struct PrecalculatedDatastructure<'p> {
     triangles: Vec<Triangle<'p>>,
 }

@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use std::path::Path;
 use crate::scene::texture::{Texture, TextureError};
 use std::pin::Pin;
-use bmp::Image;
 use image::DynamicImage;
 
 pub struct TextureAtlasBuilder {
