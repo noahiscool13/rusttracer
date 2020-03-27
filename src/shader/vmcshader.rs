@@ -4,8 +4,9 @@ use crate::util::vector::Vector;
 use crate::util::ray::Ray;
 use crate::datastructure::DataStructure;
 use rand::{thread_rng, Rng};
+use std::f64;
 
-const AIR_DENS : f64 = 0.1f64;
+const AIR_DENS : f64 = 0.01f64;
 
 pub struct VMcShader;
 
@@ -57,7 +58,7 @@ impl VMcShader {
             } else {
                 Vector::repeated(0f64)
             };
-
+        //Todo add *2.*f64::consts::PI to indirect
         let total =  indirect + part_emi;
 
         return total.into();

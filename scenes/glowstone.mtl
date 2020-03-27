@@ -6,7 +6,7 @@ newmtl Glowstone
 # Ka 0.2 0.2 0.2
 Kd 1 1 1
 Ks 0 0 0
-Ke 4 4 4
+Ke 5 5 5
 # map_Ka glowstone-RGB.png
 # for G3D, to make textures look blocky:
 interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION

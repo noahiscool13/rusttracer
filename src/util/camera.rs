@@ -27,7 +27,7 @@ impl Camera {
         let xdir = (2f64 * x as f64 * self.inf_width - 1f64) * self.angle * self.aspect_ratio;
         let ydir = (1f64 - 2f64 * y as f64 * self.inf_height) * self.angle;
 
-        let mut raydir = Vector::new(xdir,ydir,-1f64).rotated(Vector::new(0.,1.,-0.3).unit());
+        let mut raydir = Vector::new(xdir,ydir,-1f64).rotated(Vector::new(0.,1.,-0.35).unit());
         raydir.normalize();
 
         Ray::new(self.pos, raydir)
