@@ -9,6 +9,8 @@ use rayon::iter::ParallelIterator;
 use crate::util::vector::Vector;
 use rand::{thread_rng, Rng};
 
+use log::info;
+
 const SPP : usize = 10;
 
 pub struct JMSTracer;
@@ -31,7 +33,7 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
                 row[x] = (out / SPP as f64).into();
             }
 
-            println!("Finished row {}", y);
+            info!("Finished row {}", y);
         });
 
         output
