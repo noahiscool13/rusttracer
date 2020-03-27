@@ -38,7 +38,6 @@ impl<'m> Default for Mesh<'m> {
 /// and each mesh holds a pointer to the material. That's why some unsafe code is used.
 pub struct Scene<'s> {
     textureatlas: TextureAtlas<'s>,
-
     meshes: Pin<Box<[Mesh<'s>]>>,
     materials: Pin<Box<[Material<'s>]>>,
 }
@@ -49,6 +48,27 @@ impl<'s> Scene<'s> {
         self.meshes.iter()
             .flat_map(move |i| {
                 i.triangles.iter()
+            })
+    }
+
+    pub fn vertices(&self) -> impl Iterator<Item = &Vector>{
+        self.meshes.iter()
+            .flat_map(move |i| {
+                i.vertices.iter()
+            })
+    }
+
+    pub fn texture_coordinates(&self) -> impl Iterator<Item = &TextureCoordinate>{
+        self.meshes.iter()
+            .flat_map(move |i| {
+                i.texcoords.iter()
+            })
+    }
+
+    pub fn normals(&self) -> impl Iterator<Item = &Vector>{
+        self.meshes.iter()
+            .flat_map(move |i| {
+                i.normals.iter()
             })
     }
 }

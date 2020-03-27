@@ -3,7 +3,6 @@ use crate::datastructure::intersection::Intersection;
 use crate::scene::scene::Scene;
 
 pub mod basic;
-pub mod precalculated;
 pub mod intersection;
 
 pub trait DataStructure<'d> {

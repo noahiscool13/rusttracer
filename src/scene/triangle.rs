@@ -54,4 +54,8 @@ impl<'t> Triangle<'t> {
         &self.mesh.texcoords[self.c]
     }
 
+
+    pub fn index_a(&self) -> usize { self.a }
+    pub fn index_b(&self) -> usize { self.b }
+    pub fn index_c(&self) -> usize { self.c }
 }
