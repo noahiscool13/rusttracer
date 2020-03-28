@@ -11,15 +11,13 @@ use rand::{thread_rng, Rng};
 
 use log::info;
 
-const SPP : usize = 150;
+const SPP : usize = 8000;
 
 pub struct JMSTracer;
 
 impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, DS, S> for JMSTracer {
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
-
-
 
         output.par_iter_mut().enumerate().for_each(|(y, row)| {
             for x in 0..camera.width {

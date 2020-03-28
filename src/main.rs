@@ -4,7 +4,8 @@ use crate::setup::Setup;
 use simple_logging;
 use log::LevelFilter;
 use log::info;
-use crate::setup::monte_carlo_gamma::MonteCarloGamma;
+use crate::setup::glowstone_gamma::GlowStoneGamma;
+use crate::setup::mc_cornell_box_gamma::McCornellBoxGamma;
 
 mod datastructure;
 mod raytracer;
@@ -20,5 +21,5 @@ fn main() {
     simple_logging::log_to_stderr(LevelFilter::Debug);
     info!("log :)");
 
-    MonteCarloGamma.run()
+    McCornellBoxGamma.run()
 }
