@@ -19,8 +19,6 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
 
-
-
         output.par_iter_mut().enumerate().for_each(|(y, row)| {
             for x in 0..camera.width {
                 let mut out = Vector::repeated(0f64);
