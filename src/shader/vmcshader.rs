@@ -59,7 +59,7 @@ impl VMcShader {
                 Vector::repeated(0f64)
             };
         //Todo add *2.*f64::consts::PI to indirect
-        let total =  indirect + part_emi;
+        let total =  indirect*2. + part_emi;
 
         return total.into();
     }
