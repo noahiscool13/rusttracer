@@ -4,8 +4,8 @@ use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 use std::f64;
-use crate::util::rng::random_f64;
-use xorshift::Rng;
+use crate::util::rng::get_rng;
+use rand::Rng;
 
 const AIR_DENS: f64 = 0.05f64;
 const PARTICLE_REFLECT: f64 = 0.2;
@@ -23,9 +23,9 @@ impl VMcShader {
             intersection
         } else {
             if depth > 0 {
-                let reflec_type = random_f64();
+                let reflec_type = get_rng(|mut r| r.gen::<f64>());
                 if PARTICLE_REFLECT>reflec_type {
-                    let breakdist = -(random_f64()).ln() / AIR_DENS;
+                    let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / AIR_DENS;
                     let hit_point = ray.origin + ray.direction * breakdist;
                     let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
                     return self.shade_internal(&scatter_ray, depth - 1, datastructure);
@@ -41,10 +41,10 @@ impl VMcShader {
 
         let dist = (ray.origin - hit_pos).length();
 
-        let breakdist = -random_f64().ln() / AIR_DENS;
+        let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / AIR_DENS;
 
         if breakdist < dist {
-            let reflec_type = random_f64();
+            let reflec_type = get_rng(|mut r| r.gen::<f64>());
             if PARTICLE_REFLECT>reflec_type {
                 let hit_point = ray.origin + ray.direction * breakdist;
                 let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
@@ -67,7 +67,7 @@ impl VMcShader {
         //        let direct = part_amb + part_emi + part_diff + part_spec;
 
         let indirect = if depth > 0 {
-            let reflec_type = random_f64();
+            let reflec_type = get_rng(|mut r| r.gen::<f64>());
             let diffuse_max = intersection.triangle.material().diffuse.max();
             if (diffuse_max>reflec_type) {
                 let bounce_direction =

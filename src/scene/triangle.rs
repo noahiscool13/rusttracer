@@ -53,4 +53,14 @@ impl<'t> Triangle<'t> {
     pub fn texture_c(&self) -> &TextureCoordinate {
         &self.mesh.texcoords[self.c]
     }
+
+    pub fn area(&self) -> f64 {
+        let side1 = (self.c() - self.a()).length();
+        let side2 = (self.c() - self.b()).length();
+        let side3 = (self.b() - self.a()).length();
+
+        let s = (side1 + side2 + side3) / 2.;
+
+        (s * (s - side1) * (s - side2) * (s - side3)).sqrt()
+    }
 }
