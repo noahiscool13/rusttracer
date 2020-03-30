@@ -12,7 +12,7 @@ use crate::util::rng::get_rng;
 use rand::Rng;
 use crossbeam::thread;
 
-const SPP: usize = 10;
+const SPP: usize = 1000;
 
 pub struct JMSTracer;
 
