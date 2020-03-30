@@ -21,5 +21,5 @@ fn main() {
     simple_logging::log_to_stderr(LevelFilter::Debug);
     info!("log :)");
 
-    MonteCarlo.run()
+    GlowStoneGamma.run()
 }

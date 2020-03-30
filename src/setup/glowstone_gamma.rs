@@ -35,7 +35,7 @@ impl Setup for GlowStoneGamma {
             .with_tracer(JMSTracer)
             .with_postprocessor(&Gamma);
 
-        let camera = Camera::new(Vector::new(0.5, 2.2, 3.),  600, 600, 60f64);
+        let camera = Camera::new(Vector::new(0.5, 2.2, 3.),  1000, 1000, 60f64);
         renderer.render(&camera).to_bmp().save("render.bmp").expect("Couldn't save");
     }
 }
