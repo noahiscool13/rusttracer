@@ -4,8 +4,7 @@ use crate::scene::scene::Scene;
 use crate::scene::triangle::Triangle;
 use crate::util::ray::Ray;
 use std::f64;
-
-const EPSILON: f64 = 0.00001;
+use crate::util::consts::INTERSECTION_EPSILON;
 
 pub struct BasicDataStructure<'d> {
     data: &'d Scene<'d>,
@@ -23,7 +22,7 @@ impl<'d> BasicDataStructure<'d> {
         let h = ray.direction.cross(edge2);
         let a = edge1.dot(h);
 
-        if -EPSILON < a && a < EPSILON {
+        if -INTERSECTION_EPSILON < a && a < INTERSECTION_EPSILON {
             return None;
         }
 
@@ -44,7 +43,7 @@ impl<'d> BasicDataStructure<'d> {
         }
 
         let t = f * edge2.dot(q);
-        if t < EPSILON {
+        if t < INTERSECTION_EPSILON {
             return None;
         }
 

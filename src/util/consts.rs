@@ -1,0 +1,2 @@
+
+pub const INTERSECTION_EPSILON: f64 = 0.00001;
