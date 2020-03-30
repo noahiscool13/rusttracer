@@ -1,5 +1,4 @@
 use crate::datastructure::basic::BasicDataStructure;
-use crate::postprocessors::gamma::Gamma;
 use crate::raytracer::jmstrace::JMSTracer;
 use crate::renderer::RendererBuilder;
 use crate::scene::scene::SceneBuilder;

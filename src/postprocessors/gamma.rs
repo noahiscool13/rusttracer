@@ -1,6 +1,5 @@
 use crate::postprocessors::PostProcessor;
 use crate::util::outputbuffer::OutputBuffer;
-use crate::util::vector::Vector;
 
 /// This postprocessor returns the same image as it got in.
 /// Useful if you don't want to postprocess at all.

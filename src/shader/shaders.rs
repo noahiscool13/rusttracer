@@ -1,7 +1,6 @@
 use crate::datastructure::intersection::Intersection;
 use crate::scene::texturecoordinate::TextureCoordinate;
 use crate::util::vector::Vector;
-use log::error;
 
 pub fn ambient(intersection: &Intersection) -> Vector {
     let texture = if let Some(texture) = intersection.triangle.mesh.material.ambient_texture {

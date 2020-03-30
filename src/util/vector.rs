@@ -1,8 +1,10 @@
 use crate::util::color::Color;
 use std::f64;
 use std::ops::{Add, Div, Mul, Sub};
-use crate::util::rng::random_f64;
-use xorshift::Rng;
+use crate::util::rng::get_rng;
+use rand::Rng;
+
+const EPSILON: f64 = 0.00001;
 
 trait Clamp01 {
     fn clamp01(self) -> Self;
@@ -33,6 +35,10 @@ impl Vector {
 
     pub fn from_arr([a, b, c]: [f32; 3]) -> Self {
         Self::new(a as f64, b as f64, c as f64)
+    }
+
+    pub fn iszero(&self) -> bool {
+        self.x.abs() < EPSILON && self.y.abs() < EPSILON && self.z.abs() < EPSILON
     }
 
     pub fn dot(&self, other: Self) -> f64 {
@@ -96,8 +102,8 @@ impl Vector {
     }
 
     pub fn point_on_hemisphere() -> Vector {
-        let theta = random_f64() * 2f64 * f64::consts::PI;
-        let phi = (1f64 - 2f64 * random_f64()).acos();
+        let theta = get_rng(|mut r| r.gen::<f64>()) * 2f64 * f64::consts::PI;
+        let phi = (1f64 - 2f64 * get_rng(|mut r| r.gen::<f64>())).acos();
 
         Vector::new(
             phi.sin() * theta.cos(),
@@ -107,8 +113,8 @@ impl Vector {
     }
 
     pub fn point_on_sphere() -> Vector {
-        let theta = random_f64() * 2f64 * f64::consts::PI;
-        let phi = (2f64 * random_f64() - 1f64).acos() - f64::consts::PI / 2f64;
+        let theta = get_rng(|mut r| r.gen::<f64>()) * 2f64 * f64::consts::PI;
+        let phi = (2f64 * get_rng(|mut r| r.gen::<f64>()) - 1f64).acos() - f64::consts::PI / 2f64;
 
         Vector::new(phi.cos() * theta.cos(), phi.cos() * theta.sin(), phi.cos())
     }

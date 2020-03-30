@@ -4,8 +4,8 @@ use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 use std::f64;
-use crate::util::rng::random_f64;
-use xorshift::Rng;
+use crate::util::rng::get_rng;
+use rand::Rng;
 
 const AIR_DENS: f64 = 0.01f64;
 
@@ -22,7 +22,7 @@ impl VMcShader {
             intersection
         } else {
             if depth > 0 {
-                let breakdist = -(random_f64()).ln() / AIR_DENS;
+                let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / AIR_DENS;
                 let hit_point = ray.origin + ray.direction * breakdist;
                 let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
                 return self.shade_internal(&scatter_ray, depth - 1, datastructure);
@@ -35,7 +35,7 @@ impl VMcShader {
 
         let dist = (ray.origin - hit_pos).length();
 
-        let breakdist = -random_f64().ln() / AIR_DENS;
+        let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / AIR_DENS;
 
         if breakdist < dist {
             let hit_point = ray.origin + ray.direction * breakdist;
