@@ -5,7 +5,7 @@ use rand::distributions::WeightedError;
 use crate::util::rng::get_rng;
 use rand::Rng;
 
-
+#[derive(Debug)]
 pub enum LightError {
     WeightedError(WeightedError),
 }
@@ -17,10 +17,13 @@ pub struct LightSourceManager<'l> {
 
 impl<'l> LightSourceManager<'l> {
     pub fn new(scene: &'l Scene) -> Result<Self, LightError> {
-        let lightsources: Vec<&'l Triangle> = scene.triangles()
+        Self::from_triangle_iter(scene.triangles())
+    }
+
+    pub(super) fn from_triangle_iter(iter: impl Iterator<Item = &'l Triangle<'l>>) -> Result<Self, LightError> {
+        let lightsources: Vec<&'l Triangle> = iter
             .filter(|i| !i.mesh.material.emittance.iszero())
             .collect();
-
 
         let weights = WeightedIndex::new(
             lightsources.iter()

@@ -10,7 +10,7 @@ use rayon::iter::ParallelIterator;
 use log::info;
 use crate::util::rng::get_rng;
 use rand::Rng;
-
+use crossbeam::thread;
 
 const SPP: usize = 10;
 
@@ -21,6 +21,7 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
 {
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
+
 
         output.par_iter_mut().enumerate().for_each(|(y, row)| {
             for x in 0..camera.width {

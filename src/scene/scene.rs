@@ -9,7 +9,6 @@ use std::mem;
 use std::path::Path;
 use std::pin::Pin;
 use crate::scene::light::LightSourceManager;
-use image::error::ImageError::Limits;
 
 #[derive(Debug)]
 pub struct Mesh<'m> {
@@ -43,7 +42,7 @@ pub struct Scene<'s> {
     meshes: Pin<Box<[Mesh<'s>]>>,
     materials: Pin<Box<[Material<'s>]>>,
 
-    lightsourcemanager: LightSourceManager<'s>,
+    pub lightsourcemanager: LightSourceManager<'s>,
 }
 
 impl<'s> Scene<'s> {
@@ -187,10 +186,18 @@ impl<'s> SceneBuilder<'s> {
             }
         }
 
+        let lightsourcemanager = LightSourceManager::from_triangle_iter(
+            meshes.iter().flat_map(move |i| i.triangles.iter()).map(|i| {
+                let ptr: &'a Triangle = unsafe { mem::transmute(i) };
+                ptr
+            })
+        )?;
+
         Ok(Scene {
             textureatlas,
             meshes,
             materials,
+            lightsourcemanager
         })
     }
 }
