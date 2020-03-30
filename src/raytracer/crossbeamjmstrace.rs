@@ -14,10 +14,10 @@ use crossbeam::thread;
 
 const SPP: usize = 10;
 
-pub struct JMSTracer;
+pub struct CrossbeamJMSTracer;
 
 impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, DS, S>
-    for JMSTracer
+    for CrossbeamJMSTracer
 {
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
