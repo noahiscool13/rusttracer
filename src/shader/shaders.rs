@@ -1,6 +1,6 @@
-use crate::util::vector::Vector;
 use crate::datastructure::intersection::Intersection;
 use crate::scene::texturecoordinate::TextureCoordinate;
+use crate::util::vector::Vector;
 use log::error;
 
 pub fn ambient(intersection: &Intersection) -> Vector {
@@ -27,15 +27,15 @@ pub fn emittance(intersection: &Intersection) -> Vector {
     intersection.triangle.material().emittance * texture
 }
 
-pub fn map_uv(intersection: &Intersection) -> TextureCoordinate{
+pub fn map_uv(intersection: &Intersection) -> TextureCoordinate {
     let texa = intersection.triangle.texture_a();
     let texb = intersection.triangle.texture_b();
     let texc = intersection.triangle.texture_c();
 
-    let e1 = texc-texa;
-    let e2 = texb-texa;
+    let e1 = texc - texa;
+    let e2 = texb - texa;
 
-//    error!("e1: {:?}, e2: {:?}", e1, e2);
+    //    error!("e1: {:?}, e2: {:?}", e1, e2);
 
     texa.to_owned() + (e1 * intersection.uv.1) + (e2 * intersection.uv.0)
 }
@@ -55,7 +55,12 @@ pub fn diffuse(intersection: &Intersection, hit_pos: Vector, light_pos: Vector) 
     light_dir.dot(triangle.normal()).max(0.) * triangle.material().diffuse * texture
 }
 
-pub fn specular(intersection: &Intersection, hit_pos: Vector, light_pos: Vector, cam_pos: Vector) -> Vector {
+pub fn specular(
+    intersection: &Intersection,
+    hit_pos: Vector,
+    light_pos: Vector,
+    cam_pos: Vector,
+) -> Vector {
     let texture = if let Some(texture) = intersection.triangle.mesh.material.specular_texture {
         let coord = map_uv(intersection);
 

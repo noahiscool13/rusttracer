@@ -1,7 +1,7 @@
-use crate::scene::scene::{Mesh};
-use crate::util::vector::Vector;
 use crate::scene::material::Material;
+use crate::scene::scene::Mesh;
 use crate::scene::texturecoordinate::TextureCoordinate;
+use crate::util::vector::Vector;
 
 #[derive(Debug, Clone)]
 pub struct Triangle<'t> {
@@ -9,7 +9,7 @@ pub struct Triangle<'t> {
     pub(super) b: usize,
     pub(super) c: usize,
 
-    pub mesh: &'t Mesh<'t>
+    pub mesh: &'t Mesh<'t>,
 }
 
 impl<'t> Triangle<'t> {
@@ -53,5 +53,4 @@ impl<'t> Triangle<'t> {
     pub fn texture_c(&self) -> &TextureCoordinate {
         &self.mesh.texcoords[self.c]
     }
-
 }

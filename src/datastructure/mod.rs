@@ -1,10 +1,10 @@
-use crate::util::ray::Ray;
 use crate::datastructure::intersection::Intersection;
 use crate::scene::scene::Scene;
+use crate::util::ray::Ray;
 
 pub mod basic;
-pub mod precalculated;
 pub mod intersection;
+pub mod precalculated;
 
 pub trait DataStructure<'d> {
     /// Generates a datastructure

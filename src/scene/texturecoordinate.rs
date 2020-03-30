@@ -23,7 +23,6 @@ impl Add for TextureCoordinate {
     }
 }
 
-
 impl Sub for TextureCoordinate {
     type Output = TextureCoordinate;
 

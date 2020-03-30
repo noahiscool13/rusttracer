@@ -1,5 +1,5 @@
-use crate::util::vector::Vector;
 use crate::scene::texture::{Texture, TextureAtlas};
+use crate::util::vector::Vector;
 use lazy_static::lazy_static;
 use std::mem;
 
@@ -65,17 +65,22 @@ pub struct Material<'m> {
 
     pub emittance: Vector,
     pub emittance_texture: Option<&'m Texture>,
-
 }
 
 impl<'m> Material<'m> {
-
-    pub(super) unsafe fn from_tobj_material<'a>(material: tobj::Material, textureatlas: &'a TextureAtlas<'a>) -> Self {
+    pub(super) unsafe fn from_tobj_material<'a>(
+        material: tobj::Material,
+        textureatlas: &'a TextureAtlas<'a>,
+    ) -> Self {
         let default_emittance = "0.0 0.0 0.0".into();
         let default_emittance_texture_name = "".into();
 
-        let stremittance = material.unknown_param.get("Ke").unwrap_or(&default_emittance);
-        let emittancevec: Vec<f64> = stremittance.split(" ")
+        let stremittance = material
+            .unknown_param
+            .get("Ke")
+            .unwrap_or(&default_emittance);
+        let emittancevec: Vec<f64> = stremittance
+            .split(" ")
             .map(|i| i.parse())
             .collect::<Result<Vec<f64>, _>>()
             .unwrap_or(vec![0., 0., 0.]);
@@ -86,7 +91,10 @@ impl<'m> Material<'m> {
             Vector::new(emittancevec[0], emittancevec[1], emittancevec[2])
         };
 
-        let emittance_texture_name = material.unknown_param.get("map_Ke").unwrap_or(&default_emittance_texture_name);
+        let emittance_texture_name = material
+            .unknown_param
+            .get("map_Ke")
+            .unwrap_or(&default_emittance_texture_name);
 
         Self {
             name: material.name,
@@ -96,15 +104,27 @@ impl<'m> Material<'m> {
             shininess: material.shininess as f64,
             dissolve: material.dissolve as f64,
             optical_density: material.optical_density as f64,
-            ambient_texture: mem::transmute::<_, Option<&'m Texture>>(textureatlas.get_texture(&material.ambient_texture)),
-            diffuse_texture: mem::transmute::<_, Option<&'m Texture>>(textureatlas.get_texture(&material.diffuse_texture)),
-            specular_texture: mem::transmute::<_, Option<&'m Texture>>(textureatlas.get_texture(&material.specular_texture)),
-            normal_texture: mem::transmute::<_, Option<&'m Texture>>(textureatlas.get_texture(&material.normal_texture)),
-            dissolve_texture: mem::transmute::<_, Option<&'m Texture>>(textureatlas.get_texture(&material.dissolve_texture)),
+            ambient_texture: mem::transmute::<_, Option<&'m Texture>>(
+                textureatlas.get_texture(&material.ambient_texture),
+            ),
+            diffuse_texture: mem::transmute::<_, Option<&'m Texture>>(
+                textureatlas.get_texture(&material.diffuse_texture),
+            ),
+            specular_texture: mem::transmute::<_, Option<&'m Texture>>(
+                textureatlas.get_texture(&material.specular_texture),
+            ),
+            normal_texture: mem::transmute::<_, Option<&'m Texture>>(
+                textureatlas.get_texture(&material.normal_texture),
+            ),
+            dissolve_texture: mem::transmute::<_, Option<&'m Texture>>(
+                textureatlas.get_texture(&material.dissolve_texture),
+            ),
             illumination_model: material.illumination_model,
 
             emittance,
-            emittance_texture: mem::transmute::<_, Option<&'m Texture>>(textureatlas.get_texture(&emittance_texture_name)),
+            emittance_texture: mem::transmute::<_, Option<&'m Texture>>(
+                textureatlas.get_texture(&emittance_texture_name),
+            ),
         }
     }
 }

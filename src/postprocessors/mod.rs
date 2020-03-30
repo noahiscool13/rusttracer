@@ -1,8 +1,8 @@
 use crate::util::outputbuffer::OutputBuffer;
 
+pub mod gamma;
 pub mod group;
 pub mod identity;
-pub mod gamma;
 
 /// After raytracing, a `PostProcessor` will be applied to the outputbuffer.
 /// There are many options. If multiple postprocessor steps are required,
@@ -10,5 +10,3 @@ pub mod gamma;
 pub trait PostProcessor {
     fn process(&self, buffer: OutputBuffer) -> OutputBuffer;
 }
-
-

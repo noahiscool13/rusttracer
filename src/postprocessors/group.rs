@@ -5,14 +5,12 @@ use crate::util::outputbuffer::OutputBuffer;
 /// Will apply Processors based on the order in which they are
 /// added with `add_postprocessor`
 pub struct PostProcessorGroup<'p> {
-    processors: Vec<&'p dyn PostProcessor>
+    processors: Vec<&'p dyn PostProcessor>,
 }
 
 impl<'p> PostProcessorGroup<'p> {
-    pub fn new() -> Self{
-        Self {
-            processors: vec![],
-        }
+    pub fn new() -> Self {
+        Self { processors: vec![] }
     }
 
     pub fn add_postprocessor(&mut self, postprocessor: &'p dyn PostProcessor) {

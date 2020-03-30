@@ -1,7 +1,7 @@
 use crate::util::color::Color;
-use bmp::{Image, px, Pixel};
-use std::ops::{Deref, DerefMut};
 use crate::util::vector::Vector;
+use bmp::{px, Image, Pixel};
+use std::ops::{Deref, DerefMut};
 
 pub struct OutputBuffer {
     buffer: Vec<Vec<Vector>>,
@@ -35,7 +35,7 @@ impl OutputBuffer {
         }
     }
 
-    pub fn with_size(width: usize, height: usize) -> Self{
+    pub fn with_size(width: usize, height: usize) -> Self {
         let mut res = Self::new();
         res.presize(width, height);
         res
@@ -47,9 +47,7 @@ impl OutputBuffer {
 
     pub fn to_bmp(&self) -> Image {
         let height = self.buffer.len();
-        let width = if height > 0 {
-            self.buffer[0].len()
-        } else { 0 };
+        let width = if height > 0 { self.buffer[0].len() } else { 0 };
 
         let mut img = Image::new(width as u32, height as u32);
 
@@ -68,8 +66,6 @@ impl OutputBuffer {
 
 impl Default for OutputBuffer {
     fn default() -> Self {
-        Self {
-            buffer: Vec::new(),
-        }
+        Self { buffer: Vec::new() }
     }
 }

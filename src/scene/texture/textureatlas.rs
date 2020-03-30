@@ -1,33 +1,38 @@
+use crate::scene::texture::{Texture, TextureError};
+use image::DynamicImage;
 use std::collections::HashMap;
 use std::path::Path;
-use crate::scene::texture::{Texture, TextureError};
 use std::pin::Pin;
-use image::DynamicImage;
 
 pub struct TextureAtlasBuilder {
-    atlas: HashMap<String, Texture>
+    atlas: HashMap<String, Texture>,
 }
 
 impl TextureAtlasBuilder {
     pub fn new() -> Self {
         Self {
-            atlas: HashMap::new()
+            atlas: HashMap::new(),
         }
     }
 
-    pub fn add_texture_file(&mut self, filename: impl AsRef<Path>, basepath: impl AsRef<Path>) -> Result<(), TextureError> {
-        Ok(self.add_texture(filename.as_ref()
-                                .to_str()
-                                .ok_or(TextureError::FileName)?
-                                .into(),
-                            Texture::new(basepath.as_ref().join(filename))?,
+    pub fn add_texture_file(
+        &mut self,
+        filename: impl AsRef<Path>,
+        basepath: impl AsRef<Path>,
+    ) -> Result<(), TextureError> {
+        Ok(self.add_texture(
+            filename
+                .as_ref()
+                .to_str()
+                .ok_or(TextureError::FileName)?
+                .into(),
+            Texture::new(basepath.as_ref().join(filename))?,
         ))
     }
 
     pub fn add_texture(&mut self, name: String, texture: Texture) {
         self.atlas.insert(name, texture);
     }
-
 
     pub fn build<'t>(self) -> TextureAtlas<'t> {
         let mut atlas = HashMap::new();
@@ -37,7 +42,7 @@ impl TextureAtlasBuilder {
             let mut vec = Vec::with_capacity(atlassize);
             vec.resize_with(atlassize, || Texture {
                 image: DynamicImage::new_rgb8(0, 0).to_rgb(),
-                size: (0, 0)
+                size: (0, 0),
             });
             Pin::from(vec.into_boxed_slice())
         };
@@ -51,18 +56,12 @@ impl TextureAtlasBuilder {
 
         for (index, name) in names.into_iter().enumerate() {
             // Safe because textures is pinned.
-            let ptr: &'t Texture = unsafe {
-                std::mem::transmute(&textures[index])
-            };
+            let ptr: &'t Texture = unsafe { std::mem::transmute(&textures[index]) };
 
             atlas.insert(name, ptr);
         }
 
-
-        TextureAtlas {
-            atlas,
-            textures,
-        }
+        TextureAtlas { atlas, textures }
     }
 }
 
