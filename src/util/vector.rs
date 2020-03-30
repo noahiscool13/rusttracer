@@ -79,6 +79,20 @@ impl Vector {
         Vector::new(self.x.powf(exp), self.y.powf(exp), self.z.powf(exp))
     }
 
+    pub fn max(&self) -> f64 {
+        if self.x>self.y {
+            if self.x >self.z {
+                return self.x;
+            }
+            return self.z;
+        } else {
+            if self.y >self.z {
+                return self.y;
+            }
+            return self.z;
+        }
+    }
+
     pub fn gamma(&self, exp: f64) -> Vector {
         self.powf(exp) * (exp + 1f64) / 2f64
     }
