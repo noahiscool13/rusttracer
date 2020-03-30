@@ -1,0 +1,61 @@
+**Settings**
+- 100 spp
+- 1000x1000 pixels
+
+**No optimisations**
+
+Cornell box:
+- Time: 4:54
+- Error: 184
+
+Glow stone:
+- Time: 5:09
+- Error: 200
+
+**Diffuse russian roulette**
+
+Cornell box:
+- Time: 2:55
+- Error: 201
+
+Glow stone:
+- Time: 5:04
+- Error: 200
+
+**Volumetric russian roulette**
+
+Cornell box:
+- Time: 1:18
+- Error: 203
+
+Glow stone:
+- Time: 1:23
+- Error: 235
+
+**Settings**
+- 200 spp
+- 1000x1000 pixels
+
+**Volumetric russian roulette**
+
+Cornell box:
+- Time: 2:30
+- Error: 189
+
+Glow stone:
+- Time: 2:49
+- Error: 192
+
+**Settings**
+- 400 spp
+- 1000x1000 pixels
+
+**Volumetric russian roulette**
+
+Cornell box:
+- Time: 5:04
+- Error: 171
+
+Glow stone:
+- Time: 5:39
+- Error: 146

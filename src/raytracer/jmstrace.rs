@@ -12,7 +12,7 @@ use log::info;
 use crate::util::rng::random_f64;
 use xorshift::Rng;
 
-const SPP: usize = 100;
+const SPP: usize = 400;
 
 pub struct JMSTracer;
 
