@@ -1,22 +1,19 @@
-use xorshift::{Rand, SeedableRng, Xorshift1024, Rng};
-use std::time::{SystemTime, UNIX_EPOCH};
-use std::cell::RefCell;
+use rand_xoshiro::SplitMix64;
+use rand::SeedableRng;
+use std::cell::{RefCell, RefMut};
+
+type RngType = SplitMix64;
 
 thread_local! {
-    static RNG: RefCell<Xorshift1024> = {
-        let now = SystemTime::now();
-        let millis = now.duration_since(UNIX_EPOCH)
-            .expect("Time went backwards (rerun)").as_nanos() as u64;
-
-        let states = [millis, millis, millis, millis, millis, millis, millis, millis, millis, millis, millis, millis, millis, millis, millis, millis];
-        RefCell::new(SeedableRng::from_seed(&states[..]))
-    }
+    static RNG: RefCell<RngType> = RefCell::new(RngType::from_entropy())
 }
 
+pub fn get_rng<T>(mut func: impl FnMut(RefMut<RngType>) -> T) -> T {
 
-pub fn random_f64() -> f64 {
 
-    RNG.with(|f| {
-        f.borrow_mut().next_f64()
+    RNG.with(|rng| {
+        let r = rng.borrow_mut();
+        func(r)
     })
 }
+

@@ -7,6 +7,7 @@ pub mod basic;
 pub mod jmstrace;
 pub mod mstrace;
 pub mod rayon;
+pub mod crossbeamjmstrace;
 
 pub trait RayTracer<'r, DS: DataStructure<'r>, S: Shader<'r, DS>> {
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer;

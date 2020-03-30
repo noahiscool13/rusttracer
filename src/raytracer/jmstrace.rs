@@ -7,12 +7,12 @@ use crate::util::vector::Vector;
 use rayon::iter::IndexedParallelIterator;
 use rayon::iter::IntoParallelRefMutIterator;
 use rayon::iter::ParallelIterator;
-
 use log::info;
-use crate::util::rng::random_f64;
-use xorshift::Rng;
+use crate::util::rng::get_rng;
+use rand::Rng;
+use crossbeam::thread;
 
-const SPP: usize = 100;
+const SPP: usize = 10;
 
 pub struct JMSTracer;
 
@@ -22,13 +22,14 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
     fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
 
+
         output.par_iter_mut().enumerate().for_each(|(y, row)| {
             for x in 0..camera.width {
                 let mut out = Vector::repeated(0f64);
                 for _ in 0..SPP {
                     let ray = camera.generate_ray(
-                        x as f64 + random_f64(),
-                        y as f64 + random_f64(),
+                        x as f64 + get_rng(|mut r| r.gen::<f64>()),
+                        y as f64 + get_rng(|mut r| r.gen::<f64>()),
                     );
 
                     out = out + shader.shade(&ray, datastructure);
