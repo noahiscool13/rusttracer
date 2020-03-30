@@ -2,7 +2,7 @@ use crate::scene::texture::TextureError;
 
 #[derive(Debug)]
 pub enum SceneError {
-    TextureError(TextureError)
+    TextureError(TextureError),
 }
 
 impl From<TextureError> for SceneError {

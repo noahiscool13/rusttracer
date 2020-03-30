@@ -1,12 +1,12 @@
-use std::ops::{Add, Sub, Mul, Div};
 use crate::util::color::Color;
 use std::f64;
-use rand::{Rng, thread_rng};
+use std::ops::{Add, Div, Mul, Sub};
+use crate::util::rng::random_f64;
+use xorshift::Rng;
 
 trait Clamp01 {
     fn clamp01(self) -> Self;
 }
-
 
 impl Clamp01 for f64 {
     fn clamp01(self) -> Self {
@@ -20,7 +20,6 @@ pub struct Vector {
     y: f64,
     z: f64,
 }
-
 
 impl Vector {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
@@ -67,31 +66,24 @@ impl Vector {
 
     pub fn unit(&self) -> Vector {
         let length = self.length();
-        Vector::new(
-            self.x / length,
-            self.y / length,
-            self.z / length,
-        )
+        Vector::new(self.x / length, self.y / length, self.z / length)
     }
 
     pub fn powf(&self, exp: f64) -> Vector {
-        Vector::new(
-            self.x.powf(exp),
-            self.y.powf(exp),
-            self.z.powf(exp),
-        )
+        Vector::new(self.x.powf(exp), self.y.powf(exp), self.z.powf(exp))
     }
 
     pub fn gamma(&self, exp: f64) -> Vector {
-        self.powf(exp)*(exp+1f64)/2f64
+        self.powf(exp) * (exp + 1f64) / 2f64
     }
 
     pub fn rotated(&self, rotation: Vector) -> Vector {
-
         let nt = if rotation.x.abs() > rotation.y.abs() {
-            Vector::new(rotation.z, 0f64, -rotation.x) / (rotation.x.powi(2) + rotation.z.powi(2)).sqrt()
+            Vector::new(rotation.z, 0f64, -rotation.x)
+                / (rotation.x.powi(2) + rotation.z.powi(2)).sqrt()
         } else {
-            Vector::new(0f64, -rotation.z, rotation.y) / (rotation.y.powi(2) + rotation.z.powi(2)).sqrt()
+            Vector::new(0f64, -rotation.z, rotation.y)
+                / (rotation.y.powi(2) + rotation.z.powi(2)).sqrt()
         };
 
         let nb = rotation.cross(nt);
@@ -100,22 +92,25 @@ impl Vector {
         let y = self.x * nb.y + self.y * rotation.y + self.z * nt.y;
         let z = self.x * nb.z + self.y * rotation.z + self.z * nt.z;
 
-        Vector::new(x,y,z)
+        Vector::new(x, y, z)
     }
 
-    pub fn point_on_hemisphere() -> Vector{
+    pub fn point_on_hemisphere() -> Vector {
+        let theta = random_f64() * 2f64 * f64::consts::PI;
+        let phi = (1f64 - 2f64 * random_f64()).acos();
 
-        let theta = thread_rng().gen::<f64>() * 2f64 * f64::consts::PI;
-        let phi= (1f64-2f64*thread_rng().gen::<f64>()).acos();
-
-        Vector::new(phi.sin()*theta.cos(),(phi.sin()*theta.sin()).abs(),phi.cos())
+        Vector::new(
+            phi.sin() * theta.cos(),
+            (phi.sin() * theta.sin()).abs(),
+            phi.cos(),
+        )
     }
 
-    pub fn point_on_sphere() -> Vector{
-        let theta = thread_rng().gen::<f64>() * 2f64 * f64::consts::PI;
-        let phi= (2f64*thread_rng().gen::<f64>()-1f64).acos()-f64::consts::PI/2f64;
+    pub fn point_on_sphere() -> Vector {
+        let theta = random_f64() * 2f64 * f64::consts::PI;
+        let phi = (2f64 * random_f64() - 1f64).acos() - f64::consts::PI / 2f64;
 
-        Vector::new(phi.cos()*theta.cos(),phi.cos()*theta.sin(),phi.cos())
+        Vector::new(phi.cos() * theta.cos(), phi.cos() * theta.sin(), phi.cos())
     }
 }
 
@@ -152,7 +147,6 @@ impl Add for Vector {
         }
     }
 }
-
 
 impl Sub for Vector {
     type Output = Vector;
@@ -202,11 +196,10 @@ impl Mul<Vector> for Vector {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use crate::util::vector::Vector;
     use crate::util::color::Color;
+    use crate::util::vector::Vector;
 
     #[test]
     fn test_add() {
@@ -223,10 +216,13 @@ mod tests {
         let a: Vector = Vector::new(5., -5., 0.5);
         let c: Color = a.into();
 
-        assert_eq!(c, Color {
-            r: 255,
-            g: 0,
-            b: 127
-        });
+        assert_eq!(
+            c,
+            Color {
+                r: 255,
+                g: 0,
+                b: 127
+            }
+        );
     }
 }

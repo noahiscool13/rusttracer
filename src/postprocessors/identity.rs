@@ -10,4 +10,3 @@ impl PostProcessor for IdentityPostProcessor {
         buffer
     }
 }
-

@@ -1,4 +1,3 @@
-
 #[derive(Default, Eq, PartialEq, Clone, Debug)]
 pub struct Color {
     pub r: u8,
@@ -7,8 +6,7 @@ pub struct Color {
 }
 
 impl Color {
-    pub fn new(r: u8, g:u8, b:u8) -> Self {
-        Self {r,g,b}
+    pub fn new(r: u8, g: u8, b: u8) -> Self {
+        Self { r, g, b }
     }
 }
-

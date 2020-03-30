@@ -1,20 +1,22 @@
-use crate::datastructure::DataStructure;
-use crate::util::ray::Ray;
 use crate::datastructure::intersection::Intersection;
-use std::f64;
+use crate::datastructure::DataStructure;
 use crate::scene::scene::Scene;
 use crate::scene::triangle::Triangle;
+use crate::util::ray::Ray;
+use std::f64;
 
 const EPSILON: f64 = 0.00001;
-
 
 pub struct PrecalculatedDatastructure<'p> {
     triangles: Vec<Triangle<'p>>,
 }
 
 impl<'p> PrecalculatedDatastructure<'p> {
-
-    fn intersects_triangle<'a>(&self, ray: &'a Ray, triangle: &'a Triangle) -> Option<Intersection<'a>> {
+    fn intersects_triangle<'a>(
+        &self,
+        ray: &'a Ray,
+        triangle: &'a Triangle,
+    ) -> Option<Intersection<'a>> {
         let edge1 = triangle.b() - triangle.a();
         let edge2 = triangle.c() - triangle.a();
 
@@ -46,13 +48,20 @@ impl<'p> PrecalculatedDatastructure<'p> {
             return None;
         }
 
-        Some(Intersection { uv: (u, v), t, ray, triangle})
+        Some(Intersection {
+            uv: (u, v),
+            t,
+            ray,
+            triangle,
+        })
     }
 }
 
 impl<'d> DataStructure<'d> for PrecalculatedDatastructure<'d> {
     fn new(scene: &'d Scene<'d>) -> Self {
-        Self {triangles: scene.triangles().cloned().collect()}
+        Self {
+            triangles: scene.triangles().cloned().collect(),
+        }
     }
 
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
@@ -63,7 +72,7 @@ impl<'d> DataStructure<'d> for PrecalculatedDatastructure<'d> {
                 min = match min {
                     None => Some(intersection),
                     Some(i) if intersection.t < i.t => Some(intersection),
-                    _ => min
+                    _ => min,
                 };
             }
         }
