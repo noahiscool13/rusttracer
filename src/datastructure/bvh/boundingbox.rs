@@ -27,12 +27,12 @@ impl Axis {
 
 #[derive(Debug)]
 pub struct BoundingBox {
-    min: Vector,
-    max: Vector,
+    pub(super) min: Vector,
+    pub(super) max: Vector,
 }
 
 impl BoundingBox {
-    pub const Empty: BoundingBox = BoundingBox {
+    pub const EMPTY: BoundingBox = BoundingBox {
         min: Vector {
             x: f64::INFINITY,
             y: f64::INFINITY,
@@ -50,7 +50,7 @@ impl BoundingBox {
     }
 
     pub fn from_triangle(triangle: &Triangle) -> Self {
-        Self::Empty
+        Self::EMPTY
             .include_point(triangle.a())
             .include_point(triangle.b())
             .include_point(triangle.c())
@@ -67,8 +67,8 @@ impl BoundingBox {
         }
     }
 
-    pub fn from_triangles<'a>(triangles: impl Iterator<Item = &'a Triangle<'a>>) -> Self {
-        let mut curr = Self::Empty;
+    pub fn from_triangles<'a>(triangles: impl Iterator<Item=&'a Triangle<'a>>) -> Self {
+        let mut curr = Self::EMPTY;
         for i in triangles {
             curr.merge(&BoundingBox::from_triangle(i));
         }
@@ -139,7 +139,7 @@ pub mod tests {
 
     #[test]
     fn test_include_point() {
-        let bb = BoundingBox::Empty;
+        let bb = BoundingBox::EMPTY;
 
         let ibb = bb
             .include_point(Vector::new(0., 0., 0.))
