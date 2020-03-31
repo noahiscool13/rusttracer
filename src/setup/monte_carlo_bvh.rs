@@ -1,4 +1,5 @@
 use crate::datastructure::basic::BasicDataStructure;
+use crate::datastructure::bvh::KDTreeDataStructure;
 use crate::raytracer::jmstrace::JMSTracer;
 use crate::renderer::RendererBuilder;
 use crate::scene::scene::SceneBuilder;
@@ -9,11 +10,11 @@ use crate::util::vector::Vector;
 use std::path::Path;
 use std::process;
 
-pub struct MonteCarloKDTree;
+pub struct MonteCarloBVH;
 
-impl Setup for MonteCarloKDTree {
+impl Setup for MonteCarloBVH {
     fn run(&self) {
-        let tobj = tobj::load_obj("scenes/monte-carlo.obj".as_ref()).unwrap_or_else(|err| {
+        let tobj = tobj::load_obj("scenes/glowstone.obj".as_ref()).unwrap_or_else(|err| {
             eprintln!("Couldn't open obj file: {}", err);
             process::exit(1);
         });
@@ -27,7 +28,7 @@ impl Setup for MonteCarloKDTree {
             });
 
         let renderer = RendererBuilder::new(&scene)
-            .with_datastructure::<BasicDataStructure>()
+            .with_datastructure::<KDTreeDataStructure>()
             .with_shader(VMcShader)
             .with_tracer(JMSTracer)
             .without_postprocessor();

@@ -1,5 +1,5 @@
-use crate::scene::texture::TextureError;
 use crate::scene::light::LightError;
+use crate::scene::texture::TextureError;
 
 #[derive(Debug)]
 pub enum SceneError {

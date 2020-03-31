@@ -2,6 +2,7 @@ use crate::scene::material::Material;
 use crate::scene::scene::Mesh;
 use crate::scene::texturecoordinate::TextureCoordinate;
 use crate::util::vector::Vector;
+use std::hash::{Hash, Hasher};
 
 #[derive(Debug, Clone)]
 pub struct Triangle<'t> {
@@ -11,6 +12,26 @@ pub struct Triangle<'t> {
 
     pub mesh: &'t Mesh<'t>,
 }
+
+/// Technically two triangle's hashes can be equal when their indices are the same, but mesh different.
+/// Therefore this function SHOULD NOT be used for strict equality. It's used internally for some optimizations.
+impl<'t> Hash for Triangle<'t> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.a.hash(state);
+        self.b.hash(state);
+        self.c.hash(state);
+    }
+}
+
+/// Technically two triangles can be equal when their indices are the same, but mesh different.
+/// Therefore this function SHOULD NOT be used for strict equality. It's used internally for some optimizations.
+impl<'t> PartialEq for Triangle<'t> {
+    fn eq(&self, other: &Self) -> bool {
+        self.a == other.a && self.b == other.b && self.c == other.c
+    }
+}
+
+impl<'t> Eq for Triangle<'t> {}
 
 impl<'t> Triangle<'t> {
     #[inline]
@@ -62,5 +83,9 @@ impl<'t> Triangle<'t> {
         let s = (side1 + side2 + side3) / 2.;
 
         (s * (s - side1) * (s - side2) * (s - side3)).sqrt()
+    }
+
+    pub fn midpoint(&self) -> Vector {
+        (self.a() + self.b() + self.c()) / 3.
     }
 }

@@ -3,14 +3,11 @@ use crate::raytracer::RayTracer;
 use crate::shader::Shader;
 use crate::util::camera::Camera;
 use crate::util::outputbuffer::OutputBuffer;
-use crate::util::vector::Vector;
-use rayon::iter::IndexedParallelIterator;
-use rayon::iter::IntoParallelRefMutIterator;
-use rayon::iter::ParallelIterator;
-use log::info;
 use crate::util::rng::get_rng;
-use rand::Rng;
+use crate::util::vector::Vector;
 use crossbeam::thread;
+use log::info;
+use rand::Rng;
 
 const SPP: usize = 1000;
 
@@ -24,7 +21,8 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
 
         thread::scope(|s| {
             let num_cpus = num_cpus::get();
-            let rows_per_thread = (camera.height / num_cpus) + if camera.height % num_cpus == 0 {0} else {1};
+            let rows_per_thread =
+                (camera.height / num_cpus) + if camera.height % num_cpus == 0 { 0 } else { 1 };
 
             for (index, chunk) in output.chunks_mut(rows_per_thread).enumerate() {
                 let start_y = index * rows_per_thread;
@@ -49,8 +47,8 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
                     }
                 });
             }
-        }).expect("One of the threads in the threadpool has panicked!");
-
+        })
+        .expect("One of the threads in the threadpool has panicked!");
 
         output
     }

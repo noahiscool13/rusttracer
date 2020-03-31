@@ -4,7 +4,7 @@ use crate::util::ray::Ray;
 
 pub mod basic;
 pub mod intersection;
-pub mod kdtree;
+pub mod bvh;
 
 pub trait DataStructure<'d> {
     /// Generates a datastructure
