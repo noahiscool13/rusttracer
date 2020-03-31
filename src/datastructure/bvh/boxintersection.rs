@@ -1,5 +1,5 @@
-use crate::util::ray::Ray;
 use crate::datastructure::bvh::boundingbox::BoundingBox;
+use crate::util::ray::Ray;
 
 #[derive(Debug)]
 pub struct BoxIntersection<'i> {

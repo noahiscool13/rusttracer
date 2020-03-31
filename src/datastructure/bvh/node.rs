@@ -1,12 +1,12 @@
 use crate::datastructure::bvh::boundingbox::{Axis, BoundingBox};
+use crate::datastructure::bvh::node::BVHNode::Empty;
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
+use core::fmt;
 use log::debug;
 use std::collections::HashSet;
 use std::f32::MAX;
-use std::fmt::{Display, Formatter, Error, Debug};
-use core::fmt;
-use crate::datastructure::bvh::node::BVHNode::Empty;
+use std::fmt::{Debug, Display, Error, Formatter};
 
 pub(super) enum BVHNode<'d> {
     Leaf {
@@ -30,8 +30,6 @@ pub(super) enum BVHNode<'d> {
 // }
 
 impl<'d> BVHNode<'d> {
-
-
     // fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
     //     writeln!(f, "node [{:?}]:", self.triangles.len())?;
     //     if let Some(l) = &self.left{
@@ -65,7 +63,10 @@ impl<'d> BVHNode<'d> {
         total / length
     }
 
-    fn divide_triangles_over_boundingboxes<'a>((leftbox, rightbox): (&BoundingBox, &BoundingBox), triangles: &HashSet<&'a Triangle<'a>>) -> (HashSet<&'a Triangle<'a>>, HashSet<&'a Triangle<'a>>) {
+    fn divide_triangles_over_boundingboxes<'a>(
+        (leftbox, rightbox): (&BoundingBox, &BoundingBox),
+        triangles: &HashSet<&'a Triangle<'a>>,
+    ) -> (HashSet<&'a Triangle<'a>>, HashSet<&'a Triangle<'a>>) {
         let mut leftset = HashSet::new();
         let mut rightset = HashSet::new();
 
@@ -86,7 +87,6 @@ impl<'d> BVHNode<'d> {
         boundingbox: BoundingBox,
         depth: usize,
     ) -> Self {
-
         let longest_axis = boundingbox.longest_axis();
 
         struct state<'s> {
@@ -97,12 +97,11 @@ impl<'d> BVHNode<'d> {
         }
 
         for (leftbox, rightbox) in longest_axis.divide(&boundingbox, 16) {
-            let (leftset, rightset) = Self::divide_triangles_over_boundingboxes((&leftbox, &rightbox), &triangles);
+            let (leftset, rightset) =
+                Self::divide_triangles_over_boundingboxes((&leftbox, &rightbox), &triangles);
 
             let leftcost = leftbox.cost(leftset.len());
             let rightcost = rightbox.cost(rightset.len());
-
-
         }
 
         BVHNode::Empty

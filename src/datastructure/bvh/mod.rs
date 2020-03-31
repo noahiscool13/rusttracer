@@ -1,17 +1,17 @@
-use crate::datastructure::intersection::Intersection;
 use crate::datastructure::bvh::boundingbox::BoundingBox;
+use crate::datastructure::bvh::boxintersection::BoxIntersection;
 use crate::datastructure::bvh::node::BVHNode;
+use crate::datastructure::intersection::Intersection;
 use crate::datastructure::DataStructure;
 use crate::scene::scene::Scene;
 use crate::scene::triangle::Triangle;
 use crate::util::ray::Ray;
 use log::debug;
 use std::collections::HashSet;
-use crate::datastructure::bvh::boxintersection::BoxIntersection;
 
 mod boundingbox;
-mod node;
 mod boxintersection;
+mod node;
 
 pub struct KDTreeDataStructure<'d> {
     root: BVHNode<'d>,
@@ -26,7 +26,6 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
         debug!("Cached triangles locally");
 
         let root = BVHNode::new(triangles);
-
 
         Self { root }
     }

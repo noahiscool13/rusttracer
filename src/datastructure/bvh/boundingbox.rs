@@ -9,17 +9,21 @@ pub enum Axis {
 }
 
 impl Axis {
-    pub fn divide(&self, bounding_box: &BoundingBox, steps: usize) -> Vec<(BoundingBox, BoundingBox)> {
+    pub fn divide(
+        &self,
+        bounding_box: &BoundingBox,
+        steps: usize,
+    ) -> Vec<(BoundingBox, BoundingBox)> {
         match self {
-            Axis::X(length) => (0..steps).map(|i| {
-                bounding_box.split_at(Axis::X((1. / *length) * i as f64))
-            }).collect(),
-            Axis::Y(length) => (0..steps).map(|i| {
-                bounding_box.split_at(Axis::Y((1. / *length) * i as f64))
-            }).collect(),
-            Axis::Z(length) => (0..steps).map(|i| {
-                bounding_box.split_at(Axis::Z((1. / *length) * i as f64))
-            }).collect(),
+            Axis::X(length) => (0..steps)
+                .map(|i| bounding_box.split_at(Axis::X((1. / *length) * i as f64)))
+                .collect(),
+            Axis::Y(length) => (0..steps)
+                .map(|i| bounding_box.split_at(Axis::Y((1. / *length) * i as f64)))
+                .collect(),
+            Axis::Z(length) => (0..steps)
+                .map(|i| bounding_box.split_at(Axis::Z((1. / *length) * i as f64)))
+                .collect(),
         }
     }
 }
@@ -66,7 +70,7 @@ impl BoundingBox {
         }
     }
 
-    pub fn from_triangles<'a>(triangles: impl Iterator<Item=&'a Triangle<'a>>) -> Self {
+    pub fn from_triangles<'a>(triangles: impl Iterator<Item = &'a Triangle<'a>>) -> Self {
         let mut curr = Self::EMPTY;
         for i in triangles {
             curr.merge(&BoundingBox::from_triangle(i));
@@ -85,44 +89,79 @@ impl BoundingBox {
 
     pub fn surface_area(&self) -> f64 {
         let size = self.size();
-        let surface_top = size.x*size.z;
-        let surface_front = size.x*size.y;
-        let surface_side = size.y*size.z;
+        let surface_top = size.x * size.z;
+        let surface_front = size.x * size.y;
+        let surface_side = size.y * size.z;
 
-        2.*(surface_top+surface_front+surface_side)
+        2. * (surface_top + surface_front + surface_side)
     }
 
     pub fn cost(&self, numtriangles: usize) -> f64 {
-        self.surface_area()*numtriangles as f64
+        self.surface_area() * numtriangles as f64
     }
 
-    pub fn contains(&self, triangle: &Triangle) -> bool{
-        true
+    //Todo optimize contains function to get rid of false positives
+    pub fn contains(&self, triangle: &Triangle) -> bool {
+        if triangle.a().x < self.min.x && triangle.b().x < self.min.x && triangle.c().x < self.min.x
+        {
+            return false;
+        }
+        if triangle.a().y < self.min.y && triangle.b().y < self.min.y && triangle.c().y < self.min.y
+        {
+            return false;
+        }
+        if triangle.a().z < self.min.z && triangle.b().z < self.min.z && triangle.c().z < self.min.z
+        {
+            return false;
+        }
+
+        if triangle.a().x > self.max.x && triangle.b().x > self.max.x && triangle.c().x > self.max.x
+        {
+            return false;
+        }
+        if triangle.a().y > self.max.y && triangle.b().y > self.max.y && triangle.c().y > self.max.y
+        {
+            return false;
+        }
+        if triangle.a().z > self.max.z && triangle.b().z > self.max.z && triangle.c().z > self.max.z
+        {
+            return false;
+        }
+        return true;
     }
 
     pub fn split_at(&self, axis: Axis) -> (BoundingBox, BoundingBox) {
         match axis {
-            Axis::X(i) => (BoundingBox {
-                min: self.min,
-                max: Vector::new(self.min.x + i, self.max.y, self.max.z),
-            }, BoundingBox {
-                min: Vector::new(self.min.x + i, self.max.y, self.max.z),
-                max: self.max,
-            }),
-            Axis::Y(i) => (BoundingBox {
-                min: self.min,
-                max: Vector::new(self.max.x, self.min.y + i, self.max.z),
-            }, BoundingBox {
-                min: Vector::new(self.max.x, self.min.y + i, self.max.z),
-                max: self.max,
-            }),
-            Axis::Z(i) => (BoundingBox {
-                min: self.min,
-                max: Vector::new(self.max.x, self.max.y, self.min.z + i),
-            }, BoundingBox {
-                min: Vector::new(self.max.x, self.max.y, self.min.z + i),
-                max: self.max,
-            }),
+            Axis::X(i) => (
+                BoundingBox {
+                    min: self.min,
+                    max: Vector::new(self.min.x + i, self.max.y, self.max.z),
+                },
+                BoundingBox {
+                    min: Vector::new(self.min.x + i, self.max.y, self.max.z),
+                    max: self.max,
+                },
+            ),
+            Axis::Y(i) => (
+                BoundingBox {
+                    min: self.min,
+                    max: Vector::new(self.max.x, self.min.y + i, self.max.z),
+                },
+                BoundingBox {
+                    min: Vector::new(self.max.x, self.min.y + i, self.max.z),
+                    max: self.max,
+                },
+            ),
+            Axis::Z(i) => (
+                BoundingBox {
+                    min: self.min,
+                    max: Vector::new(self.max.x, self.max.y, self.min.z + i),
+                },
+                BoundingBox {
+                    min: Vector::new(self.max.x, self.max.y, self.min.z + i),
+                    max: self.max,
+                },
+            ),
         }
     }
 
