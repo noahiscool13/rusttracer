@@ -52,38 +52,38 @@ pub fn intersects_boundingbox(
     let tymin = (boundingbox.min.y - ray.origin.y) / ray.direction.y;
     let tymax = (boundingbox.max.y - ray.origin.y) / ray.direction.y;
 
-    if tymin>tymax{
+    if tymin > tymax {
         let (tymin, tymax) = (tymax, tymin);
     }
 
-    if (tmin>tymax) || (tymin>tmax) {
+    if (tmin > tymax) || (tymin > tmax) {
         return None;
     }
 
-    if tymin>tmin {
+    if tymin > tmin {
         tmin = tymin;
     }
 
-    if tymax<tmax{
+    if tymax < tmax {
         tmax = tymax;
     }
 
     let tzmin = (boundingbox.min.z - ray.origin.z) / ray.direction.z;
     let tzmax = (boundingbox.max.z - ray.origin.z) / ray.direction.z;
 
-    if tzmin>tzmax{
+    if tzmin > tzmax {
         let (tzmin, tzmax) = (tzmax, tzmin);
     }
 
-    if (tmin>tzmax) || (tzmin>tmax) {
+    if (tmin > tzmax) || (tzmin > tmax) {
         return None;
     }
 
-    if tyzin>tmin {
+    if tyzin > tmin {
         tmin = tzmin;
     }
 
-    if tzmax<tmax{
+    if tzmax < tmax {
         tmax = tzmax;
     }
 

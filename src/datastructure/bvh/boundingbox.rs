@@ -50,7 +50,7 @@ impl BoundingBox {
         }
     }
 
-    pub fn from_triangles<'a>(triangles: impl Iterator<Item = &'a Triangle<'a>>) -> Self {
+    pub fn from_triangles<'a>(triangles: impl Iterator<Item=&'a Triangle<'a>>) -> Self {
         let mut curr = Self::Empty;
         for i in triangles {
             curr.merge(&BoundingBox::from_triangle(i));
