@@ -6,7 +6,6 @@ use std::collections::HashSet;
 use std::f32::MAX;
 use std::fmt::{Display, Formatter, Error, Debug};
 use core::fmt;
-use crate::datastructure::bvh::node::BVHNode::Empty;
 
 pub(super) enum BVHNode<'d> {
     Leaf {
@@ -19,8 +18,6 @@ pub(super) enum BVHNode<'d> {
         left: Box<BVHNode<'d>>,
         right: Box<BVHNode<'d>>,
     },
-
-    Empty,
 }
 
 // impl<'d> Display for BVHNode<'d> {
@@ -83,28 +80,64 @@ impl<'d> BVHNode<'d> {
 
     fn new_internal(
         triangles: HashSet<&'d Triangle<'d>>,
-        boundingbox: BoundingBox,
+        bounding_box: BoundingBox,
         depth: usize,
     ) -> Self {
 
-        let longest_axis = boundingbox.longest_axis();
 
-        struct state<'s> {
+        let longest_axis = bounding_box.longest_axis();
+
+        struct State<'s> {
             leftbox: BoundingBox,
             rightbox: BoundingBox,
             leftset: HashSet<&'s Triangle<'s>>,
             rightset: HashSet<&'s Triangle<'s>>,
+
+            totalcost: f64
         }
 
-        for (leftbox, rightbox) in longest_axis.divide(&boundingbox, 16) {
+        let mut smallest: Option<State> = None;
+
+        for (leftbox, rightbox) in longest_axis.divide(&bounding_box, 16) {
             let (leftset, rightset) = Self::divide_triangles_over_boundingboxes((&leftbox, &rightbox), &triangles);
 
             let leftcost = leftbox.cost(leftset.len());
             let rightcost = rightbox.cost(rightset.len());
+            let totalcost = leftcost + rightcost;
 
+            if let Some(s) = smallest.as_ref() {
+                if totalcost < s.totalcost {
+                    smallest = Some(State {
+                        leftbox, rightbox,
+                        leftset, rightset,
+                        totalcost,
+                    })
+                }
+            } else {
+                smallest = Some(State {
+                    leftbox, rightbox,
+                    leftset, rightset,
+                    totalcost,
+                });
+            }
 
         }
 
-        BVHNode::Empty
+        // Can't fail because smallest is set in the first iteration of the loop.
+        let smallest = smallest.unwrap();
+        let current_cost = bounding_box.cost(triangles.len());
+
+        if smallest.totalcost > current_cost {
+            BVHNode::Leaf {
+                bounding_box,
+                triangles,
+            }
+        } else {
+            BVHNode::Node {
+                bounding_box,
+                left: Box::new(Self::new_internal(smallest.leftset, smallest.leftbox, depth+1)),
+                right: Box::new(Self::new_internal(smallest.rightset, smallest.rightbox, depth+1)),
+            }
+        }
     }
 }
