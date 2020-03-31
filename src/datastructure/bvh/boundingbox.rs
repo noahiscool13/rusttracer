@@ -9,7 +9,7 @@ pub enum Axis {
 }
 
 #[derive(Debug)]
-pub(super) struct BoundingBox {
+pub struct BoundingBox {
     pub(super) min: Vector,
     pub(super) max: Vector,
 }

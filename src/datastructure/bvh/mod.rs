@@ -37,11 +37,11 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
     }
 }
 
-pub fn intersects_boundingbox(
-    boundingbox: &BoundingBox,
-    ray: &Ray,
+pub fn intersects_boundingbox<'a>(
+    boundingbox: &'a BoundingBox,
+    ray: &'a Ray,
     triangle: &Triangle,
-) -> Option<BoxIntersection> {
+) -> Option<BoxIntersection<'a>> {
     let mut tmin = (boundingbox.min.x - ray.origin.x) / ray.direction.x;
     let mut tmax = (boundingbox.max.x - ray.origin.x) / ray.direction.x;
 
@@ -79,7 +79,7 @@ pub fn intersects_boundingbox(
         return None;
     }
 
-    if tyzin > tmin {
+    if tzmin > tmin {
         tmin = tzmin;
     }
 
