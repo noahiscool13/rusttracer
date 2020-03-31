@@ -25,7 +25,6 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
 
         let root = BVHNode::new(triangles);
 
-        debug!("Generated tree: {}", root);
 
         Self { root }
     }

@@ -3,13 +3,30 @@ use crate::util::vector::Vector;
 use std::f64;
 
 pub enum Axis {
-    X,
-    Y,
-    Z,
+    X(f64),
+    Y(f64),
+    Z(f64),
+}
+
+impl Axis {
+    pub fn divide(&self, bounding_box: &BoundingBox, steps: usize) -> Vec<(BoundingBox, BoundingBox)> {
+
+        match self {
+            Axis::X(length) => (0..steps).map(|i| {
+                bounding_box.split_at(Axis::X((1. / *length) * i as f64))
+            }).collect(),
+            Axis::Y(length) => (0..steps).map(|i| {
+                bounding_box.split_at(Axis::Y((1. / *length) * i as f64))
+            }).collect(),
+            Axis::Z(length) => (0..steps).map(|i| {
+                bounding_box.split_at(Axis::Z((1. / *length) * i as f64))
+            }).collect(),
+        }
+    }
 }
 
 #[derive(Debug)]
-pub(super) struct BoundingBox {
+pub struct BoundingBox {
     min: Vector,
     max: Vector,
 }
@@ -59,19 +76,49 @@ impl BoundingBox {
         curr
     }
 
+    pub fn cost(&self, numtriangles: usize) -> f64{
+        0.
+    }
+
+    pub fn split_at(&self, axis: Axis) -> (BoundingBox, BoundingBox) {
+        match axis {
+            Axis::X(i) => (BoundingBox {
+                min: self.min,
+                max: Vector::new(self.min.x + i, self.max.y, self.max.z),
+            }, BoundingBox {
+                min: Vector::new(self.min.x + i, self.max.y, self.max.z),
+                max: self.max,
+            }),
+            Axis::Y(i) => (BoundingBox {
+                min: self.min,
+                max: Vector::new(self.max.x, self.min.y + i, self.max.z),
+            }, BoundingBox {
+                min: Vector::new(self.max.x, self.min.y + i, self.max.z),
+                max: self.max,
+            }),
+            Axis::Z(i) => (BoundingBox {
+                min: self.min,
+                max: Vector::new(self.max.x, self.max.y, self.min.z + i),
+            }, BoundingBox {
+                min: Vector::new(self.max.x, self.max.y, self.min.z + i),
+                max: self.max,
+            }),
+        }
+    }
+
     pub fn longest_axis(&self) -> Axis {
         let dx = self.max.x - self.min.x;
         let dy = self.max.y - self.min.y;
         let dz = self.max.z - self.min.z;
 
         if dx > dy && dx > dz {
-            Axis::X
+            Axis::X(dx)
         } else if dx > dy && dx <= dz {
-            Axis::Z
+            Axis::Z(dz)
         } else if dx <= dy && dy > dz {
-            Axis::Y
+            Axis::Y(dy)
         } else {
-            Axis::Z
+            Axis::Z(dz)
         }
     }
 }
