@@ -5,6 +5,7 @@ pub mod mc_cornell_box_gamma;
 pub mod monte_carlo;
 pub mod monte_carlo_gamma;
 pub mod monte_carlo_crossbeam;
+pub mod house_cb;
 
 pub trait Setup {
     fn run(&self);
