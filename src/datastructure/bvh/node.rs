@@ -1,4 +1,5 @@
 use crate::datastructure::bvh::boundingbox::{Axis, BoundingBox};
+use crate::datastructure::bvh::node::BVHNode::Empty;
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
 use log::debug;
@@ -27,8 +28,6 @@ pub(super) enum BVHNode<'d> {
 // }
 
 impl<'d> BVHNode<'d> {
-
-
     // fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
     //     writeln!(f, "node [{:?}]:", self.triangles.len())?;
     //     if let Some(l) = &self.left{
@@ -62,7 +61,10 @@ impl<'d> BVHNode<'d> {
         total / length
     }
 
-    fn divide_triangles_over_boundingboxes<'a>((leftbox, rightbox): (&BoundingBox, &BoundingBox), triangles: &HashSet<&'a Triangle<'a>>) -> (HashSet<&'a Triangle<'a>>, HashSet<&'a Triangle<'a>>) {
+    fn divide_triangles_over_boundingboxes<'a>(
+        (leftbox, rightbox): (&BoundingBox, &BoundingBox),
+        triangles: &HashSet<&'a Triangle<'a>>,
+    ) -> (HashSet<&'a Triangle<'a>>, HashSet<&'a Triangle<'a>>) {
         let mut leftset = HashSet::new();
         let mut rightset = HashSet::new();
 
@@ -83,7 +85,7 @@ impl<'d> BVHNode<'d> {
         bounding_box: BoundingBox,
         depth: usize,
     ) -> Self {
-
+        let longest_axis = boundingbox.longest_axis();
 
         let longest_axis = bounding_box.longest_axis();
 

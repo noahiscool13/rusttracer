@@ -1,8 +1,8 @@
 use crate::setup::monte_carlo::MonteCarlo;
 use crate::setup::Setup;
 
-use crate::setup::monte_carlo_crossbeam::MonteCarloCrossbeam;
 use crate::setup::monte_carlo_bvh::MonteCarloBVH;
+use crate::setup::monte_carlo_crossbeam::MonteCarloCrossbeam;
 use log::info;
 use log::LevelFilter;
 use simple_logging;
