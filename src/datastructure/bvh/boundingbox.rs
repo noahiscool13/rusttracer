@@ -10,8 +10,8 @@ pub enum Axis {
 
 #[derive(Debug)]
 pub(super) struct BoundingBox {
-    min: Vector,
-    max: Vector,
+    pub(super) min: Vector,
+    pub(super) max: Vector,
 }
 
 impl BoundingBox {
