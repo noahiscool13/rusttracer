@@ -1,5 +1,4 @@
 use crate::datastructure::bvh::boundingbox::{Axis, BoundingBox};
-use crate::datastructure::bvh::node::BVHNode::Empty;
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
 use log::debug;
@@ -85,8 +84,6 @@ impl<'d> BVHNode<'d> {
         bounding_box: BoundingBox,
         depth: usize,
     ) -> Self {
-        let longest_axis = boundingbox.longest_axis();
-
         let longest_axis = bounding_box.longest_axis();
 
         struct State<'s> {
