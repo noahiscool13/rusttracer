@@ -80,6 +80,10 @@ impl BoundingBox {
         0.
     }
 
+    pub fn contains(&self, triangle: &Triangle) -> bool{
+        true
+    }
+
     pub fn split_at(&self, axis: Axis) -> (BoundingBox, BoundingBox) {
         match axis {
             Axis::X(i) => (BoundingBox {

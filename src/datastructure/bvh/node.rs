@@ -65,6 +65,21 @@ impl<'d> BVHNode<'d> {
         total / length
     }
 
+    fn divide_triangles_over_boundingboxes<'a>((leftbox, rightbox): (&BoundingBox, &BoundingBox), triangles: &HashSet<&'a Triangle<'a>>) -> (HashSet<&'a Triangle<'a>>, HashSet<&'a Triangle<'a>>) {
+        let mut leftset = HashSet::new();
+        let mut rightset = HashSet::new();
+
+        for i in triangles {
+            if leftbox.contains(i) {
+                leftset.insert(*i);
+            }
+            if rightbox.contains(i) {
+                rightset.insert(*i);
+            }
+        }
+
+        (leftset, rightset)
+    }
 
     fn new_internal(
         triangles: HashSet<&'d Triangle<'d>>,
@@ -74,7 +89,19 @@ impl<'d> BVHNode<'d> {
 
         let longest_axis = boundingbox.longest_axis();
 
-        for (left, right) in longest_axis.divide(&boundingbox, 16) {
+        struct state<'s> {
+            leftbox: BoundingBox,
+            rightbox: BoundingBox,
+            leftset: HashSet<&'s Triangle<'s>>,
+            rightset: HashSet<&'s Triangle<'s>>,
+        }
+
+        for (leftbox, rightbox) in longest_axis.divide(&boundingbox, 16) {
+            let (leftset, rightset) = Self::divide_triangles_over_boundingboxes((&leftbox, &rightbox), &triangles);
+
+            let leftcost = leftbox.cost(leftset.len());
+            let rightcost = rightbox.cost(rightset.len());
+
 
         }
 
