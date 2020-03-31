@@ -10,7 +10,6 @@ pub enum Axis {
 
 impl Axis {
     pub fn divide(&self, bounding_box: &BoundingBox, steps: usize) -> Vec<(BoundingBox, BoundingBox)> {
-
         match self {
             Axis::X(length) => (0..steps).map(|i| {
                 bounding_box.split_at(Axis::X((1. / *length) * i as f64))
@@ -76,8 +75,25 @@ impl BoundingBox {
         curr
     }
 
-    pub fn cost(&self, numtriangles: usize) -> f64{
-        0.
+    pub fn size(&self) -> Vector {
+        let x = self.max.x - self.min.x;
+        let y = self.max.y - self.min.y;
+        let z = self.max.z - self.min.z;
+
+        Vector::new(x, y, z)
+    }
+
+    pub fn surface_area(&self) -> f64 {
+        let size = self.size();
+        let surface_top = size.x*size.z;
+        let surface_front = size.x*size.y;
+        let surface_side = size.y*size.z;
+
+        2.*(surface_top+surface_front+surface_side)
+    }
+
+    pub fn cost(&self, numtriangles: usize) -> f64 {
+        self.surface_area()*numtriangles as f64
     }
 
     pub fn contains(&self, triangle: &Triangle) -> bool{
