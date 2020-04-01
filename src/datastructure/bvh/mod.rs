@@ -26,6 +26,7 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
         debug!("Cached triangles locally");
 
         let root = BVHNode::new(triangles);
+        debug!("{}", root);
 
         Self { root }
     }
@@ -38,21 +39,24 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
 pub fn intersects_boundingbox<'a>(
     boundingbox: &'a BoundingBox,
     ray: &'a Ray,
-    triangle: &Triangle,
 ) -> Option<BoxIntersection<'a>> {
     let mut tmin = (boundingbox.min.x - ray.origin.x) / ray.direction.x;
     let mut tmax = (boundingbox.max.x - ray.origin.x) / ray.direction.x;
 
-    if tmin > tmax {
-        let (tmin, tmax) = (tmax, tmin);
-    }
+    let (mut tmin, mut tmax) = if tmin > tmax {
+        (tmax, tmin)
+    } else {
+        (tmin, tmax)
+    };
 
     let tymin = (boundingbox.min.y - ray.origin.y) / ray.direction.y;
     let tymax = (boundingbox.max.y - ray.origin.y) / ray.direction.y;
 
-    if tymin > tymax {
-        let (tymin, tymax) = (tymax, tymin);
-    }
+    let (mut tymin,mut tymax) = if tymin > tymax {
+        (tymax, tymin)
+    } else {
+        (tymin, tymax)
+    };
 
     if (tmin > tymax) || (tymin > tmax) {
         return None;
