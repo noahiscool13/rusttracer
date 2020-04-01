@@ -15,6 +15,7 @@ pub fn ambient(intersection: &Intersection) -> Vector {
 }
 
 pub fn emittance(intersection: &Intersection) -> Vector {
+
     let texture = if let Some(texture) = intersection.triangle.mesh.material.emittance_texture {
         let coord = map_uv(intersection);
 

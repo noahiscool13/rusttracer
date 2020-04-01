@@ -32,25 +32,6 @@ impl<'t> Debug for Triangle<'t> {
     }
 }
 
-/// Technically two triangle's hashes can be equal when their indices are the same, but mesh different.
-/// Therefore this function SHOULD NOT be used for strict equality. It's used internally for some optimizations.
-impl<'t> Hash for Triangle<'t> {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.a.hash(state);
-        self.b.hash(state);
-        self.c.hash(state);
-    }
-}
-
-/// Technically two triangles can be equal when their indices are the same, but mesh different.
-/// Therefore this function SHOULD NOT be used for strict equality. It's used internally for some optimizations.
-impl<'t> PartialEq for Triangle<'t> {
-    fn eq(&self, other: &Self) -> bool {
-        self.a == other.a && self.b == other.b && self.c == other.c
-    }
-}
-
-impl<'t> Eq for Triangle<'t> {}
 
 impl<'t> Triangle<'t> {
     #[inline]

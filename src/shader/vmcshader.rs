@@ -65,7 +65,6 @@ impl VMcShader {
         //
         //
         //        let direct = part_amb + part_emi + part_diff + part_spec;
-        dbg!(part_emi);
 
         let indirect = if depth > 0 {
             let reflec_type = get_rng(|mut r| r.gen::<f64>());

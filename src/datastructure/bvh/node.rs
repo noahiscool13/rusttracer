@@ -3,14 +3,12 @@ use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
 use core::fmt;
 use log::debug;
-use std::collections::HashSet;
-use std::f32::MAX;
 use std::fmt::{Debug, Display, Error, Formatter};
 
 pub enum BVHNode<'d> {
     Leaf {
         bounding_box: BoundingBox,
-        triangles: HashSet<&'d Triangle<'d>>,
+        triangles: Vec<&'d Triangle<'d>>,
     },
     Node {
         bounding_box: BoundingBox,
@@ -49,7 +47,7 @@ impl<'d> BVHNode<'d> {
         Ok(())
     }
 
-    pub fn new(triangles: HashSet<&'d Triangle<'d>>) -> Self {
+    pub fn new(triangles: Vec<&'d Triangle<'d>>) -> Self {
         debug!("Creating new KD Tree with {} triangles", triangles.len());
 
         let bb = BoundingBox::from_triangles(triangles.iter().cloned());
@@ -70,17 +68,17 @@ impl<'d> BVHNode<'d> {
 
     fn divide_triangles_over_boundingboxes<'a>(
         (leftbox, rightbox): (&BoundingBox, &BoundingBox),
-        triangles: &HashSet<&'a Triangle<'a>>,
-    ) -> (HashSet<&'a Triangle<'a>>, HashSet<&'a Triangle<'a>>) {
-        let mut leftset = HashSet::new();
-        let mut rightset = HashSet::new();
+        triangles: &Vec<&'a Triangle<'a>>,
+    ) -> (Vec<&'a Triangle<'a>>, Vec<&'a Triangle<'a>>) {
+        let mut leftset = Vec::new();
+        let mut rightset = Vec::new();
 
         for i in triangles {
             if leftbox.contains(i) {
-                leftset.insert(*i);
+                leftset.push(*i);
             }
             if rightbox.contains(i) {
-                rightset.insert(*i);
+                rightset.push(*i);
             }
         }
 
@@ -88,7 +86,7 @@ impl<'d> BVHNode<'d> {
     }
 
     fn new_internal(
-        triangles: HashSet<&'d Triangle<'d>>,
+        triangles: Vec<&'d Triangle<'d>>,
         bounding_box: BoundingBox,
         depth: usize,
     ) -> Self {
@@ -104,8 +102,8 @@ impl<'d> BVHNode<'d> {
         struct State<'s> {
             leftbox: BoundingBox,
             rightbox: BoundingBox,
-            leftset: HashSet<&'s Triangle<'s>>,
-            rightset: HashSet<&'s Triangle<'s>>,
+            leftset: Vec<&'s Triangle<'s>>,
+            rightset: Vec<&'s Triangle<'s>>,
 
             totalcost: f64,
         }

@@ -123,7 +123,7 @@ impl<'d> KDTreeDataStructure<'d> {
 impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
     fn new(scene: &'d Scene<'d>) -> Self {
         debug!("Started building KD-Tree");
-        let triangles: HashSet<&Triangle> = scene.triangles().collect();
+        let triangles: Vec<&Triangle> = scene.triangles().collect();
         debug!("Cached triangles locally");
 
         let root = BVHNode::new(triangles);
