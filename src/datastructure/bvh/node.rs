@@ -1,9 +1,9 @@
-use crate::datastructure::bvh::boundingbox::{Axis, BoundingBox};
+use crate::datastructure::bvh::boundingbox::BoundingBox;
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
 use core::fmt;
 use log::debug;
-use std::fmt::{Debug, Display, Error, Formatter};
+use std::fmt::{Display, Formatter};
 
 pub enum BVHNode<'d> {
     Leaf {
@@ -28,15 +28,14 @@ impl<'d> BVHNode<'d> {
     fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         match self {
             BVHNode::Leaf {
-                bounding_box,
+                bounding_box: _,
                 triangles,
             } => {
                 write!(f, "{}", "\t".repeat(depth))?;
                 writeln!(
                     f,
-                    "leaf node with {} triangles [{:?}]:",
+                    "leaf node with {} triangles:",
                     triangles.len(),
-                    triangles
                 )?;
             }
             BVHNode::Node {
@@ -45,7 +44,7 @@ impl<'d> BVHNode<'d> {
                 bounding_box,
             } => {
                 write!(f, "{}", "\t".repeat(depth))?;
-                writeln!(f, "Bounding box: {:#?}", bounding_box)?;
+                writeln!(f, ">>")?;
                 left.print(f, depth + 1)?;
                 right.print(f, depth + 1)?;
             }
@@ -172,6 +171,13 @@ impl<'d> BVHNode<'d> {
                     depth + 1,
                 )),
             }
+        }
+    }
+
+    pub fn includes_point(&self, point: &Vector) -> bool{
+        match self {
+            BVHNode::Leaf {bounding_box, ..} => bounding_box.includes_point(point),
+            BVHNode::Node {bounding_box, ..} => bounding_box.includes_point(point),
         }
     }
 }

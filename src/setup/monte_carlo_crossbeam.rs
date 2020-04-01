@@ -1,6 +1,5 @@
 use crate::datastructure::basic::BasicDataStructure;
 use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
-use crate::raytracer::jmstrace::JMSTracer;
 use crate::renderer::RendererBuilder;
 use crate::scene::scene::SceneBuilder;
 use crate::setup::Setup;

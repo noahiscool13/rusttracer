@@ -29,7 +29,7 @@ impl<'r, DS: DataStructure<'r> + Sync, S: Shader<'r, DS> + Sync> RayTracer<'r, D
 
                 s.spawn(move |_| {
                     for y in start_y..(start_y + chunk.len()) {
-                        let mut row = &mut chunk[y - start_y];
+                        let row = &mut chunk[y - start_y];
 
                         for x in 0..camera.width {
                             let mut out = Vector::repeated(0f64);

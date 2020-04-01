@@ -1,7 +1,6 @@
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
 use std::f64;
-use std::f64::EPSILON;
 
 pub enum Axis {
     X(f64),
@@ -182,6 +181,30 @@ impl BoundingBox {
             Axis::Z(dz)
         }
     }
+
+    pub fn includes_point(&self, point: &Vector) -> bool {
+        if point.x >= self.min.x {
+            return false;
+        }
+        if point.y >= self.min.y {
+            return false;
+        }
+        if point.z >= self.min.z {
+            return false;
+        }
+
+        if point.x <= self.max.x {
+            return false;
+        }
+        if point.y <= self.max.y {
+            return false;
+        }
+        if point.z <= self.max.z {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 #[cfg(test)]
@@ -203,8 +226,8 @@ pub mod tests {
         let bb = BoundingBox::EMPTY;
 
         let ibb = bb
-            .include_point(Vector::new(0., 0., 0.))
-            .include_point(Vector::new(1., 1., 1.));
+            .includes_point(Vector::new(0., 0., 0.))
+            .includes_point(Vector::new(1., 1., 1.));
 
         assert_eq!(ibb.min, Vector::new(0., 0., 0.));
         assert_eq!(ibb.max, Vector::new(1., 1., 1.));

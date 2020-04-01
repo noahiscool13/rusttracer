@@ -4,7 +4,6 @@ use crate::scene::scene::Scene;
 use crate::scene::triangle::Triangle;
 use crate::util::consts::INTERSECTION_EPSILON;
 use crate::util::ray::Ray;
-use std::f64;
 
 pub struct BasicDataStructure<'d> {
     data: &'d Scene<'d>,

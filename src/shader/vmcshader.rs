@@ -1,5 +1,5 @@
 use crate::datastructure::DataStructure;
-use crate::shader::shaders::{diffuse, emittance, map_uv};
+use crate::shader::shaders::{emittance, map_uv};
 use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::rng::get_rng;

@@ -1,4 +1,3 @@
-use crate::datastructure::basic::BasicDataStructure;
 use crate::datastructure::bvh::KDTreeDataStructure;
 use crate::raytracer::jmstrace::JMSTracer;
 use crate::renderer::RendererBuilder;

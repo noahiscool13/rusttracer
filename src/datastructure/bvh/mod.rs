@@ -8,7 +8,6 @@ use crate::scene::triangle::Triangle;
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 use log::debug;
-use std::collections::HashSet;
 //use core::num::dec2flt::rawfp::RawFloat;
 use crate::util::consts::INTERSECTION_EPSILON;
 
@@ -85,35 +84,35 @@ impl<'d> KDTreeDataStructure<'d> {
                 None
             }
             BVHNode::Node {
-                bounding_box,
+                bounding_box: _,
                 left,
                 right,
             } => {
                 let dist_l = intersects_bhv(&left, ray);
                 let dist_r = intersects_bhv(&right, ray);
 
-                match (dist_l, dist_r) {
-                    (None, None) => return None,
-                    (Some(i), None) => return Self::intersect_internal(ray, left),
-                    (None, Some(i)) => return Self::intersect_internal(ray, right),
+                return match (dist_l, dist_r) {
+                    (None, None) => None,
+                    (Some(_), None) => Self::intersect_internal(ray, left),
+                    (None, Some(_)) => Self::intersect_internal(ray, right),
                     (Some(left_intersection), Some(right_intersection)) => {
                         if left_intersection.t < right_intersection.t {
                             let hit = Self::intersect_internal(ray, left);
-                            if let Some(hit_int) = hit {
-                                if point_in_bhv(hit_int.hit_pos(), left) {
-                                    return Some(hit_int);
+                            if let Some(intersection) = hit {
+                                if left.includes_point(&intersection.hit_pos()) {
+                                    return Some(intersection);
                                 }
                             }
-                            return Self::intersect_internal(ray, right);
-                        }
-
-                        let hit = Self::intersect_internal(ray, right);
-                        if let Some(hit_int) = hit {
-                            if point_in_bhv(hit_int.hit_pos(), right) {
-                                return Some(hit_int);
+                            Self::intersect_internal(ray, right)
+                        } else {
+                            let hit = Self::intersect_internal(ray, right);
+                            if let Some(intersection) = hit {
+                                if right.includes_point(&intersection.hit_pos()) {
+                                    return Some(intersection);
+                                }
                             }
+                            Self::intersect_internal(ray, left)
                         }
-                        return Self::intersect_internal(ray, left);
                     }
                 }
             }
@@ -138,43 +137,6 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
     }
 }
 
-pub fn point_in_bhv(point: Vector, node: &BVHNode) -> bool {
-    match node {
-        BVHNode::Leaf {
-            bounding_box,
-            triangles: _,
-        } => point_in_boundingbox(point, bounding_box),
-        BVHNode::Node {
-            bounding_box,
-            left: _,
-            right: _,
-        } => point_in_boundingbox(point, bounding_box),
-    }
-}
-
-pub fn point_in_boundingbox(point: Vector, boundingbox: &BoundingBox) -> bool {
-    if point.x >= boundingbox.min.x {
-        return false;
-    }
-    if point.y >= boundingbox.min.y {
-        return false;
-    }
-    if point.z >= boundingbox.min.z {
-        return false;
-    }
-
-    if point.x <= boundingbox.max.x {
-        return false;
-    }
-    if point.y <= boundingbox.max.y {
-        return false;
-    }
-    if point.z <= boundingbox.max.z {
-        return false;
-    }
-
-    return true;
-}
 
 pub fn intersects_bhv<'a>(node: &'a BVHNode, ray: &'a Ray) -> Option<BoxIntersection<'a>> {
     match node {
@@ -194,8 +156,8 @@ pub fn intersects_boundingbox<'a>(
     boundingbox: &'a BoundingBox,
     ray: &'a Ray,
 ) -> Option<BoxIntersection<'a>> {
-    let mut tmin = (boundingbox.min.x - ray.origin.x) / ray.direction.x;
-    let mut tmax = (boundingbox.max.x - ray.origin.x) / ray.direction.x;
+    let tmin = (boundingbox.min.x - ray.origin.x) / ray.direction.x;
+    let tmax = (boundingbox.max.x - ray.origin.x) / ray.direction.x;
 
     let (mut tmin, mut tmax) = if tmin > tmax {
         (tmax, tmin)
@@ -206,7 +168,7 @@ pub fn intersects_boundingbox<'a>(
     let tymin = (boundingbox.min.y - ray.origin.y) / ray.direction.y;
     let tymax = (boundingbox.max.y - ray.origin.y) / ray.direction.y;
 
-    let (mut tymin, mut tymax) = if tymin > tymax {
+    let (tymin, tymax) = if tymin > tymax {
         (tymax, tymin)
     } else {
         (tymin, tymax)
@@ -227,7 +189,7 @@ pub fn intersects_boundingbox<'a>(
     let tzmin = (boundingbox.min.z - ray.origin.z) / ray.direction.z;
     let tzmax = (boundingbox.max.z - ray.origin.z) / ray.direction.z;
 
-    let (mut tzmin, mut tzmax) = if tzmin > tzmax {
+    let (tzmin, tzmax) = if tzmin > tzmax {
         (tzmax, tzmin)
     } else {
         (tzmin, tzmax)

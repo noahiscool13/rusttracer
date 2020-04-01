@@ -5,14 +5,13 @@ use crate::util::camera::Camera;
 use crate::util::outputbuffer::OutputBuffer;
 use crate::util::rng::get_rng;
 use crate::util::vector::Vector;
-use crossbeam::thread;
 use log::info;
 use rand::Rng;
 use rayon::iter::IndexedParallelIterator;
 use rayon::iter::IntoParallelRefMutIterator;
 use rayon::iter::ParallelIterator;
 
-const SPP: usize = 100;
+const SPP: usize = 10;
 
 pub struct JMSTracer;
 
