@@ -127,7 +127,7 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
         debug!("Cached triangles locally");
 
         let root = BVHNode::new(triangles);
-        debug!("{}", root);
+        println!("{}", root);
 
         Self { root }
     }
@@ -150,23 +150,23 @@ pub fn point_in_bhv(point: Vector, node: &BVHNode) -> bool {
 
 
 pub fn point_in_boundingbox(point: Vector, boundingbox: &BoundingBox) -> bool {
-    if point.x > boundingbox.min.x {
+    if point.x >= boundingbox.min.x {
         return false;
     }
-    if point.y > boundingbox.min.y {
+    if point.y >= boundingbox.min.y {
         return false;
     }
-    if point.z > boundingbox.min.z {
+    if point.z >= boundingbox.min.z {
         return false;
     }
 
-    if point.x < boundingbox.max.x {
+    if point.x <= boundingbox.max.x {
         return false;
     }
-    if point.y < boundingbox.max.y {
+    if point.y <= boundingbox.max.y {
         return false;
     }
-    if point.z < boundingbox.max.z {
+    if point.z <= boundingbox.max.z {
         return false;
     }
 
@@ -224,9 +224,15 @@ pub fn intersects_boundingbox<'a>(
     let tzmin = (boundingbox.min.z - ray.origin.z) / ray.direction.z;
     let tzmax = (boundingbox.max.z - ray.origin.z) / ray.direction.z;
 
-    if tzmin > tzmax {
-        let (tzmin, tzmax) = (tzmax, tzmin);
-    }
+    let (mut tzmin, mut tzmax) = if tzmin > tzmax {
+        (tzmax, tzmin)
+    } else {
+        (tzmin, tzmax)
+    };
+
+//    if tzmin > tzmax {
+//        let (tzmin, tzmax) = (tzmax, tzmin);
+//    }
 
     if (tmin > tzmax) || (tzmin > tmax) {
         return None;

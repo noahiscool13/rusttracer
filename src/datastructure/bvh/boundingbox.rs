@@ -1,6 +1,7 @@
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
 use std::f64;
+use std::f64::EPSILON;
 
 pub enum Axis {
     X(f64),
@@ -65,8 +66,8 @@ impl BoundingBox {
 
     pub fn include_point(&self, point: Vector) -> Self {
         Self {
-            min: self.min.min(&point),
-            max: self.max.max(&point),
+            min: self.min.min(&(point-Vector::repeated(0.01))),//,
+            max: self.max.max(&(point+Vector::repeated(0.01))),//,
         }
     }
 
