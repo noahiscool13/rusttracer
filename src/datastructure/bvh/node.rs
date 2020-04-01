@@ -35,7 +35,6 @@ impl<'d> BVHNode<'d> {
                     triangles.len(),
                     triangles
                 )?;
-                writeln!(f, "Bounding box: {:#?}", bounding_box)?;
             }
             BVHNode::Node { left, right, bounding_box } => {
                 write!(f, "{}", "\t".repeat(depth))?;
