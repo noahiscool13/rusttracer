@@ -23,7 +23,7 @@ impl<'d> KDTreeDataStructure<'d> {
     fn intersect_internal<'a>(ray: &'a Ray, node: &BVHNode) -> Option<Intersection<'a>> {
         match node {
             BVHNode::Leaf {bounding_box, triangles} => {
-
+                None
             }
             BVHNode::Node {bounding_box, left, right} => {
                 let dist_l = intersects_bhv(&left, ray);
@@ -56,8 +56,6 @@ impl<'d> KDTreeDataStructure<'d> {
                 }
             }
         }
-
-    None
     }
 
 }
@@ -75,7 +73,9 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
     }
 
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
-        Self::intersect_internal(ray, &self.root)
+        let res = Self::intersect_internal(ray, &self.root);
+
+        res
     }
 }
 
