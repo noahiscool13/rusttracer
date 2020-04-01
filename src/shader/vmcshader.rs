@@ -1,5 +1,5 @@
 use crate::datastructure::DataStructure;
-use crate::shader::shaders::{diffuse, emittance};
+use crate::shader::shaders::{diffuse, emittance, map_uv};
 use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::rng::get_rng;
@@ -71,18 +71,23 @@ impl VMcShader {
             let diffuse_max = intersection.triangle.material().diffuse.max_item();
             if diffuse_max > reflec_type {
                 let bounce_direction =
-                    Vector::point_on_hemisphere().rotated(intersection.triangle.normal());
+                    Vector::point_on_diffuse_hemisphere().rotated(intersection.triangle.normal());
                 let bounce_ray = Ray::new(hit_pos, bounce_direction);
                 let indirect_light = self.shade_internal(&bounce_ray, depth - 1, datastructure);
-                indirect_light * diffuse(&intersection, hit_pos, hit_pos + bounce_direction)
-                    / diffuse_max
+                let texture = if let Some(texture) = intersection.triangle.mesh.material.diffuse_texture {
+                    let coord = map_uv(&intersection);
+                    texture.at(coord)
+                } else {
+                    Vector::new(1., 1., 1.)
+                };
+                indirect_light * intersection.triangle.material().diffuse/diffuse_max*texture
             } else {
                 Vector::repeated(0f64)
             }
         } else {
             Vector::repeated(0f64)
         };
-        let total = indirect * 2. + part_emi;
+        let total = indirect + part_emi;
 
         return total.into();
     }

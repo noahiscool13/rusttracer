@@ -36,8 +36,6 @@ Glow stone:
 - 200 spp
 - 1000x1000 pixels
 
-**Volumetric russian roulette**
-
 Cornell box:
 - Time: 2:30
 - Error: 189
@@ -50,8 +48,6 @@ Glow stone:
 - 400 spp
 - 1000x1000 pixels
 
-**Volumetric russian roulette**
-
 Cornell box:
 - Time: 5:04
 - Error: 171
@@ -59,3 +55,41 @@ Cornell box:
 Glow stone:
 - Time: 5:39
 - Error: 146
+
+**Cosine weighted sampling**
+
+**Settings**
+- 100 spp
+- 1000x1000 pixels
+
+Cornell box:
+- Time: 1:16
+- Error: 191
+
+Glow stone:
+- Time: 1:22
+- Error: 233
+
+**Settings**
+- 200 spp
+- 1000x1000 pixels
+
+Cornell box:
+- Time: 2:30
+- Error: 174
+
+Glow stone:
+- Time: 2:44
+- Error: 189
+
+**Settings**
+- 400 spp
+- 1000x1000 pixels
+
+Cornell box:
+- Time: 4:51
+- Error: 158
+
+Glow stone:
+- Time: 5:44
+- Error: 144
