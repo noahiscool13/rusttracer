@@ -52,7 +52,7 @@ pub fn intersects_boundingbox<'a>(
     let tymin = (boundingbox.min.y - ray.origin.y) / ray.direction.y;
     let tymax = (boundingbox.max.y - ray.origin.y) / ray.direction.y;
 
-    let (mut tymin,mut tymax) = if tymin > tymax {
+    let (mut tymin, mut tymax) = if tymin > tymax {
         (tymax, tymin)
     } else {
         (tymin, tymax)

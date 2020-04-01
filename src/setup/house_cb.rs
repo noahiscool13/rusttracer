@@ -1,15 +1,15 @@
 use crate::datastructure::basic::BasicDataStructure;
+use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
 use crate::raytracer::jmstrace::JMSTracer;
 use crate::renderer::RendererBuilder;
 use crate::scene::scene::SceneBuilder;
 use crate::setup::Setup;
+use crate::shader::mtlshader::MtlShader;
 use crate::shader::vmcshader::VMcShader;
 use crate::util::camera::Camera;
 use crate::util::vector::Vector;
 use std::path::Path;
 use std::process;
-use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
-use crate::shader::mtlshader::MtlShader;
 
 pub struct HouseCB;
 

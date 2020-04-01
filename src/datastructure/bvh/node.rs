@@ -1,11 +1,11 @@
 use crate::datastructure::bvh::boundingbox::{Axis, BoundingBox};
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
+use core::fmt;
 use log::debug;
 use std::collections::HashSet;
 use std::f32::MAX;
-use std::fmt::{Display, Formatter, Error, Debug};
-use core::fmt;
+use std::fmt::{Debug, Display, Error, Formatter};
 
 pub(super) enum BVHNode<'d> {
     Leaf {
@@ -29,11 +29,16 @@ impl<'d> Display for BVHNode<'d> {
 impl<'d> BVHNode<'d> {
     fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         match self {
-            BVHNode::Leaf {triangles, ..} => {
+            BVHNode::Leaf { triangles, .. } => {
                 write!(f, "{}", "\t".repeat(depth))?;
-                writeln!(f, "leaf node with {} triangles [{:?}]:", triangles.len(), triangles)?;
-            },
-            BVHNode::Node {left, right, ..} => {
+                writeln!(
+                    f,
+                    "leaf node with {} triangles [{:?}]:",
+                    triangles.len(),
+                    triangles
+                )?;
+            }
+            BVHNode::Node { left, right, .. } => {
                 write!(f, "{}", "\t".repeat(depth))?;
                 writeln!(f, ">>")?;
                 left.print(f, depth + 1)?;
@@ -102,13 +107,14 @@ impl<'d> BVHNode<'d> {
             leftset: HashSet<&'s Triangle<'s>>,
             rightset: HashSet<&'s Triangle<'s>>,
 
-            totalcost: f64
+            totalcost: f64,
         }
 
         let mut smallest: Option<State> = None;
 
         for (leftbox, rightbox) in longest_axis.divide(&bounding_box, 16) {
-            let (leftset, rightset) = Self::divide_triangles_over_boundingboxes((&leftbox, &rightbox), &triangles);
+            let (leftset, rightset) =
+                Self::divide_triangles_over_boundingboxes((&leftbox, &rightbox), &triangles);
 
             let leftcost = leftbox.cost(leftset.len());
             let rightcost = rightbox.cost(rightset.len());
@@ -117,21 +123,23 @@ impl<'d> BVHNode<'d> {
             if let Some(s) = smallest.as_ref() {
                 if totalcost < s.totalcost {
                     smallest = Some(State {
-                        leftbox, rightbox,
-                        leftset, rightset,
+                        leftbox,
+                        rightbox,
+                        leftset,
+                        rightset,
                         totalcost,
                     })
                 }
             } else {
                 smallest = Some(State {
-                    leftbox, rightbox,
-                    leftset, rightset,
+                    leftbox,
+                    rightbox,
+                    leftset,
+                    rightset,
                     totalcost,
                 });
             }
-
         }
-
 
         // Can't fail because smallest is set in the first iteration of the loop.
         let smallest = smallest.unwrap();
@@ -148,8 +156,16 @@ impl<'d> BVHNode<'d> {
         } else {
             BVHNode::Node {
                 bounding_box,
-                left: Box::new(Self::new_internal(smallest.leftset, smallest.leftbox, depth+1)),
-                right: Box::new(Self::new_internal(smallest.rightset, smallest.rightbox, depth+1)),
+                left: Box::new(Self::new_internal(
+                    smallest.leftset,
+                    smallest.leftbox,
+                    depth + 1,
+                )),
+                right: Box::new(Self::new_internal(
+                    smallest.rightset,
+                    smallest.rightbox,
+                    depth + 1,
+                )),
             }
         }
     }

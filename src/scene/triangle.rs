@@ -2,9 +2,9 @@ use crate::scene::material::Material;
 use crate::scene::scene::Mesh;
 use crate::scene::texturecoordinate::TextureCoordinate;
 use crate::util::vector::Vector;
-use std::hash::{Hash, Hasher};
-use std::fmt::{Debug, Formatter, Error};
 use std::fmt;
+use std::fmt::{Debug, Error, Formatter};
+use std::hash::{Hash, Hasher};
 
 /// A triangle is a part of a mesh, holding the locations of vertices, normals and texture coordinates.
 /// A triangle has a reference to the mesh it is in, which is a recursive reference.
@@ -22,7 +22,13 @@ pub struct Triangle<'t> {
 
 impl<'t> Debug for Triangle<'t> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "Triangle {{a: {:?}, b: {:?}, c: {:?}}}", self.a(), self.b(), self.c())
+        write!(
+            f,
+            "Triangle {{a: {:?}, b: {:?}, c: {:?}}}",
+            self.a(),
+            self.b(),
+            self.c()
+        )
     }
 }
 

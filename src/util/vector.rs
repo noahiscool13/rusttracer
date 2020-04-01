@@ -151,9 +151,9 @@ impl Vector {
 
     pub fn point_on_diffuse_hemisphere() -> Vector {
         let u = get_rng(|mut r| r.gen::<f64>());
-        let v = 2.*f64::consts::PI*get_rng(|mut r| r.gen::<f64>());
+        let v = 2. * f64::consts::PI * get_rng(|mut r| r.gen::<f64>());
 
-        Vector::new(v.cos()*u.sqrt(),(1.-u).sqrt(),v.sin()*u.sqrt())
+        Vector::new(v.cos() * u.sqrt(), (1. - u).sqrt(), v.sin() * u.sqrt())
     }
 }
 

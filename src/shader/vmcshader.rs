@@ -74,13 +74,14 @@ impl VMcShader {
                     Vector::point_on_diffuse_hemisphere().rotated(intersection.triangle.normal());
                 let bounce_ray = Ray::new(hit_pos, bounce_direction);
                 let indirect_light = self.shade_internal(&bounce_ray, depth - 1, datastructure);
-                let texture = if let Some(texture) = intersection.triangle.mesh.material.diffuse_texture {
-                    let coord = map_uv(&intersection);
-                    texture.at(coord)
-                } else {
-                    Vector::new(1., 1., 1.)
-                };
-                indirect_light * intersection.triangle.material().diffuse/diffuse_max*texture
+                let texture =
+                    if let Some(texture) = intersection.triangle.mesh.material.diffuse_texture {
+                        let coord = map_uv(&intersection);
+                        texture.at(coord)
+                    } else {
+                        Vector::new(1., 1., 1.)
+                    };
+                indirect_light * intersection.triangle.material().diffuse / diffuse_max * texture
             } else {
                 Vector::repeated(0f64)
             }
