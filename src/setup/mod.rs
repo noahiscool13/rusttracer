@@ -11,4 +11,3 @@ pub mod house_bvh;
 pub trait Setup {
     fn run(&self);
 }
-

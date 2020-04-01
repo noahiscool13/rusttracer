@@ -27,7 +27,10 @@ impl<'d> Display for BVHNode<'d> {
 impl<'d> BVHNode<'d> {
     fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         match self {
-            BVHNode::Leaf { bounding_box,triangles } => {
+            BVHNode::Leaf {
+                bounding_box,
+                triangles,
+            } => {
                 write!(f, "{}", "\t".repeat(depth))?;
                 writeln!(
                     f,
@@ -36,7 +39,11 @@ impl<'d> BVHNode<'d> {
                     triangles
                 )?;
             }
-            BVHNode::Node { left, right, bounding_box } => {
+            BVHNode::Node {
+                left,
+                right,
+                bounding_box,
+            } => {
                 write!(f, "{}", "\t".repeat(depth))?;
                 writeln!(f, "Bounding box: {:#?}", bounding_box)?;
                 left.print(f, depth + 1)?;
