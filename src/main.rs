@@ -6,6 +6,8 @@ use crate::setup::monte_carlo_crossbeam::MonteCarloCrossbeam;
 use log::info;
 use log::LevelFilter;
 use simple_logging;
+use crate::setup::glowstone_gamma::GlowStoneGamma;
+use crate::setup::house_cb::HouseCB;
 
 mod datastructure;
 mod postprocessors;

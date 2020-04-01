@@ -73,7 +73,7 @@ impl BoundingBox {
     pub fn from_triangles<'a>(triangles: impl Iterator<Item = &'a Triangle<'a>>) -> Self {
         let mut curr = Self::EMPTY;
         for i in triangles {
-            curr.merge(&BoundingBox::from_triangle(i));
+            curr = curr.merge(&BoundingBox::from_triangle(i));
         }
 
         curr
@@ -97,7 +97,8 @@ impl BoundingBox {
     }
 
     pub fn cost(&self, numtriangles: usize) -> f64 {
-        self.surface_area() * numtriangles as f64
+        let res = self.surface_area() * numtriangles as f64;
+        res
     }
 
     //Todo optimize contains function to get rid of false positives
@@ -138,7 +139,7 @@ impl BoundingBox {
                     max: Vector::new(self.min.x + i, self.max.y, self.max.z),
                 },
                 BoundingBox {
-                    min: Vector::new(self.min.x + i, self.max.y, self.max.z),
+                    min: Vector::new(self.min.x + i, self.min.y, self.min.z),
                     max: self.max,
                 },
             ),
@@ -148,7 +149,7 @@ impl BoundingBox {
                     max: Vector::new(self.max.x, self.min.y + i, self.max.z),
                 },
                 BoundingBox {
-                    min: Vector::new(self.max.x, self.min.y + i, self.max.z),
+                    min: Vector::new(self.min.x, self.min.y + i, self.min.z),
                     max: self.max,
                 },
             ),
@@ -158,7 +159,7 @@ impl BoundingBox {
                     max: Vector::new(self.max.x, self.max.y, self.min.z + i),
                 },
                 BoundingBox {
-                    min: Vector::new(self.max.x, self.max.y, self.min.z + i),
+                    min: Vector::new(self.min.x, self.min.y, self.min.z + i),
                     max: self.max,
                 },
             ),

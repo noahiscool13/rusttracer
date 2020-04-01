@@ -5,6 +5,7 @@ pub mod monte_carlo;
 pub mod monte_carlo_bvh;
 pub mod monte_carlo_crossbeam;
 pub mod monte_carlo_gamma;
+pub mod house_cb;
 
 pub trait Setup {
     fn run(&self);

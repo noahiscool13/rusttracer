@@ -20,26 +20,29 @@ pub enum BVHNode<'d> {
     },
 }
 
-// impl<'d> Display for BVHNode<'d> {
-//     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-//         self.print(f, 0)
-//     }
-// }
+impl<'d> Display for BVHNode<'d> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        self.print(f, 0)
+    }
+}
 
 impl<'d> BVHNode<'d> {
-    // fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
-    //     writeln!(f, "node [{:?}]:", self.triangles.len())?;
-    //     if let Some(l) = &self.left{
-    //         write!(f, "{}", "\t".repeat(depth))?;
-    //         l.print(f, depth+1)?;
-    //     }
-    //     if let Some(r) = &self.right{
-    //         write!(f, "{}", "\t".repeat(depth))?;
-    //         r.print(f, depth+1)?;
-    //     }
-    //
-    //     Ok(())
-    // }
+    fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
+        match self {
+            BVHNode::Leaf {triangles, ..} => {
+                write!(f, "{}", "\t".repeat(depth))?;
+                writeln!(f, "leaf node with {} triangles [{:?}]:", triangles.len(), triangles)?;
+            },
+            BVHNode::Node {left, right, ..} => {
+                write!(f, "{}", "\t".repeat(depth))?;
+                writeln!(f, ">>")?;
+                left.print(f, depth + 1)?;
+                right.print(f, depth + 1)?;
+            }
+        }
+
+        Ok(())
+    }
 
     pub fn new(triangles: HashSet<&'d Triangle<'d>>) -> Self {
         debug!("Creating new KD Tree with {} triangles", triangles.len());
@@ -84,6 +87,13 @@ impl<'d> BVHNode<'d> {
         bounding_box: BoundingBox,
         depth: usize,
     ) -> Self {
+        if triangles.len() == 0 {
+            return BVHNode::Leaf {
+                bounding_box: BoundingBox::EMPTY,
+                triangles,
+            };
+        }
+
         let longest_axis = bounding_box.longest_axis();
 
         struct State<'s> {
@@ -122,11 +132,15 @@ impl<'d> BVHNode<'d> {
 
         }
 
+
         // Can't fail because smallest is set in the first iteration of the loop.
         let smallest = smallest.unwrap();
         let current_cost = bounding_box.cost(triangles.len());
 
-        if smallest.totalcost > current_cost {
+        debug!("Smallest possible split cost: {}", smallest.totalcost);
+        debug!("Parent split cost: {}", current_cost);
+
+        if smallest.totalcost >= current_cost {
             BVHNode::Leaf {
                 bounding_box,
                 triangles,
