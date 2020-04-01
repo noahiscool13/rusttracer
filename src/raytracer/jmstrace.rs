@@ -12,7 +12,7 @@ use rayon::iter::IndexedParallelIterator;
 use rayon::iter::IntoParallelRefMutIterator;
 use rayon::iter::ParallelIterator;
 
-const SPP: usize = 1000;
+const SPP: usize = 10;
 
 pub struct JMSTracer;
 

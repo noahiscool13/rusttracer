@@ -9,6 +9,9 @@ use crate::util::ray::Ray;
 use log::debug;
 use std::collections::HashSet;
 use crate::util::vector::Vector;
+//use core::num::dec2flt::rawfp::RawFloat;
+use crate::util::consts::INTERSECTION_EPSILON;
+
 
 mod boundingbox;
 mod boxintersection;
@@ -18,14 +21,73 @@ pub struct KDTreeDataStructure<'d> {
     root: BVHNode<'d>,
 }
 
-impl<'d> KDTreeDataStructure<'d> {
 
-    fn intersect_internal<'a>(ray: &'a Ray, node: &BVHNode) -> Option<Intersection<'a>> {
+fn intersects_triangle<'a>(
+    ray: &'a Ray,
+    triangle: &'a Triangle,
+) -> Option<Intersection<'a>> {
+    let edge1 = triangle.b() - triangle.a();
+    let edge2 = triangle.c() - triangle.a();
+
+    let h = ray.direction.cross(edge2);
+    let a = edge1.dot(h);
+
+    if -INTERSECTION_EPSILON < a && a < INTERSECTION_EPSILON {
+        return None;
+    }
+
+    let f = 1f64 / a;
+
+    let s = ray.origin - triangle.a();
+    let u = f * s.dot(h);
+
+    let q = s.cross(edge1);
+    let v = f * ray.direction.dot(q);
+
+    if u < 0f64 || u > 1f64 {
+        return None;
+    }
+
+    if v < 0f64 || u + v > 1f64 {
+        return None;
+    }
+
+    let t = f * edge2.dot(q);
+    if t < INTERSECTION_EPSILON {
+        return None;
+    }
+
+    Some(Intersection {
+        uv: (u, v),
+        t,
+        ray,
+        triangle,
+    })
+}
+
+
+impl<'d> KDTreeDataStructure<'d> {
+    fn intersect_internal<'a>(ray: &'a Ray, node: & 'a BVHNode) -> Option<Intersection<'a>> {
         match node {
-            BVHNode::Leaf {bounding_box, triangles} => {
+            BVHNode::Leaf { bounding_box, triangles } => {
+                if intersects_boundingbox(bounding_box, ray).is_some() {
+                    let mut min = None;
+
+                    for triangle in triangles {
+                        if let Some(intersection) = intersects_triangle(ray, &triangle) {
+                            min = match min {
+                                None => Some(intersection),
+                                Some(i) if intersection.t < i.t => Some(intersection),
+                                _ => min,
+                            };
+                        }
+                    }
+
+                    return min;
+                }
                 None
             }
-            BVHNode::Node {bounding_box, left, right} => {
+            BVHNode::Node { bounding_box, left, right } => {
                 let dist_l = intersects_bhv(&left, ray);
                 let dist_r = intersects_bhv(&right, ray);
 
@@ -33,11 +95,11 @@ impl<'d> KDTreeDataStructure<'d> {
                     (None, None) => return None,
                     (Some(i), None) => return Self::intersect_internal(ray, left),
                     (None, Some(i)) => return Self::intersect_internal(ray, right),
-                    (Some(left_intersection),Some(right_intersection)) => {
+                    (Some(left_intersection), Some(right_intersection)) => {
                         if left_intersection.t < right_intersection.t {
                             let hit = Self::intersect_internal(ray, left);
                             if let Some(hit_int) = hit {
-                                if point_in_bhv(hit_int.hit_pos(),left) {
+                                if point_in_bhv(hit_int.hit_pos(), left) {
                                     return Some(hit_int);
                                 }
                             }
@@ -46,18 +108,16 @@ impl<'d> KDTreeDataStructure<'d> {
 
                         let hit = Self::intersect_internal(ray, right);
                         if let Some(hit_int) = hit {
-                            if point_in_bhv(hit_int.hit_pos(),right) {
+                            if point_in_bhv(hit_int.hit_pos(), right) {
                                 return Some(hit_int);
                             }
                         }
                         return Self::intersect_internal(ray, left);
                     }
-
                 }
             }
         }
     }
-
 }
 
 impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
@@ -73,42 +133,40 @@ impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
     }
 
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
-        let res = Self::intersect_internal(ray, &self.root);
-
-        res
+        Self::intersect_internal(ray, &self.root)
     }
 }
 
 pub fn point_in_bhv(point: Vector, node: &BVHNode) -> bool {
     match node {
-        BVHNode::Leaf {bounding_box, triangles: _} => {
-            point_in_boundingbox(point,bounding_box)
+        BVHNode::Leaf { bounding_box, triangles: _ } => {
+            point_in_boundingbox(point, bounding_box)
         }
-        BVHNode::Node {bounding_box, left: _, right:_} => {
-            point_in_boundingbox(point,bounding_box)
+        BVHNode::Node { bounding_box, left: _, right: _ } => {
+            point_in_boundingbox(point, bounding_box)
         }
     }
 }
 
 
 pub fn point_in_boundingbox(point: Vector, boundingbox: &BoundingBox) -> bool {
-    if point.x< boundingbox.min.x{
+    if point.x > boundingbox.min.x {
         return false;
     }
-    if point.y< boundingbox.min.y{
+    if point.y > boundingbox.min.y {
         return false;
     }
-    if point.z< boundingbox.min.z{
+    if point.z > boundingbox.min.z {
         return false;
     }
 
-    if point.x> boundingbox.max.x{
+    if point.x < boundingbox.max.x {
         return false;
     }
-    if point.y> boundingbox.max.y{
+    if point.y < boundingbox.max.y {
         return false;
     }
-    if point.z> boundingbox.max.z{
+    if point.z < boundingbox.max.z {
         return false;
     }
 
@@ -120,14 +178,13 @@ pub fn intersects_bhv<'a>(
     ray: &'a Ray,
 ) -> Option<BoxIntersection<'a>> {
     match node {
-        BVHNode::Leaf {bounding_box, triangles: _} => {
-            intersects_boundingbox(bounding_box,ray)
+        BVHNode::Leaf { bounding_box, triangles: _ } => {
+            intersects_boundingbox(bounding_box, ray)
         }
-        BVHNode::Node {bounding_box, left: _, right:_} => {
-            intersects_boundingbox(bounding_box,ray)
+        BVHNode::Node { bounding_box, left: _, right: _ } => {
+            intersects_boundingbox(bounding_box, ray)
         }
     }
-
 }
 
 pub fn intersects_boundingbox<'a>(
