@@ -10,4 +10,3 @@ pub mod monte_carlo_gamma;
 pub trait Setup {
     fn run(&self);
 }
-

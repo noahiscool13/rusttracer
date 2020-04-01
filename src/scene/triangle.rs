@@ -32,7 +32,6 @@ impl<'t> Debug for Triangle<'t> {
     }
 }
 
-
 impl<'t> Triangle<'t> {
     #[inline]
     pub fn a(&self) -> Vector {
