@@ -97,7 +97,7 @@ impl BoundingBox {
     }
 
     pub fn cost(&self, numtriangles: usize) -> f64 {
-        let res = self.surface_area() * numtriangles as f64;
+        let res = self.surface_area() * numtriangles.max(20) as f64;
         res
     }
 
