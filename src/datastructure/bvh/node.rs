@@ -7,7 +7,7 @@ use std::f32::MAX;
 use std::fmt::{Display, Formatter, Error, Debug};
 use core::fmt;
 
-pub(super) enum BVHNode<'d> {
+pub enum BVHNode<'d> {
     Leaf {
         bounding_box: BoundingBox,
         triangles: HashSet<&'d Triangle<'d>>,
