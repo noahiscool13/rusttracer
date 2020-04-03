@@ -102,6 +102,12 @@ impl<'d> BVHNode<'d> {
                 triangles,
             };
         }
+        if triangles.len() < 30{
+            return BVHNode::Leaf {
+                bounding_box,
+                triangles,
+            }
+        }
 
         let longest_axis = bounding_box.longest_axis();
 
@@ -152,7 +158,7 @@ impl<'d> BVHNode<'d> {
         debug!("Smallest possible split cost: {}", smallest.totalcost);
         debug!("Parent split cost: {}", current_cost);
 
-        if smallest.totalcost >= current_cost {
+        if smallest.totalcost >= current_cost{
             BVHNode::Leaf {
                 bounding_box,
                 triangles,

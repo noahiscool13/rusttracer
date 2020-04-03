@@ -8,6 +8,7 @@ use crate::util::camera::Camera;
 use crate::util::vector::Vector;
 use std::path::Path;
 use std::process;
+use crate::shader::mtlshader::MtlShader;
 
 pub struct HouseBVH;
 
@@ -28,11 +29,11 @@ impl Setup for HouseBVH {
 
         let renderer = RendererBuilder::new(&scene)
             .with_datastructure::<KDTreeDataStructure>()
-            .with_shader(VMcShader)
+            .with_shader(MtlShader)
             .with_tracer(JMSTracer)
             .without_postprocessor();
 
-        let camera = Camera::new(Vector::new(0., 1.0, 3.), 1000, 1000, 60f64);
+        let camera = Camera::new(Vector::new(-30., 20., 90.), 800, 800, 60f64);
         renderer
             .render(&camera)
             .to_bmp()

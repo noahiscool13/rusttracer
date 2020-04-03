@@ -16,13 +16,13 @@ impl Axis {
     ) -> Vec<(BoundingBox, BoundingBox)> {
         match self {
             Axis::X(length) => (0..steps)
-                .map(|i| bounding_box.split_at(Axis::X((1. / *length) * i as f64)))
+                .map(|i| bounding_box.split_at(Axis::X((1. / steps as f64 *length) * i as f64)))
                 .collect(),
             Axis::Y(length) => (0..steps)
-                .map(|i| bounding_box.split_at(Axis::Y((1. / *length) * i as f64)))
+                .map(|i| bounding_box.split_at(Axis::Y((1. /steps as f64 *length) * i as f64)))
                 .collect(),
             Axis::Z(length) => (0..steps)
-                .map(|i| bounding_box.split_at(Axis::Z((1. / *length) * i as f64)))
+                .map(|i| bounding_box.split_at(Axis::Z((1. /steps as f64 *length) * i as f64)))
                 .collect(),
         }
     }
@@ -97,7 +97,7 @@ impl BoundingBox {
     }
 
     pub fn cost(&self, numtriangles: usize) -> f64 {
-        let res = self.surface_area() * numtriangles.max(30) as f64;
+        let res = self.surface_area() * numtriangles as f64;
         res
     }
 
@@ -226,7 +226,7 @@ pub mod tests {
         let bb = BoundingBox::EMPTY;
 
         let ibb = bb
-            .includes_point(Vector::new(0., 0., 0.))
+            .includes_point(&Vector::new(0., 0., 0.))
             .includes_point(Vector::new(1., 1., 1.));
 
         assert_eq!(ibb.min, Vector::new(0., 0., 0.));
