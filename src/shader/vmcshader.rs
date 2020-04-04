@@ -1,11 +1,11 @@
 use crate::datastructure::DataStructure;
-use crate::shader::shaders::{diffuse, emittance, map_uv};
+use crate::shader::shaders::{emittance, map_uv};
 use crate::shader::Shader;
 use crate::util::ray::Ray;
-use crate::util::vector::Vector;
-use std::f64;
 use crate::util::rng::get_rng;
+use crate::util::vector::Vector;
 use rand::Rng;
+use std::f64;
 
 const AIR_DENS: f64 = 0.05f64;
 const PARTICLE_REFLECT: f64 = 0.2;
@@ -24,7 +24,7 @@ impl VMcShader {
         } else {
             if depth > 0 {
                 let reflec_type = get_rng(|mut r| r.gen::<f64>());
-                if PARTICLE_REFLECT>reflec_type {
+                if PARTICLE_REFLECT > reflec_type {
                     let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / AIR_DENS;
                     let hit_point = ray.origin + ray.direction * breakdist;
                     let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
@@ -45,7 +45,7 @@ impl VMcShader {
 
         if breakdist < dist {
             let reflec_type = get_rng(|mut r| r.gen::<f64>());
-            if PARTICLE_REFLECT>reflec_type {
+            if PARTICLE_REFLECT > reflec_type {
                 let hit_point = ray.origin + ray.direction * breakdist;
                 let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
                 if depth > 0 {
@@ -68,19 +68,20 @@ impl VMcShader {
 
         let indirect = if depth > 0 {
             let reflec_type = get_rng(|mut r| r.gen::<f64>());
-            let diffuse_max = intersection.triangle.material().diffuse.max();
-            if (diffuse_max>reflec_type) {
+            let diffuse_max = intersection.triangle.material().diffuse.max_item();
+            if diffuse_max > reflec_type {
                 let bounce_direction =
                     Vector::point_on_diffuse_hemisphere().rotated(intersection.triangle.normal());
                 let bounce_ray = Ray::new(hit_pos, bounce_direction);
                 let indirect_light = self.shade_internal(&bounce_ray, depth - 1, datastructure);
-                let texture = if let Some(texture) = intersection.triangle.mesh.material.diffuse_texture {
-                    let coord = map_uv(&intersection);
-                    texture.at(coord)
-                } else {
-                    Vector::new(1., 1., 1.)
-                };
-                indirect_light * intersection.triangle.material().diffuse/diffuse_max*texture
+                let texture =
+                    if let Some(texture) = intersection.triangle.mesh.material.diffuse_texture {
+                        let coord = map_uv(&intersection);
+                        texture.at(coord)
+                    } else {
+                        Vector::new(1., 1., 1.)
+                    };
+                indirect_light * intersection.triangle.material().diffuse / diffuse_max * texture
             } else {
                 Vector::repeated(0f64)
             }

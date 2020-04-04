@@ -1,11 +1,4 @@
-use crate::setup::monte_carlo::MonteCarlo;
-use crate::setup::Setup;
 
-use log::info;
-use log::LevelFilter;
-use simple_logging;
-use crate::setup::glowstone_gamma::GlowStoneGamma;
-use crate::setup::house_cb::HouseCB;
 
 mod datastructure;
 mod postprocessors;
@@ -16,9 +9,20 @@ mod setup;
 mod shader;
 mod util;
 
-fn main() {
-    simple_logging::log_to_stderr(LevelFilter::Debug);
-    info!("log :)");
+#[allow(unused_imports)]
+mod child {
+    use log::LevelFilter;
+    use crate::setup::monte_carlo_bvh::MonteCarloBVH;
+    use crate::setup::Setup;
+    use crate::setup::house_bvh::HouseBVH;
 
-    GlowStoneGamma.run()
+    pub fn main() {
+        simple_logging::log_to_stderr(LevelFilter::Debug);
+
+        HouseBVH.run()
+    }
+}
+
+fn main() {
+    child::main()
 }

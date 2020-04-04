@@ -1,19 +1,19 @@
-use crate::datastructure::basic::BasicDataStructure;
-use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
+use crate::datastructure::bvh::KDTreeDataStructure;
+use crate::raytracer::jmstrace::JMSTracer;
 use crate::renderer::RendererBuilder;
 use crate::scene::scene::SceneBuilder;
 use crate::setup::Setup;
-use crate::shader::mtlshader::MtlShader;
+use crate::shader::vmcshader::VMcShader;
 use crate::util::camera::Camera;
 use crate::util::vector::Vector;
 use std::path::Path;
 use std::process;
 
-pub struct HouseCB;
+pub struct MonteCarloBVH;
 
-impl Setup for HouseCB {
+impl Setup for MonteCarloBVH {
     fn run(&self) {
-        let tobj = tobj::load_obj("scenes/house.obj".as_ref()).unwrap_or_else(|err| {
+        let tobj = tobj::load_obj("scenes/monte-carlo.obj".as_ref()).unwrap_or_else(|err| {
             eprintln!("Couldn't open obj file: {}", err);
             process::exit(1);
         });
@@ -27,12 +27,12 @@ impl Setup for HouseCB {
             });
 
         let renderer = RendererBuilder::new(&scene)
-            .with_datastructure::<BasicDataStructure>()
-            .with_shader(MtlShader)
-            .with_tracer(CrossbeamJMSTracer)
+            .with_datastructure::<KDTreeDataStructure>()
+            .with_shader(VMcShader)
+            .with_tracer(JMSTracer)
             .without_postprocessor();
 
-        let camera = Camera::new(Vector::new(-20., 10.0, 55.), 100, 100, 60f64);
+        let camera = Camera::new(Vector::new(0., 1.0, 3.), 1000, 1000, 60f64);
         renderer
             .render(&camera)
             .to_bmp()

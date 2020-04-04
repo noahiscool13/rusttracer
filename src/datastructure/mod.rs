@@ -3,8 +3,8 @@ use crate::scene::scene::Scene;
 use crate::util::ray::Ray;
 
 pub mod basic;
+pub mod bvh;
 pub mod intersection;
-pub mod precalculated;
 
 pub trait DataStructure<'d> {
     /// Generates a datastructure

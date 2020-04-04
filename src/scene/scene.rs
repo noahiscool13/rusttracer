@@ -1,4 +1,5 @@
 use crate::scene::error::SceneError;
+use crate::scene::light::LightSourceManager;
 use crate::scene::material::Material;
 use crate::scene::material::DEFAULT_MATERIAL;
 use crate::scene::texture::{TextureAtlas, TextureAtlasBuilder};
@@ -8,7 +9,6 @@ use crate::util::vector::Vector;
 use std::mem;
 use std::path::Path;
 use std::pin::Pin;
-use crate::scene::light::LightSourceManager;
 
 #[derive(Debug)]
 pub struct Mesh<'m> {
@@ -50,25 +50,16 @@ impl<'s> Scene<'s> {
         self.meshes.iter().flat_map(move |i| i.triangles.iter())
     }
 
-    pub fn vertices(&self) -> impl Iterator<Item = &Vector>{
-        self.meshes.iter()
-            .flat_map(move |i| {
-                i.vertices.iter()
-            })
+    pub fn vertices(&self) -> impl Iterator<Item = &Vector> {
+        self.meshes.iter().flat_map(move |i| i.vertices.iter())
     }
 
-    pub fn texture_coordinates(&self) -> impl Iterator<Item = &TextureCoordinate>{
-        self.meshes.iter()
-            .flat_map(move |i| {
-                i.texcoords.iter()
-            })
+    pub fn texture_coordinates(&self) -> impl Iterator<Item = &TextureCoordinate> {
+        self.meshes.iter().flat_map(move |i| i.texcoords.iter())
     }
 
-    pub fn normals(&self) -> impl Iterator<Item = &Vector>{
-        self.meshes.iter()
-            .flat_map(move |i| {
-                i.normals.iter()
-            })
+    pub fn normals(&self) -> impl Iterator<Item = &Vector> {
+        self.meshes.iter().flat_map(move |i| i.normals.iter())
     }
 }
 
@@ -187,17 +178,20 @@ impl<'s> SceneBuilder<'s> {
         }
 
         let lightsourcemanager = LightSourceManager::from_triangle_iter(
-            meshes.iter().flat_map(move |i| i.triangles.iter()).map(|i| {
-                let ptr: &'a Triangle = unsafe { mem::transmute(i) };
-                ptr
-            })
+            meshes
+                .iter()
+                .flat_map(move |i| i.triangles.iter())
+                .map(|i| {
+                    let ptr: &'a Triangle = unsafe { mem::transmute(i) };
+                    ptr
+                }),
         )?;
 
         Ok(Scene {
             textureatlas,
             meshes,
             materials,
-            lightsourcemanager
+            lightsourcemanager,
         })
     }
 }

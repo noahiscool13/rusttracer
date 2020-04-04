@@ -10,12 +10,11 @@ impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader {
     fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
-
         } else {
             return Vector::repeated(0f64);
         };
 
-        let pointlight = Vector::new(0f64, 50f64, 50f64);
+        let pointlight = Vector::new(-30., 20., 70.);
         let brightness = Vector::repeated(1f64);
 
         let hit_pos = intersection.hit_pos();
