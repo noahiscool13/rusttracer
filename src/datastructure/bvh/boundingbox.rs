@@ -183,23 +183,23 @@ impl BoundingBox {
     }
 
     pub fn includes_point(&self, point: &Vector) -> bool {
-        if point.x >= self.min.x {
+        if point.x < self.min.x {
             return false;
         }
-        if point.y >= self.min.y {
+        if point.y < self.min.y {
             return false;
         }
-        if point.z >= self.min.z {
+        if point.z < self.min.z {
             return false;
         }
 
-        if point.x <= self.max.x {
+        if point.x > self.max.x {
             return false;
         }
-        if point.y <= self.max.y {
+        if point.y > self.max.y {
             return false;
         }
-        if point.z <= self.max.z {
+        if point.z > self.max.z {
             return false;
         }
 
