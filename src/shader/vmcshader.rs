@@ -7,8 +7,8 @@ use crate::util::vector::Vector;
 use rand::Rng;
 use std::f64;
 
-const AIR_DENS: f64 = 0.05f64;
-const PARTICLE_REFLECT: f64 = 0.2;
+const AIR_DENS: f64 = 0.3f64;
+const PARTICLE_REFLECT: f64 = 0.4;
 
 pub struct VMcShader;
 
@@ -60,6 +60,7 @@ impl VMcShader {
         //
         //        let part_amb = ambient(&intersection.face, self.scene) * Vector::repeated(0.1);
         let part_emi = emittance(&intersection);
+
         //        let part_diff = diffuse(&intersection.face, self.scene, hit_pos, pointlight) * brightness;
         //        let part_spec = specular(&intersection.face, self.scene, hit_pos, pointlight, intersection.ray.origin) * brightness;
         //
@@ -68,10 +69,15 @@ impl VMcShader {
 
         let indirect = if depth > 0 {
             let reflec_type = get_rng(|mut r| r.gen::<f64>());
-            let diffuse_max = intersection.triangle.material().diffuse.max();
+            let diffuse_max = intersection.triangle.material().diffuse.max_item();
             if diffuse_max > reflec_type {
+                let fliped_normal = if intersection.triangle.normal().dot(ray.direction)<0.{
+                    intersection.triangle.normal()
+                } else {
+                    intersection.triangle.normal()*-1.
+                };
                 let bounce_direction =
-                    Vector::point_on_diffuse_hemisphere().rotated(intersection.triangle.normal());
+                    Vector::point_on_diffuse_hemisphere().rotated(fliped_normal);
                 let bounce_ray = Ray::new(hit_pos, bounce_direction);
                 let indirect_light = self.shade_internal(&bounce_ray, depth - 1, datastructure);
                 let texture =

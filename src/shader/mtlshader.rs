@@ -14,7 +14,9 @@ impl<'s> Shader<'s> for MtlShader {
             return Vector::repeated(0f64);
         };
 
-        let pointlight = Vector::new(0f64, 50f64, 50f64);
+        let pointlight = Vector::new(3., 1.0, 0.);
+//        let pointlight = Vector::new(100., 100., 100.);
+
         let brightness = Vector::repeated(1f64);
 
         let hit_pos = intersection.hit_pos();

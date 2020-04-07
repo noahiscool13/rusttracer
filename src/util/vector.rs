@@ -2,8 +2,8 @@ use crate::util::color::Color;
 use crate::util::rng::get_rng;
 use rand::Rng;
 use std::f64;
+use std::ops::{Add, AddAssign, Div, Mul, Sub};
 use serde::{Serialize, Deserialize};
-use std::ops::{Add, Div, Mul, Sub};
 
 const EPSILON: f64 = 0.00001;
 
@@ -19,9 +19,9 @@ impl Clamp01 for f64 {
 
 #[derive(PartialEq, Debug, Clone, Copy, Default, Serialize, Deserialize)]
 pub struct Vector {
-    x: f64,
-    y: f64,
-    z: f64,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 impl Vector {
@@ -80,7 +80,7 @@ impl Vector {
         Vector::new(self.x.powf(exp), self.y.powf(exp), self.z.powf(exp))
     }
 
-    pub fn max(&self) -> f64 {
+    pub fn max_item(&self) -> f64 {
         if self.x > self.y {
             if self.x > self.z {
                 return self.x;
@@ -91,6 +91,22 @@ impl Vector {
                 return self.y;
             }
             return self.z;
+        }
+    }
+
+    pub fn min(&self, other: &Self) -> Self {
+        Self {
+            x: self.x.min(other.x),
+            y: self.y.min(other.y),
+            z: self.z.min(other.z),
+        }
+    }
+
+    pub fn max(&self, other: &Self) -> Self {
+        Self {
+            x: self.x.max(other.x),
+            y: self.y.max(other.y),
+            z: self.z.max(other.z),
         }
     }
 
@@ -129,9 +145,13 @@ impl Vector {
 
     pub fn point_on_sphere() -> Vector {
         let theta = get_rng(|mut r| r.gen::<f64>()) * 2f64 * f64::consts::PI;
-        let phi = (2f64 * get_rng(|mut r| r.gen::<f64>()) - 1f64).acos() - f64::consts::PI / 2f64;
+        let phi = (1f64 - 2f64 * get_rng(|mut r| r.gen::<f64>())).acos();
 
-        Vector::new(phi.cos() * theta.cos(), phi.cos() * theta.sin(), phi.cos())
+        Vector::new(
+            phi.sin() * theta.cos(),
+            (phi.sin() * theta.sin()),
+            phi.cos(),
+        )
     }
 
     pub fn point_on_diffuse_hemisphere() -> Vector {
@@ -173,6 +193,14 @@ impl Add for Vector {
             y: self.y + rhs.y,
             z: self.z + rhs.z,
         }
+    }
+}
+
+impl AddAssign for Vector {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
     }
 }
 

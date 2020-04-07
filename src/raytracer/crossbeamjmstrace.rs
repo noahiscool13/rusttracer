@@ -9,7 +9,7 @@ use crossbeam::thread;
 use log::info;
 use rand::Rng;
 
-const SPP: usize = 2;
+const SPP: usize = 1000;
 
 pub struct CrossbeamJMSTracer;
 
@@ -32,7 +32,7 @@ impl<'r> RayTracer<'r> for CrossbeamJMSTracer {
 
                 s.spawn(move |_| {
                     for y in start_y..(start_y + chunk.len()) {
-                        let mut row = &mut chunk[y - start_y];
+                        let row = &mut chunk[y - start_y];
 
                         for x in 0..camera.width {
                             let mut out = Vector::repeated(0f64);

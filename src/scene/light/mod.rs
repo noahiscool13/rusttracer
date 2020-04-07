@@ -12,7 +12,7 @@ pub enum LightError {
 
 pub struct LightSourceManager<'l> {
     lightsources: Vec<&'l Triangle<'l>>,
-    weights: WeightedIndex<u64>,
+    weights: WeightedIndex<f64>,
 }
 
 impl<'l> LightSourceManager<'l> {
@@ -34,7 +34,7 @@ impl<'l> LightSourceManager<'l> {
                     let area = l.area();
                     let emittance = l.mesh.material.emittance.length();
 
-                    (area * emittance) as u64
+                    (area * emittance) as f64
                 })
                 .collect(),
         )
