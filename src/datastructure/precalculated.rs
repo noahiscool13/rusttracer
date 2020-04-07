@@ -12,6 +12,14 @@ pub struct PrecalculatedDatastructure<'p> {
 }
 
 impl<'p> PrecalculatedDatastructure<'p> {
+    fn new(scene: &'p Scene<'p>) -> Self {
+        Self {
+            triangles: scene.triangles().cloned().collect(),
+        }
+    }
+}
+
+impl<'p> PrecalculatedDatastructure<'p> {
     fn intersects_triangle<'a>(
         &self,
         ray: &'a Ray,
@@ -58,12 +66,6 @@ impl<'p> PrecalculatedDatastructure<'p> {
 }
 
 impl<'d> DataStructure<'d> for PrecalculatedDatastructure<'d> {
-    fn new(scene: &'d Scene<'d>) -> Self {
-        Self {
-            triangles: scene.triangles().cloned().collect(),
-        }
-    }
-
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
         let mut min = None;
 

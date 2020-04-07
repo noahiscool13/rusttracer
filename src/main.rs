@@ -1,12 +1,10 @@
-use crate::setup::monte_carlo::MonteCarlo;
-use crate::setup::Setup;
 
 use log::info;
 use log::LevelFilter;
 use simple_logging;
-use crate::setup::glowstone_gamma::GlowStoneGamma;
-use crate::setup::house_cb::HouseCB;
+use crate::config::Config;
 
+mod config;
 mod datastructure;
 mod postprocessors;
 mod raytracer;
@@ -20,5 +18,14 @@ fn main() {
     simple_logging::log_to_stderr(LevelFilter::Debug);
     info!("log :)");
 
-    GlowStoneGamma.run()
+    Config::default().dump("config.yml")
+        .unwrap();
+
+    // Config::load("config.toml")
+    //     .unwrap()
+    //     .run()
+    //     .unwrap();
+
+
+    // GlowStoneGamma.run()
 }

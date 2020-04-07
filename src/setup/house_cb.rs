@@ -1,15 +1,13 @@
 use crate::datastructure::basic::BasicDataStructure;
-use crate::raytracer::jmstrace::JMSTracer;
+use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
 use crate::renderer::RendererBuilder;
 use crate::scene::scene::SceneBuilder;
 use crate::setup::Setup;
-use crate::shader::vmcshader::VMcShader;
+use crate::shader::mtlshader::MtlShader;
 use crate::util::camera::Camera;
 use crate::util::vector::Vector;
 use std::path::Path;
 use std::process;
-use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
-use crate::shader::mtlshader::MtlShader;
 
 pub struct HouseCB;
 
@@ -28,10 +26,11 @@ impl Setup for HouseCB {
                 process::exit(1);
             });
 
-        let renderer = RendererBuilder::new(&scene)
-            .with_datastructure::<BasicDataStructure>()
-            .with_shader(MtlShader)
-            .with_tracer(CrossbeamJMSTracer)
+        let ds = BasicDataStructure::new(&scene);
+
+        let renderer = RendererBuilder::new(&ds)
+            .with_shader(&MtlShader)
+            .with_tracer(&CrossbeamJMSTracer)
             .without_postprocessor();
 
         let camera = Camera::new(Vector::new(-20., 10.0, 55.), 100, 100, 60f64);

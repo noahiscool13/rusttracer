@@ -5,8 +5,8 @@ use crate::util::vector::Vector;
 
 pub struct TestShader {}
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for TestShader {
-    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
+impl<'s> Shader<'s> for TestShader {
+    fn shade(&self, ray: &Ray, datastructure: &'s dyn DataStructure<'s>) -> Vector {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
         } else {

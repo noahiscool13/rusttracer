@@ -7,11 +7,11 @@ use crate::util::vector::Vector;
 pub struct McShader;
 
 impl McShader {
-    pub fn shade_internal<'a, DS: DataStructure<'a>>(
+    pub fn shade_internal<'a>(
         &self,
         ray: &Ray,
         depth: usize,
-        datastructure: &DS,
+        datastructure: &'a dyn DataStructure<'a>,
     ) -> Vector {
         //        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
         //        let brightness = Vector::repeated(0f64);
@@ -42,14 +42,14 @@ impl McShader {
             Vector::repeated(0f64)
         };
 
-        let total =  indirect*2. + part_emi;
+        let total = indirect * 2. + part_emi;
 
         return total.into();
     }
 }
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for McShader {
-    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
+impl<'s> Shader<'s> for McShader {
+    fn shade(&self, ray: &Ray, datastructure: &'s dyn DataStructure<'s>) -> Vector {
         self.shade_internal(ray, 4, datastructure)
     }
 }

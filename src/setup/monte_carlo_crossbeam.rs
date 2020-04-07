@@ -1,5 +1,5 @@
 use crate::datastructure::basic::BasicDataStructure;
-use crate::raytracer::jmstrace::JMSTracer;
+use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
 use crate::renderer::RendererBuilder;
 use crate::scene::scene::SceneBuilder;
 use crate::setup::Setup;
@@ -8,7 +8,6 @@ use crate::util::camera::Camera;
 use crate::util::vector::Vector;
 use std::path::Path;
 use std::process;
-use crate::raytracer::crossbeamjmstrace::CrossbeamJMSTracer;
 
 pub struct MonteCarloCrossbeam;
 
@@ -27,10 +26,11 @@ impl Setup for MonteCarloCrossbeam {
                 process::exit(1);
             });
 
-        let renderer = RendererBuilder::new(&scene)
-            .with_datastructure::<BasicDataStructure>()
-            .with_shader(VMcShader)
-            .with_tracer(CrossbeamJMSTracer)
+        let ds = BasicDataStructure::new(&scene);
+
+        let renderer = RendererBuilder::new(&ds)
+            .with_shader(&VMcShader)
+            .with_tracer(&CrossbeamJMSTracer)
             .without_postprocessor();
 
         let camera = Camera::new(Vector::new(0., 1.0, 3.), 1000, 1000, 60f64);

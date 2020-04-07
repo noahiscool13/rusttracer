@@ -6,11 +6,10 @@ use crate::util::vector::Vector;
 
 pub struct MtlShader;
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader {
-    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
+impl<'s> Shader<'s> for MtlShader {
+    fn shade(&self, ray: &Ray, datastructure: &'s dyn DataStructure<'s>) -> Vector {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
-
         } else {
             return Vector::repeated(0f64);
         };

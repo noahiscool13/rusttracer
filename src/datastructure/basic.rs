@@ -12,6 +12,10 @@ pub struct BasicDataStructure<'d> {
 }
 
 impl<'d> BasicDataStructure<'d> {
+    pub fn new(scene: &'d Scene<'d>) -> Self {
+        Self { data: scene }
+    }
+
     fn intersects_triangle<'a>(
         &self,
         ray: &'a Ray,
@@ -58,10 +62,6 @@ impl<'d> BasicDataStructure<'d> {
 }
 
 impl<'d> DataStructure<'d> for BasicDataStructure<'d> {
-    fn new(scene: &'d Scene<'d>) -> Self {
-        Self { data: scene }
-    }
-
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
         let mut min = None;
 

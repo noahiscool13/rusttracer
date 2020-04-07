@@ -6,8 +6,13 @@ use crate::util::outputbuffer::OutputBuffer;
 
 pub struct BasicRaytracer;
 
-impl<'r, DS: DataStructure<'r>, S: Shader<'r, DS>> RayTracer<'r, DS, S> for BasicRaytracer {
-    fn raytrace(&self, datastructure: &DS, shader: &S, camera: &Camera) -> OutputBuffer {
+impl<'r> RayTracer<'r> for BasicRaytracer {
+    fn raytrace(
+        &self,
+        datastructure: &'r dyn DataStructure<'r>,
+        shader: &'r dyn Shader<'r>,
+        camera: &Camera,
+    ) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
 
         for x in 0..camera.width {

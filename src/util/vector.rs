@@ -1,8 +1,9 @@
 use crate::util::color::Color;
-use std::f64;
-use std::ops::{Add, Div, Mul, Sub};
 use crate::util::rng::get_rng;
 use rand::Rng;
+use std::f64;
+use serde::{Serialize, Deserialize};
+use std::ops::{Add, Div, Mul, Sub};
 
 const EPSILON: f64 = 0.00001;
 
@@ -16,7 +17,7 @@ impl Clamp01 for f64 {
     }
 }
 
-#[derive(PartialEq, Debug, Clone, Copy, Default)]
+#[derive(PartialEq, Debug, Clone, Copy, Default, Serialize, Deserialize)]
 pub struct Vector {
     x: f64,
     y: f64,
@@ -80,13 +81,13 @@ impl Vector {
     }
 
     pub fn max(&self) -> f64 {
-        if self.x>self.y {
-            if self.x >self.z {
+        if self.x > self.y {
+            if self.x > self.z {
                 return self.x;
             }
             return self.z;
         } else {
-            if self.y >self.z {
+            if self.y > self.z {
                 return self.y;
             }
             return self.z;
@@ -135,9 +136,9 @@ impl Vector {
 
     pub fn point_on_diffuse_hemisphere() -> Vector {
         let u = get_rng(|mut r| r.gen::<f64>());
-        let v = 2.*f64::consts::PI*get_rng(|mut r| r.gen::<f64>());
+        let v = 2. * f64::consts::PI * get_rng(|mut r| r.gen::<f64>());
 
-        Vector::new(v.cos()*u.sqrt(),(1.-u).sqrt(),v.sin()*u.sqrt())
+        Vector::new(v.cos() * u.sqrt(), (1. - u).sqrt(), v.sin() * u.sqrt())
     }
 }
 
