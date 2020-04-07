@@ -15,11 +15,12 @@ mod child {
     use crate::setup::monte_carlo_bvh::MonteCarloBVH;
     use crate::setup::Setup;
     use crate::setup::house_bvh::HouseBVH;
+    use crate::setup::hard_box_bhv::HardBoxBHV;
 
     pub fn main() {
         simple_logging::log_to_stderr(LevelFilter::Debug);
 
-        HouseBVH.run()
+        MonteCarloBVH.run()
     }
 }
 
