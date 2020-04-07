@@ -144,9 +144,13 @@ impl Vector {
 
     pub fn point_on_sphere() -> Vector {
         let theta = get_rng(|mut r| r.gen::<f64>()) * 2f64 * f64::consts::PI;
-        let phi = (2f64 * get_rng(|mut r| r.gen::<f64>()) - 1f64).acos() - f64::consts::PI / 2f64;
+        let phi = (1f64 - 2f64 * get_rng(|mut r| r.gen::<f64>())).acos();
 
-        Vector::new(phi.cos() * theta.cos(), phi.cos() * theta.sin(), phi.cos())
+        Vector::new(
+            phi.sin() * theta.cos(),
+            (phi.sin() * theta.sin()),
+            phi.cos(),
+        )
     }
 
     pub fn point_on_diffuse_hemisphere() -> Vector {

@@ -159,7 +159,7 @@ pub fn intersects_boundingbox<'a>(
     let tmin = (boundingbox.min.x - ray.origin.x) / ray.direction.x;
     let tmax = (boundingbox.max.x - ray.origin.x) / ray.direction.x;
 
-    let (mut tmin, mut tmax) = if tmin > tmax {
+    let (tmin, tmax) = if tmin > tmax {
         (tmax, tmin)
     } else {
         (tmin, tmax)
@@ -178,13 +178,17 @@ pub fn intersects_boundingbox<'a>(
         return None;
     }
 
-    if tymin > tmin {
-        tmin = tymin;
-    }
+    let tmin = if tymin > tmin {
+        tymin
+    } else {
+        tmin
+    };
 
-    if tymax < tmax {
-        tmax = tymax;
-    }
+    let tmax = if tymax < tmax {
+        tymax
+    } else {
+        tmax
+    };
 
     let tzmin = (boundingbox.min.z - ray.origin.z) / ray.direction.z;
     let tzmax = (boundingbox.max.z - ray.origin.z) / ray.direction.z;
@@ -199,13 +203,17 @@ pub fn intersects_boundingbox<'a>(
         return None;
     }
 
-    if tzmin > tmin {
-        tmin = tzmin;
-    }
+    let tmin = if tzmin > tmin {
+        tzmin
+    } else {
+        tmin
+    };
 
-    if tzmax < tmax {
-        tmax = tzmax;
-    }
+    let tmax = if tzmax < tmax {
+        tzmax
+    } else {
+        tmax
+    };
 
     let t = tmin.min(tmax);
 

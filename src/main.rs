@@ -20,7 +20,7 @@ mod child {
     pub fn main() {
         simple_logging::log_to_stderr(LevelFilter::Debug);
 
-        MonteCarloBVH.run()
+        HardBoxBHV.run()
     }
 }
 

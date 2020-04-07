@@ -8,6 +8,7 @@ use crate::util::camera::Camera;
 use crate::util::vector::Vector;
 use std::path::Path;
 use std::process;
+use crate::shader::mtlshader::MtlShader;
 
 pub struct HardBoxBHV;
 
@@ -32,7 +33,7 @@ impl Setup for HardBoxBHV {
             .with_tracer(JMSTracer)
             .without_postprocessor();
 
-        let camera = Camera::new(Vector::new(0., 1.0, 3.), 1000, 1000, 60f64);
+        let camera = Camera::new(Vector::new(3., 1.0, 0.), 1000, 1000, 60f64);
         renderer
             .render(&camera)
             .to_bmp()
