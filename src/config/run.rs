@@ -7,6 +7,13 @@ use crate::raytracer::basic::BasicRaytracer;
 use crate::shader::mtlshader::MtlShader;
 use crate::renderer::RendererBuilder;
 use crate::util::camera::Camera;
+use crate::datastructure::bvh::KDTreeDataStructure;
+use crate::shader::mcshader::McShader;
+use crate::shader::vmcshader::VMcShader;
+use crate::datastructure::DataStructure;
+use crate::shader::Shader;
+use std::borrow::Borrow;
+use crate::raytracer::RayTracer;
 
 impl Config {
     pub fn run(self) -> Result<(), ConfigError>{
@@ -17,21 +24,25 @@ impl Config {
             .build_from_tobj(tobj)?;
 
 
-        let datastructure = match self.datastructure {
-            DatastructureConfig::Basic => BasicDataStructure::new(&scene),
+        let datastructure: Box<dyn DataStructure> = match self.datastructure {
+            DatastructureConfig::basic => Box::new(BasicDataStructure::new(&scene)),
+            DatastructureConfig::kdtree => Box::new(KDTreeDataStructure::new(&scene)),
         };
 
-        let shader = match self.shader {
-            ShaderConfig::MtlShader => MtlShader,
+        let shader: Box<dyn Shader> = match self.shader {
+            ShaderConfig::mtlshader => Box::new(MtlShader),
+            ShaderConfig::mcshader => Box::new(McShader),
+            ShaderConfig::vmcshader {air_density, particle_reflectivity} => Box::new(VMcShader::new(air_density, particle_reflectivity)),
+
         };
 
-        let tracer = match self.raytracer {
-            RaytracerConfig::Basic => BasicRaytracer,
+        let tracer: Box<dyn RayTracer> = match self.raytracer {
+            RaytracerConfig::Basic => Box::new(BasicRaytracer),
         };
 
-        let renderer = RendererBuilder::new(&datastructure)
-            .with_shader(&shader)
-            .with_tracer(&tracer)
+        let renderer = RendererBuilder::new(&*datastructure)
+            .with_shader(&*shader)
+            .with_tracer(&*tracer)
             .without_postprocessor();
 
         let camera = Camera::new(
@@ -41,7 +52,8 @@ impl Config {
             self.camera.fov,
         );
 
-        let output = renderer.render(&camera)
+
+        renderer.render(&camera)
             .to_bmp()
             .save(self.general.outputname)?;
 

@@ -4,6 +4,7 @@ use log::LevelFilter;
 use simple_logging;
 use crate::config::Config;
 
+mod config;
 mod datastructure;
 mod postprocessors;
 mod raytracer;

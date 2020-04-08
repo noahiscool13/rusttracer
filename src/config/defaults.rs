@@ -27,13 +27,16 @@ impl Default for CameraConfig {
 
 impl Default for DatastructureConfig {
     fn default() -> Self {
-        DatastructureConfig::Basic
+        DatastructureConfig::kdtree
     }
 }
 
 impl Default for ShaderConfig {
     fn default() -> Self {
-        ShaderConfig::MtlShader
+        ShaderConfig::vmcshader {
+            air_density: 0.3,
+            particle_reflectivity: 0.4,
+        }
     }
 }
 

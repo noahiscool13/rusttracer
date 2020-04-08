@@ -60,6 +60,18 @@ fn intersects_triangle<'a>(ray: &'a Ray, triangle: &'a Triangle) -> Option<Inter
 }
 
 impl<'d> KDTreeDataStructure<'d> {
+    pub fn new(scene: &'d Scene<'d>) -> Self {
+        debug!("Started building KD-Tree");
+        let triangles: Vec<&Triangle> = scene.triangles().collect();
+        debug!("Cached triangles locally");
+
+        let root = BVHNode::new(triangles);
+        println!("{}", root);
+
+        Self { root }
+    }
+
+
     fn intersect_internal<'a>(ray: &'a Ray, node: &'a BVHNode) -> Option<Intersection<'a>> {
         match node {
             BVHNode::Leaf {
@@ -121,17 +133,6 @@ impl<'d> KDTreeDataStructure<'d> {
 }
 
 impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
-    fn new(scene: &'d Scene<'d>) -> Self {
-        debug!("Started building KD-Tree");
-        let triangles: Vec<&Triangle> = scene.triangles().collect();
-        debug!("Cached triangles locally");
-
-        let root = BVHNode::new(triangles);
-        println!("{}", root);
-
-        Self { root }
-    }
-
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
         Self::intersect_internal(ray, &self.root)
     }

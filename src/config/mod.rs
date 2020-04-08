@@ -60,12 +60,18 @@ pub struct CameraConfig {
 
 #[derive(Serialize, Deserialize)]
 pub enum ShaderConfig {
-    MtlShader,
+    mtlshader,
+    mcshader,
+    vmcshader {
+        air_density: f64,
+        particle_reflectivity: f64
+    }
 }
 
 #[derive(Serialize, Deserialize)]
 pub enum DatastructureConfig {
-    Basic,
+    basic,
+    kdtree
 }
 
 impl Default for Config {

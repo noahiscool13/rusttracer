@@ -5,7 +5,6 @@ use crate::util::vector::Vector;
 pub mod mcshader;
 pub mod mtlshader;
 pub mod shaders;
-pub mod testshader;
 pub mod vmcshader;
 
 // TODO: recursive shading
