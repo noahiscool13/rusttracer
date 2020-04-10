@@ -8,33 +8,37 @@ mod builder;
 
 use crate::postprocessors::PostProcessor;
 pub use builder::RendererBuilder;
+use crate::generator::Generator;
 
 pub struct Renderer<'r> {
-    datastructure: &'r (dyn DataStructure + 'r),
-    tracer: &'r (dyn RayTracer + 'r),
-    shader: &'r (dyn Shader + 'r),
+    generator: &'r dyn Generator,
+    raytracer: &'r dyn RayTracer,
+    shader: &'r dyn Shader,
+    datastructure: &'r dyn DataStructure,
     postprocessor: &'r dyn PostProcessor,
 }
 
 impl<'r> Renderer<'r> {
     pub(self) fn new(
-        datastructure: &'r (dyn DataStructure + 'r),
-        shader: &'r (dyn Shader + 'r),
-        tracer: &'r (dyn RayTracer + 'r),
+        generator: &'r dyn Generator,
+        raytracer: &'r dyn RayTracer,
+        shader: &'r dyn Shader,
+        datastructure: &'r dyn DataStructure,
         postprocessor: &'r dyn PostProcessor,
     ) -> Self {
         Self {
-            datastructure,
-            tracer,
+            generator,
+            raytracer,
             shader,
+            datastructure,
             postprocessor,
         }
     }
 
     pub fn render(&self, camera: &Camera) -> OutputBuffer {
         let output = self
-            .tracer
-            .raytrace(self.datastructure, self.shader, camera);
+            .generator
+            .generate_internal(self.raytracer, self.datastructure, self.shader, camera);
 
         self.postprocessor.process(output)
     }

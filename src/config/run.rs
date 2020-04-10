@@ -1,4 +1,4 @@
-use crate::config::{Config, DatastructureConfig, ShaderConfig, RaytracerConfig};
+use crate::config::{Config, DatastructureConfig, ShaderConfig, RaytracerConfig, GeneratorConfig};
 use crate::config::error::ConfigError;
 use crate::scene::scene::SceneBuilder;
 use crate::datastructure::basic::BasicDataStructure;
@@ -14,6 +14,8 @@ use crate::datastructure::DataStructure;
 use crate::shader::Shader;
 use std::borrow::Borrow;
 use crate::raytracer::RayTracer;
+use crate::generator::Generator;
+use crate::generator::basic::BasicGenerator;
 
 impl Config {
     pub fn run(self) -> Result<(), ConfigError>{
@@ -32,16 +34,20 @@ impl Config {
             ShaderConfig::mtlshader => Box::new(MtlShader),
             ShaderConfig::mcshader => Box::new(McShader),
             ShaderConfig::vmcshader {air_density, particle_reflectivity} => Box::new(VMcShader::new(air_density, particle_reflectivity)),
-
         };
 
-        let tracer: Box<dyn RayTracer> = match self.raytracer {
+        let generator: Box<dyn Generator> = match self.generator {
+            GeneratorConfig::Basic => Box::new(BasicGenerator)
+        };
+
+        let raytracer: Box<dyn RayTracer> = match self.raytracer {
             RaytracerConfig::Basic => Box::new(BasicRaytracer),
         };
 
-        let renderer = RendererBuilder::new(datastructure.as_ref())
+        let renderer = RendererBuilder::new(generator.as_ref())
+            .with_raytracer(raytracer.as_ref())
             .with_shader(shader.as_ref())
-            .with_tracer(tracer.as_ref())
+            .with_datastructure(datastructure.as_ref())
             .without_postprocessor();
 
         let camera = Camera::new(

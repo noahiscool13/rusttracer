@@ -1,5 +1,5 @@
 use crate::util::vector::Vector;
-use crate::config::{CameraConfig, DatastructureConfig, GeneralConfig, ShaderConfig, RaytracerConfig};
+use crate::config::{CameraConfig, DatastructureConfig, GeneralConfig, ShaderConfig, RaytracerConfig, GeneratorConfig};
 use crate::config::corecount::CoreCount;
 
 impl Default for GeneralConfig {
@@ -43,5 +43,11 @@ impl Default for ShaderConfig {
 impl Default for RaytracerConfig {
     fn default() -> Self {
         RaytracerConfig::Basic
+    }
+}
+
+impl Default for GeneratorConfig {
+    fn default() -> Self {
+        GeneratorConfig::Basic
     }
 }

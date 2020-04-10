@@ -4,63 +4,88 @@ use crate::postprocessors::PostProcessor;
 use crate::raytracer::RayTracer;
 use crate::renderer::Renderer;
 use crate::shader::Shader;
+use crate::generator::Generator;
 
 pub struct RendererBuilder<'a> {
-    pub(self) datastructure: &'a (dyn DataStructure + 'a),
+    pub(self) generator: &'a dyn Generator
+}
+
+pub struct RendererBuilderRaytracer<'a> {
+    pub(self) generator: &'a dyn Generator,
+    pub(self) raytracer: &'a dyn RayTracer,
 }
 
 pub struct RendererBuilderShader<'a> {
-    pub(self) datastructure: &'a (dyn DataStructure + 'a),
-    pub(self) shader: &'a (dyn Shader + 'a),
+    pub(self) generator: &'a dyn Generator,
+    pub(self) raytracer: &'a dyn RayTracer,
+    pub(self) shader: &'a dyn Shader,
 }
 
-pub struct RendererBuilderPostProcessor<'a> {
-    datastructure: &'a (dyn DataStructure + 'a),
-    raytracer: &'a (dyn RayTracer + 'a),
-    shader: &'a (dyn Shader + 'a),
+pub struct RendererBuilderDatastructure<'a> {
+    pub(self) generator: &'a dyn Generator,
+    pub(self) raytracer: &'a dyn RayTracer,
+    pub(self) shader: &'a dyn Shader,
+    pub(self) datastructure: &'a dyn DataStructure,
 }
 
 impl<'a> RendererBuilder<'a> {
-    pub fn new(datastructure: &'a (dyn DataStructure + 'a)) -> Self {
-        Self { datastructure }
+    pub fn new(generator: &'a dyn Generator) -> Self {
+        Self { generator }
     }
 
-    pub fn with_shader(self, shader: &'a (dyn Shader + 'a)) -> RendererBuilderShader<'a> {
+    pub fn with_raytracer(self, raytracer: &'a dyn RayTracer) -> RendererBuilderRaytracer<'a> {
+        RendererBuilderRaytracer {
+            generator: self.generator,
+            raytracer,
+        }
+    }
+}
+
+
+impl<'a> RendererBuilderRaytracer<'a> {
+    pub fn with_shader(
+        self,
+        shader: &'a dyn Shader,
+    ) -> RendererBuilderShader<'a> {
         RendererBuilderShader {
-            datastructure: self.datastructure,
+            generator: self.generator,
+            raytracer: self.raytracer,
             shader,
         }
     }
 }
 
 impl<'a> RendererBuilderShader<'a> {
-    pub fn with_tracer(
+    pub fn with_datastructure(
         self,
-        raytracer: &'a (dyn RayTracer + 'a),
-    ) -> RendererBuilderPostProcessor<'a> {
-        RendererBuilderPostProcessor {
-            datastructure: self.datastructure,
+        datastructure: &'a dyn DataStructure,
+    ) -> RendererBuilderDatastructure<'a> {
+        RendererBuilderDatastructure {
+            generator: self.generator,
+            raytracer: self.raytracer,
             shader: self.shader,
-            raytracer,
+            datastructure
         }
     }
 }
 
-impl<'a> RendererBuilderPostProcessor<'a> {
+impl<'a> RendererBuilderDatastructure<'a> {
     pub fn without_postprocessor(self) -> Renderer<'a> {
         Renderer::new(
-            self.datastructure,
-            self.shader,
+            self.generator,
             self.raytracer,
+            self.shader,
+            self.datastructure,
             &IdentityPostProcessor,
         )
     }
 
     pub fn with_postprocessor(self, postprocessor: &'a dyn PostProcessor) -> Renderer<'a> {
         Renderer::new(
-            self.datastructure,
-            self.shader,
+            self.generator,
             self.raytracer,
+            self.shader,
+            self.datastructure,
             postprocessor,
         )
     }

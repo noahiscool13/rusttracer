@@ -14,13 +14,19 @@ pub mod run;
 pub struct Config {
     general: GeneralConfig,
     camera: CameraConfig,
+    generator: GeneratorConfig,
+    raytracer: RaytracerConfig,
     shader: ShaderConfig,
     datastructure: DatastructureConfig,
-    raytracer: RaytracerConfig
 }
 
 #[derive(Serialize, Deserialize)]
 pub enum RaytracerConfig {
+    Basic,
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum GeneratorConfig {
     Basic,
 }
 
@@ -80,9 +86,10 @@ impl Default for Config {
             general: Default::default(),
             camera: Default::default(),
 
-            datastructure: Default::default(),
-            shader: Default::default(),
+            generator: Default::default(),
             raytracer: Default::default(),
+            shader: Default::default(),
+            datastructure: Default::default(),
         }
     }
 }
