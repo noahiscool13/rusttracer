@@ -9,11 +9,11 @@ use rayon::iter::ParallelIterator;
 
 pub struct RayonRaytracer;
 
-impl<'r> RayTracer<'r> for RayonRaytracer {
-    fn raytrace(
+impl RayTracer for RayonRaytracer {
+    fn raytrace<'r>(
         &self,
-        datastructure: &'r dyn DataStructure<'r>,
-        shader: &'r dyn Shader<'r>,
+        datastructure: &'r (dyn DataStructure + 'r),
+        shader: &'r (dyn Shader + 'r),
         camera: &Camera,
     ) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);

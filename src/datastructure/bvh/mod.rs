@@ -132,7 +132,7 @@ impl<'d> KDTreeDataStructure<'d> {
     }
 }
 
-impl<'d> DataStructure<'d> for KDTreeDataStructure<'d> {
+impl<'d> DataStructure for KDTreeDataStructure<'d> {
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
         Self::intersect_internal(ray, &self.root)
     }

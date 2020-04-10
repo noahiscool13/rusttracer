@@ -59,7 +59,7 @@ impl<'d> BasicDataStructure<'d> {
     }
 }
 
-impl<'d> DataStructure<'d> for BasicDataStructure<'d> {
+impl<'d> DataStructure for BasicDataStructure<'d> {
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
         let mut min = None;
 

@@ -28,7 +28,7 @@ impl VMcShader {
         &self,
         ray: &Ray,
         depth: usize,
-        datastructure: &'a dyn DataStructure<'a>,
+        datastructure: &'a (dyn DataStructure + 'a),
     ) -> Vector {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
@@ -111,8 +111,8 @@ impl VMcShader {
     }
 }
 
-impl<'s> Shader<'s> for VMcShader {
-    fn shade(&self, ray: &Ray, datastructure: &'s dyn DataStructure<'s>) -> Vector {
+impl Shader for VMcShader {
+    fn shade<'s>(&self, ray: &Ray, datastructure: &'s (dyn DataStructure + 's)) -> Vector {
         self.shade_internal(ray, 6, datastructure)
     }
 }

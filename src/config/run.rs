@@ -23,7 +23,6 @@ impl Config {
             .texturepath(Path::new(&self.general.texturepath))
             .build_from_tobj(tobj)?;
 
-
         let datastructure: Box<dyn DataStructure> = match self.datastructure {
             DatastructureConfig::basic => Box::new(BasicDataStructure::new(&scene)),
             DatastructureConfig::kdtree => Box::new(KDTreeDataStructure::new(&scene)),
@@ -40,9 +39,9 @@ impl Config {
             RaytracerConfig::Basic => Box::new(BasicRaytracer),
         };
 
-        let renderer = RendererBuilder::new(&*datastructure)
-            .with_shader(&*shader)
-            .with_tracer(&*tracer)
+        let renderer = RendererBuilder::new(datastructure.as_ref())
+            .with_shader(shader.as_ref())
+            .with_tracer(tracer.as_ref())
             .without_postprocessor();
 
         let camera = Camera::new(

@@ -6,8 +6,8 @@ use crate::util::vector::Vector;
 
 pub struct MtlShader;
 
-impl<'s> Shader<'s> for MtlShader {
-    fn shade(&self, ray: &Ray, datastructure: &'s dyn DataStructure<'s>) -> Vector {
+impl Shader for MtlShader {
+    fn shade<'s>(&self, ray: &Ray, datastructure: &'s (dyn DataStructure + 's)) -> Vector {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
         } else {

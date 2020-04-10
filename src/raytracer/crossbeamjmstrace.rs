@@ -11,13 +11,19 @@ use rand::Rng;
 
 const SPP: usize = 1000;
 
-pub struct CrossbeamJMSTracer;
+pub struct CrossbeamJMSTracer {
+    samples_per_pixel: usize,
+}
 
-impl<'r> RayTracer<'r> for CrossbeamJMSTracer {
-    fn raytrace(
+impl CrossbeamJMSTracer {
+    pub fn new(samples_per_pixel: usize) -> Self { Self { samples_per_pixel } }
+}
+
+impl RayTracer for CrossbeamJMSTracer {
+    fn raytrace<'r>(
         &self,
-        datastructure: &'r dyn DataStructure<'r>,
-        shader: &'r dyn Shader<'r>,
+        datastructure: &'r (dyn DataStructure + 'r),
+        shader: &'r (dyn Shader + 'r),
         camera: &Camera,
     ) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
@@ -36,7 +42,7 @@ impl<'r> RayTracer<'r> for CrossbeamJMSTracer {
 
                         for x in 0..camera.width {
                             let mut out = Vector::repeated(0f64);
-                            for _ in 0..SPP {
+                            for _ in 0..self.samples_per_pixel {
                                 let ray = camera.generate_ray(
                                     x as f64 + get_rng(|mut r| r.gen::<f64>()),
                                     y as f64 + get_rng(|mut r| r.gen::<f64>()),
@@ -44,14 +50,14 @@ impl<'r> RayTracer<'r> for CrossbeamJMSTracer {
 
                                 out = out + shader.shade(&ray, datastructure);
                             }
-                            row[x] = (out / SPP as f64).into();
+                            row[x] = (out / self.samples_per_pixel as f64).into();
                         }
                         info!("Finished row {}", y);
                     }
                 });
             }
         })
-        .expect("One of the threads in the threadpool has panicked!");
+            .expect("One of the threads in the threadpool has panicked!");
 
         output
     }

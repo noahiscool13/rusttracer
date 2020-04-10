@@ -14,11 +14,11 @@ const SPP: usize = 30000;
 
 pub struct MSTracer;
 
-impl<'r> RayTracer<'r> for MSTracer {
-    fn raytrace(
+impl RayTracer for MSTracer {
+    fn raytrace<'r>(
         &self,
-        datastructure: &'r dyn DataStructure<'r>,
-        shader: &'r dyn Shader<'r>,
+        datastructure: &'r (dyn DataStructure + 'r),
+        shader: &'r (dyn Shader + 'r),
         camera: &Camera,
     ) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);

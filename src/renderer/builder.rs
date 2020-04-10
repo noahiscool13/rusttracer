@@ -5,27 +5,27 @@ use crate::raytracer::RayTracer;
 use crate::renderer::Renderer;
 use crate::shader::Shader;
 
-pub struct RendererBuilder<'rb> {
-    pub(self) datastructure: &'rb dyn DataStructure<'rb>,
+pub struct RendererBuilder<'a> {
+    pub(self) datastructure: &'a (dyn DataStructure + 'a),
 }
 
-pub struct RendererBuilderShader<'rb> {
-    pub(self) datastructure: &'rb dyn DataStructure<'rb>,
-    pub(self) shader: &'rb dyn Shader<'rb>,
+pub struct RendererBuilderShader<'a> {
+    pub(self) datastructure: &'a (dyn DataStructure + 'a),
+    pub(self) shader: &'a (dyn Shader + 'a),
 }
 
-pub struct RendererBuilderPostProcessor<'rb> {
-    datastructure: &'rb dyn DataStructure<'rb>,
-    raytracer: &'rb dyn RayTracer<'rb>,
-    shader: &'rb dyn Shader<'rb>,
+pub struct RendererBuilderPostProcessor<'a> {
+    datastructure: &'a (dyn DataStructure + 'a),
+    raytracer: &'a (dyn RayTracer + 'a),
+    shader: &'a (dyn Shader + 'a),
 }
 
-impl<'rb> RendererBuilder<'rb> {
-    pub fn new(datastructure: &'rb dyn DataStructure<'rb>) -> Self {
+impl<'a> RendererBuilder<'a> {
+    pub fn new(datastructure: &'a (dyn DataStructure + 'a)) -> Self {
         Self { datastructure }
     }
 
-    pub fn with_shader(self, shader: &'rb dyn Shader<'rb>) -> RendererBuilderShader<'rb> {
+    pub fn with_shader(self, shader: &'a (dyn Shader + 'a)) -> RendererBuilderShader<'a> {
         RendererBuilderShader {
             datastructure: self.datastructure,
             shader,
@@ -33,11 +33,11 @@ impl<'rb> RendererBuilder<'rb> {
     }
 }
 
-impl<'rb> RendererBuilderShader<'rb> {
+impl<'a> RendererBuilderShader<'a> {
     pub fn with_tracer(
         self,
-        raytracer: &'rb dyn RayTracer<'rb>,
-    ) -> RendererBuilderPostProcessor<'rb> {
+        raytracer: &'a (dyn RayTracer + 'a),
+    ) -> RendererBuilderPostProcessor<'a> {
         RendererBuilderPostProcessor {
             datastructure: self.datastructure,
             shader: self.shader,
@@ -46,8 +46,8 @@ impl<'rb> RendererBuilderShader<'rb> {
     }
 }
 
-impl<'rb> RendererBuilderPostProcessor<'rb> {
-    pub fn without_postprocessor(self) -> Renderer<'rb> {
+impl<'a> RendererBuilderPostProcessor<'a> {
+    pub fn without_postprocessor(self) -> Renderer<'a> {
         Renderer::new(
             self.datastructure,
             self.shader,
@@ -56,7 +56,7 @@ impl<'rb> RendererBuilderPostProcessor<'rb> {
         )
     }
 
-    pub fn with_postprocessor(self, postprocessor: &'rb dyn PostProcessor) -> Renderer<'rb> {
+    pub fn with_postprocessor(self, postprocessor: &'a dyn PostProcessor) -> Renderer<'a> {
         Renderer::new(
             self.datastructure,
             self.shader,

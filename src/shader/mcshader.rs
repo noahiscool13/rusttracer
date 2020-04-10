@@ -11,7 +11,7 @@ impl McShader {
         &self,
         ray: &Ray,
         depth: usize,
-        datastructure: &'a dyn DataStructure<'a>,
+        datastructure: &'a (dyn DataStructure + 'a),
     ) -> Vector {
         //        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
         //        let brightness = Vector::repeated(0f64);
@@ -48,8 +48,8 @@ impl McShader {
     }
 }
 
-impl<'s> Shader<'s> for McShader {
-    fn shade(&self, ray: &Ray, datastructure: &'s dyn DataStructure<'s>) -> Vector {
+impl Shader for McShader {
+    fn shade<'s>(&self, ray: &Ray, datastructure: &'s (dyn DataStructure + 's)) -> Vector {
         self.shade_internal(ray, 4, datastructure)
     }
 }
