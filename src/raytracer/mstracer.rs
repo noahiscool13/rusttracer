@@ -5,8 +5,13 @@ use crate::util::camera::Camera;
 use crate::util::outputbuffer::OutputBuffer;
 use crate::util::vector::Vector;
 
+#[derive(Debug)]
 pub struct MSTracer {
     samples_per_pixel: usize,
+}
+
+impl MSTracer {
+    pub fn new(samples_per_pixel: usize) -> Self { Self { samples_per_pixel } }
 }
 
 impl RayTracer for MSTracer {

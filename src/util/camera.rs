@@ -2,6 +2,7 @@ use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 use std::f64;
 
+#[derive(Debug)]
 pub struct Camera {
     pub pos: Vector,
     pub width: usize,

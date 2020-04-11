@@ -4,6 +4,7 @@ use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 
+#[derive(Debug)]
 pub struct McShader;
 
 impl McShader {

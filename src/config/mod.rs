@@ -1,4 +1,4 @@
-use crate::config::corecount::CoreCount;
+use crate::config::corecount::ThreadCount;
 use crate::util::vector::Vector;
 use crate::config::error::ConfigError;
 use std::path::Path;
@@ -22,12 +22,36 @@ pub struct Config {
 
 #[derive(Serialize, Deserialize)]
 pub enum RaytracerConfig {
-    Basic,
+    /// Simple raytracing. Cast one ray per pixel
+    basic,
+    /// Use a multisampling raytracer. Samples every pixel n times.
+    jmstracer {
+        samples_per_pixel: usize
+    },
+    /// Use a multisampling raytracer that jitters (randomizes) the rays
+    /// slightly. Samples every pixel n times.
+    mstracer {
+        samples_per_pixel: usize
+    },
 }
 
 #[derive(Serialize, Deserialize)]
 pub enum GeneratorConfig {
-    Basic,
+    /// Don't use any multithreading
+    basic,
+
+    /// Make use of the crossbeam library to spawn threads.
+    /// This can have an advantage over rayon since there's no need for scheduling.
+    crossbeam {
+        /// The number of cores to use during the raytracing.
+        threads: ThreadCount,
+    },
+
+    /// Make use of the rayon library by parallel-iterating over the pixels that have to be rendered.
+    rayon {
+        /// The number of cores to use during the raytracing.
+        threads: ThreadCount,
+    }
 }
 
 #[derive(Serialize, Deserialize)]
@@ -44,9 +68,6 @@ pub struct GeneralConfig {
 
     /// Path to search for texture files
     texturepath: String,
-
-    /// The number of cores to use during the raytracing.
-    cores: CoreCount,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -55,9 +76,9 @@ pub struct CameraConfig {
     /// The position of the camera in 3d space
     position: Vector,
 
-    /// The width of the generated image
+    /// The width of the image to be generated
     width: usize,
-    /// The height of the generated image
+    /// The height of the image to be generated
     height: usize,
 
     /// The field of view of the camera
@@ -66,7 +87,11 @@ pub struct CameraConfig {
 
 #[derive(Serialize, Deserialize)]
 pub enum ShaderConfig {
+    /// Simple shader that shades based on the material of the triangle that was hit
     mtlshader,
+
+    /// More advanced shader that uses monte carlo raytracing or pathtracing.
+    /// (https://en.wikipedia.org/wiki/Path_tracing)
     mcshader,
     vmcshader {
         air_density: f64,
@@ -76,7 +101,9 @@ pub enum ShaderConfig {
 
 #[derive(Serialize, Deserialize)]
 pub enum DatastructureConfig {
+    /// Don't use any datastructure. Just iterate through the triangles of the scene.
     basic,
+    /// Use a kdtree as a datastructure to speed up rendering of large scenes.
     kdtree
 }
 

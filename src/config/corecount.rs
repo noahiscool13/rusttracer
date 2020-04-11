@@ -1,21 +1,32 @@
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
-pub enum CoreCount {
-    /// dummy value to make it serializable
+pub enum ThreadCount {
+    /// use all cores
     all,
 
-    /// Number of cores to be used
+    /// Number of threads to be used
     count(usize),
 
-    /// Number of cores left over when running
+    /// Number of threads left over when running
     left(usize),
 }
 
-impl Default for CoreCount {
-    fn default() -> Self {
-        // CoreCount::all
+impl ThreadCount {
+    pub fn get_cores(&self) -> usize {
 
-        CoreCount::left(5)
+        let num_cpus = num_cpus::get();
+
+        match self {
+            ThreadCount::left(threads) => num_cpus - *threads,
+            ThreadCount::count(threads) => *threads,
+            ThreadCount::all => num_cpus
+        }
+    }
+}
+
+impl Default for ThreadCount {
+    fn default() -> Self {
+        ThreadCount::all
     }
 }

@@ -10,6 +10,9 @@ use crate::util::vector::Vector;
 use log::debug;
 //use core::num::dec2flt::rawfp::RawFloat;
 use crate::util::consts::INTERSECTION_EPSILON;
+use serde::export::fmt::{Debug, Error};
+use serde::export::Formatter;
+use core::fmt;
 
 mod boundingbox;
 mod boxintersection;
@@ -17,6 +20,12 @@ mod node;
 
 pub struct KDTreeDataStructure<'d> {
     root: BVHNode<'d>,
+}
+
+impl<'d> Debug for KDTreeDataStructure<'d> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "<KDTreeDataStructure...>")
+    }
 }
 
 fn intersects_triangle<'a>(ray: &'a Ray, triangle: &'a Triangle) -> Option<Intersection<'a>> {

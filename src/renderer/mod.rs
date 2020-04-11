@@ -10,6 +10,7 @@ use crate::postprocessors::PostProcessor;
 pub use builder::RendererBuilder;
 use crate::generator::Generator;
 
+#[derive(Debug)]
 pub struct Renderer<'r> {
     generator: &'r dyn Generator,
     raytracer: &'r dyn RayTracer,

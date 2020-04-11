@@ -4,6 +4,7 @@ use crate::util::outputbuffer::OutputBuffer;
 use crate::util::vector::Vector;
 use crate::util::camera::Camera;
 
+#[derive(Debug)]
 pub struct BasicGenerator;
 
 impl Generator for BasicGenerator {
@@ -12,7 +13,8 @@ impl Generator for BasicGenerator {
 
         for x in 0..camera.width {
             for y in 0..camera.height {
-                output.set_at(x, y, callback(x, y));
+                let res = callback(x, y);
+                output.set_at(x, y, res);
             }
         }
 

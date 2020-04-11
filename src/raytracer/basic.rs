@@ -5,6 +5,7 @@ use crate::util::camera::Camera;
 use crate::util::outputbuffer::OutputBuffer;
 use crate::util::vector::Vector;
 
+#[derive(Debug)]
 pub struct BasicRaytracer;
 
 impl RayTracer for BasicRaytracer {

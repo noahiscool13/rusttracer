@@ -1,6 +1,6 @@
 use crate::util::vector::Vector;
 use crate::config::{CameraConfig, DatastructureConfig, GeneralConfig, ShaderConfig, RaytracerConfig, GeneratorConfig};
-use crate::config::corecount::CoreCount;
+use crate::config::corecount::ThreadCount;
 
 impl Default for GeneralConfig {
     fn default() -> Self {
@@ -9,7 +9,6 @@ impl Default for GeneralConfig {
             scenename: "test".to_string(),
             outputname: "render.bmp".to_string(),
             texturepath: "scenes".to_string(),
-            cores: Default::default(),
         }
     }
 }
@@ -42,12 +41,12 @@ impl Default for ShaderConfig {
 
 impl Default for RaytracerConfig {
     fn default() -> Self {
-        RaytracerConfig::Basic
+        RaytracerConfig::basic
     }
 }
 
 impl Default for GeneratorConfig {
     fn default() -> Self {
-        GeneratorConfig::Basic
+        GeneratorConfig::basic
     }
 }

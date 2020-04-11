@@ -5,16 +5,22 @@ use crate::util::outputbuffer::OutputBuffer;
 use log::info;
 use crossbeam::thread;
 
-pub struct CrossbeamGenerator;
+#[derive(Debug)]
+pub struct CrossbeamGenerator {
+    threads: usize
+}
+
+impl CrossbeamGenerator {
+    pub fn new(threads: usize) -> Self { Self { threads } }
+}
 
 impl Generator for CrossbeamGenerator {
     fn generate(&self, camera: &Camera, callback: &Callback) -> OutputBuffer {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
 
         thread::scope(|s| {
-            let num_cpus = num_cpus::get();
             let rows_per_thread =
-                (camera.height / num_cpus) + if camera.height % num_cpus == 0 { 0 } else { 1 };
+                (camera.height / self.threads) + if camera.height % self.threads == 0 { 0 } else { 1 };
 
             for (index, chunk) in output.chunks_mut(rows_per_thread).enumerate() {
                 let start_y = index * rows_per_thread;
@@ -24,7 +30,6 @@ impl Generator for CrossbeamGenerator {
                         let row = &mut chunk[y - start_y];
 
                         for x in 0..camera.width {
-
                             row[x] = callback(x, y);
                         }
                         info!("Finished row {}", y);

@@ -7,6 +7,7 @@ use crate::util::rng::get_rng;
 use crate::util::vector::Vector;
 use rand::Rng;
 
+#[derive(Debug)]
 pub struct JMSTracer {
     samples_per_pixel: usize,
 }
@@ -34,6 +35,7 @@ impl RayTracer for JMSTracer {
 
             out = out + shader.shade(&ray, datastructure);
         }
+
 
         out / self.samples_per_pixel as f64
     }

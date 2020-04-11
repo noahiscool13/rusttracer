@@ -4,6 +4,7 @@ use crate::shader::Shader;
 use crate::util::camera::Camera;
 use crate::util::vector::Vector;
 use crate::util::outputbuffer::OutputBuffer;
+use serde::export::fmt::Debug;
 
 pub mod basic;
 pub mod crossbeam;
@@ -17,7 +18,7 @@ type Callback<'a> = (dyn Fn(usize, usize) -> Vector + Sync + 'a);
 ///
 /// This is important to be it's own subsystem because this iteration can be done in many ways
 /// such as multithreaded, singlethreaded, or even spread over multiple machines.
-pub trait Generator {
+pub trait Generator: Debug {
 
     fn generate_internal<'g>(&self,
                              raytracer: &'g dyn RayTracer,
