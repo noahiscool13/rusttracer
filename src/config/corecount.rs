@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub enum ThreadCount {
@@ -14,13 +14,12 @@ pub enum ThreadCount {
 
 impl ThreadCount {
     pub fn get_cores(&self) -> usize {
-
         let num_cpus = num_cpus::get();
 
         match self {
             ThreadCount::left(threads) => num_cpus - *threads,
             ThreadCount::count(threads) => *threads,
-            ThreadCount::all => num_cpus
+            ThreadCount::all => num_cpus,
         }
     }
 }

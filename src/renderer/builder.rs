@@ -1,13 +1,13 @@
 use crate::datastructure::DataStructure;
+use crate::generator::Generator;
 use crate::postprocessors::identity::IdentityPostProcessor;
 use crate::postprocessors::PostProcessor;
 use crate::raytracer::RayTracer;
 use crate::renderer::Renderer;
 use crate::shader::Shader;
-use crate::generator::Generator;
 
 pub struct RendererBuilder<'a> {
-    pub(self) generator: &'a dyn Generator
+    pub(self) generator: &'a dyn Generator,
 }
 
 pub struct RendererBuilderRaytracer<'a> {
@@ -41,12 +41,8 @@ impl<'a> RendererBuilder<'a> {
     }
 }
 
-
 impl<'a> RendererBuilderRaytracer<'a> {
-    pub fn with_shader(
-        self,
-        shader: &'a dyn Shader,
-    ) -> RendererBuilderShader<'a> {
+    pub fn with_shader(self, shader: &'a dyn Shader) -> RendererBuilderShader<'a> {
         RendererBuilderShader {
             generator: self.generator,
             raytracer: self.raytracer,
@@ -64,7 +60,7 @@ impl<'a> RendererBuilderShader<'a> {
             generator: self.generator,
             raytracer: self.raytracer,
             shader: self.shader,
-            datastructure
+            datastructure,
         }
     }
 }

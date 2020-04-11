@@ -17,7 +17,6 @@ impl RayTracer for BasicRaytracer {
         shader: &'r (dyn Shader + 'r),
         camera: &Camera,
     ) -> Vector {
-
         let ray = camera.generate_ray(x as f64, y as f64);
         shader.shade(&ray, datastructure)
     }

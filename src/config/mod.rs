@@ -1,13 +1,13 @@
 use crate::config::corecount::ThreadCount;
-use crate::util::vector::Vector;
 use crate::config::error::ConfigError;
-use std::path::Path;
+use crate::util::vector::Vector;
+use serde::{Deserialize, Serialize};
 use std::fs;
-use serde::{Serialize, Deserialize};
+use std::path::Path;
 
-pub mod error;
-pub mod defaults;
 pub mod corecount;
+pub mod defaults;
+pub mod error;
 pub mod run;
 
 #[derive(Serialize, Deserialize)]
@@ -25,14 +25,10 @@ pub enum RaytracerConfig {
     /// Simple raytracing. Cast one ray per pixel
     basic,
     /// Use a multisampling raytracer. Samples every pixel n times.
-    jmstracer {
-        samples_per_pixel: usize
-    },
+    jmstracer { samples_per_pixel: usize },
     /// Use a multisampling raytracer that jitters (randomizes) the rays
     /// slightly. Samples every pixel n times.
-    mstracer {
-        samples_per_pixel: usize
-    },
+    mstracer { samples_per_pixel: usize },
 }
 
 #[derive(Serialize, Deserialize)]
@@ -51,7 +47,7 @@ pub enum GeneratorConfig {
     rayon {
         /// The number of cores to use during the raytracing.
         threads: ThreadCount,
-    }
+    },
 }
 
 #[derive(Serialize, Deserialize)]
@@ -72,9 +68,11 @@ pub struct GeneralConfig {
 
 #[derive(Serialize, Deserialize)]
 pub struct CameraConfig {
-
     /// The position of the camera in 3d space
     position: Vector,
+
+    /// The rotation of the camera in 3d space
+    direction: Vector,
 
     /// The width of the image to be generated
     width: usize,
@@ -95,8 +93,8 @@ pub enum ShaderConfig {
     mcshader,
     vmcshader {
         air_density: f64,
-        particle_reflectivity: f64
-    }
+        particle_reflectivity: f64,
+    },
 }
 
 #[derive(Serialize, Deserialize)]
@@ -104,7 +102,7 @@ pub enum DatastructureConfig {
     /// Don't use any datastructure. Just iterate through the triangles of the scene.
     basic,
     /// Use a kdtree as a datastructure to speed up rendering of large scenes.
-    kdtree
+    kdtree,
 }
 
 impl Default for Config {
@@ -121,7 +119,6 @@ impl Default for Config {
     }
 }
 
-
 impl Config {
     pub fn dump(&self, filename: impl AsRef<Path>) -> Result<(), ConfigError> {
         let yamlstring = serde_yaml::to_string(self)?;
@@ -137,5 +134,3 @@ impl Config {
         Ok(serde_yaml::from_slice(&contents)?)
     }
 }
-
-

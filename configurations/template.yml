@@ -19,6 +19,12 @@ camera:
     x: 0.0
     y: 0.0
     z: 0.0
+  # The rotation of the camera in 3d space
+  # 3 floats
+  direction:
+    x: 0.0
+    y: 0.0
+    z: -1.0
   # The width of the image to be generated
   width: 1000
   # The height of the image to be generated

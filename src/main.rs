@@ -1,8 +1,7 @@
-
+use crate::config::Config;
 use log::info;
 use log::LevelFilter;
 use simple_logging;
-use crate::config::Config;
 
 mod config;
 mod datastructure;
@@ -11,9 +10,9 @@ mod raytracer;
 mod renderer;
 mod scene;
 // mod setup;
+mod generator;
 mod shader;
 mod util;
-mod generator;
 
 fn main() {
     simple_logging::log_to_stderr(LevelFilter::Debug);
@@ -25,7 +24,6 @@ fn main() {
         .unwrap()
         .run()
         .unwrap();
-
 
     // GlowStoneGamma.run()
 }

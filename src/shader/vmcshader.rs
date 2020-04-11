@@ -14,7 +14,7 @@ pub struct VMcShader {
 }
 
 impl VMcShader {
-    pub fn new(air_density: f64, particle_reflectivity: f64) -> Self{
+    pub fn new(air_density: f64, particle_reflectivity: f64) -> Self {
         Self {
             air_density,
             particle_reflectivity,
@@ -42,7 +42,7 @@ impl VMcShader {
                 }
             } else {
                 Vector::repeated(0f64)
-            }
+            };
         };
 
         let hit_pos = intersection.hit_pos();
@@ -77,13 +77,12 @@ impl VMcShader {
             let reflec_type = get_rng(|mut r| r.gen::<f64>());
             let diffuse_max = intersection.triangle.material().diffuse.max_item();
             if diffuse_max > reflec_type {
-                let fliped_normal = if intersection.triangle.normal().dot(ray.direction)<0.{
+                let fliped_normal = if intersection.triangle.normal().dot(ray.direction) < 0. {
                     intersection.triangle.normal()
                 } else {
-                    intersection.triangle.normal()*-1.
+                    intersection.triangle.normal() * -1.
                 };
-                let bounce_direction =
-                    Vector::point_on_diffuse_hemisphere().rotated(fliped_normal);
+                let bounce_direction = Vector::point_on_diffuse_hemisphere().rotated(fliped_normal);
                 let bounce_ray = Ray::new(hit_pos, bounce_direction);
                 let indirect_light = self.shade_internal(&bounce_ray, depth - 1, datastructure);
                 let texture =

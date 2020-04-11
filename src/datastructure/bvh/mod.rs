@@ -10,9 +10,9 @@ use crate::util::vector::Vector;
 use log::debug;
 //use core::num::dec2flt::rawfp::RawFloat;
 use crate::util::consts::INTERSECTION_EPSILON;
+use core::fmt;
 use serde::export::fmt::{Debug, Error};
 use serde::export::Formatter;
-use core::fmt;
 
 mod boundingbox;
 mod boxintersection;
@@ -80,7 +80,6 @@ impl<'d> KDTreeDataStructure<'d> {
         Self { root }
     }
 
-
     fn intersect_internal<'a>(ray: &'a Ray, node: &'a BVHNode) -> Option<Intersection<'a>> {
         match node {
             BVHNode::Leaf {
@@ -135,7 +134,7 @@ impl<'d> KDTreeDataStructure<'d> {
                             Self::intersect_internal(ray, left)
                         }
                     }
-                }
+                };
             }
         }
     }
@@ -146,7 +145,6 @@ impl<'d> DataStructure for KDTreeDataStructure<'d> {
         Self::intersect_internal(ray, &self.root)
     }
 }
-
 
 pub fn intersects_bhv<'a>(node: &'a BVHNode, ray: &'a Ray) -> Option<BoxIntersection<'a>> {
     match node {
@@ -188,17 +186,9 @@ pub fn intersects_boundingbox<'a>(
         return None;
     }
 
-    let tmin = if tymin > tmin {
-        tymin
-    } else {
-        tmin
-    };
+    let tmin = if tymin > tmin { tymin } else { tmin };
 
-    let tmax = if tymax < tmax {
-        tymax
-    } else {
-        tmax
-    };
+    let tmax = if tymax < tmax { tymax } else { tmax };
 
     let tzmin = (boundingbox.min.z - ray.origin.z) / ray.direction.z;
     let tzmax = (boundingbox.max.z - ray.origin.z) / ray.direction.z;
@@ -213,17 +203,9 @@ pub fn intersects_boundingbox<'a>(
         return None;
     }
 
-    let tmin = if tzmin > tmin {
-        tzmin
-    } else {
-        tmin
-    };
+    let tmin = if tzmin > tmin { tzmin } else { tmin };
 
-    let tmax = if tzmax < tmax {
-        tzmax
-    } else {
-        tmax
-    };
+    let tmax = if tzmax < tmax { tzmax } else { tmax };
 
     let t = tmin.min(tmax);
 

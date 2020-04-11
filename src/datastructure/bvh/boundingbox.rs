@@ -16,13 +16,13 @@ impl Axis {
     ) -> Vec<(BoundingBox, BoundingBox)> {
         match self {
             Axis::X(length) => (0..steps)
-                .map(|i| bounding_box.split_at(Axis::X((1. / steps as f64 *length) * i as f64)))
+                .map(|i| bounding_box.split_at(Axis::X((1. / steps as f64 * length) * i as f64)))
                 .collect(),
             Axis::Y(length) => (0..steps)
-                .map(|i| bounding_box.split_at(Axis::Y((1. /steps as f64 *length) * i as f64)))
+                .map(|i| bounding_box.split_at(Axis::Y((1. / steps as f64 * length) * i as f64)))
                 .collect(),
             Axis::Z(length) => (0..steps)
-                .map(|i| bounding_box.split_at(Axis::Z((1. /steps as f64 *length) * i as f64)))
+                .map(|i| bounding_box.split_at(Axis::Z((1. / steps as f64 * length) * i as f64)))
                 .collect(),
         }
     }

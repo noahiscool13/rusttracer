@@ -32,11 +32,7 @@ impl<'d> BVHNode<'d> {
                 triangles,
             } => {
                 write!(f, "{}", "\t".repeat(depth))?;
-                writeln!(
-                    f,
-                    "leaf node with {} triangles:",
-                    triangles.len(),
-                )?;
+                writeln!(f, "leaf node with {} triangles:", triangles.len(),)?;
             }
             BVHNode::Node {
                 left,
@@ -102,11 +98,11 @@ impl<'d> BVHNode<'d> {
                 triangles,
             };
         }
-        if triangles.len() < 30{
+        if triangles.len() < 30 {
             return BVHNode::Leaf {
                 bounding_box,
                 triangles,
-            }
+            };
         }
 
         let longest_axis = bounding_box.longest_axis();
@@ -158,7 +154,7 @@ impl<'d> BVHNode<'d> {
         debug!("Smallest possible split cost: {}", smallest.totalcost);
         debug!("Parent split cost: {}", current_cost);
 
-        if smallest.totalcost >= current_cost{
+        if smallest.totalcost >= current_cost {
             BVHNode::Leaf {
                 bounding_box,
                 triangles,
@@ -180,10 +176,10 @@ impl<'d> BVHNode<'d> {
         }
     }
 
-    pub fn includes_point(&self, point: &Vector) -> bool{
+    pub fn includes_point(&self, point: &Vector) -> bool {
         match self {
-            BVHNode::Leaf {bounding_box, ..} => bounding_box.includes_point(point),
-            BVHNode::Node {bounding_box, ..} => bounding_box.includes_point(point),
+            BVHNode::Leaf { bounding_box, .. } => bounding_box.includes_point(point),
+            BVHNode::Node { bounding_box, .. } => bounding_box.includes_point(point),
         }
     }
 }
