@@ -1,8 +1,6 @@
 use crate::datastructure::DataStructure;
 use crate::shader::Shader;
 use crate::util::camera::Camera;
-use crate::util::outputbuffer::OutputBuffer;
-use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 use serde::export::fmt::Debug;
 

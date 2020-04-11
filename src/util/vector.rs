@@ -83,14 +83,14 @@ impl Vector {
     pub fn max_item(&self) -> f64 {
         if self.x > self.y {
             if self.x > self.z {
-                return self.x;
+                self.x
+            } else {
+                self.z
             }
-            return self.z;
+        } else if self.y > self.z {
+            self.y
         } else {
-            if self.y > self.z {
-                return self.y;
-            }
-            return self.z;
+            self.z
         }
     }
 
@@ -149,7 +149,7 @@ impl Vector {
 
         Vector::new(
             phi.sin() * theta.cos(),
-            (phi.sin() * theta.sin()),
+            phi.sin() * theta.sin(),
             phi.cos(),
         )
     }

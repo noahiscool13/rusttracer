@@ -1,6 +1,6 @@
 use crate::datastructure::intersection::Intersection;
 use crate::datastructure::DataStructure;
-use crate::scene::scene::Scene;
+use crate::scene::Scene;
 use crate::scene::triangle::Triangle;
 use crate::util::consts::INTERSECTION_EPSILON;
 use crate::util::ray::Ray;
@@ -15,6 +15,7 @@ impl<'d> BasicDataStructure<'d> {
         Self { data: scene }
     }
 
+    #[allow(clippy::many_single_char_names)]
     fn intersects_triangle<'a>(
         &self,
         ray: &'a Ray,
@@ -74,6 +75,6 @@ impl<'d> DataStructure for BasicDataStructure<'d> {
             }
         }
 
-        return min;
+        min
     }
 }

@@ -1,7 +1,6 @@
 use crate::generator::{Callback, Generator};
 use crate::util::camera::Camera;
 use crate::util::outputbuffer::OutputBuffer;
-use crate::util::vector::Vector;
 use crossbeam::thread;
 use log::info;
 
@@ -35,8 +34,8 @@ impl Generator for CrossbeamGenerator {
                     for y in start_y..(start_y + chunk.len()) {
                         let row = &mut chunk[y - start_y];
 
-                        for x in 0..camera.width {
-                            row[x] = callback(x, y);
+                        for (x, item) in row.iter_mut().enumerate().take(camera.width)  {
+                            *item = callback(x, y);
                         }
                         info!("Finished row {}", y);
                     }

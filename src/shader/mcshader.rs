@@ -43,9 +43,7 @@ impl McShader {
             Vector::repeated(0f64)
         };
 
-        let total = indirect * 2. + part_emi;
-
-        return total.into();
+        indirect * 2. + part_emi
     }
 }
 

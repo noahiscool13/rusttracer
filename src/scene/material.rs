@@ -80,10 +80,10 @@ impl<'m> Material<'m> {
             .get("Ke")
             .unwrap_or(&default_emittance);
         let emittancevec: Vec<f64> = stremittance
-            .split(" ")
+            .split(' ')
             .map(|i| i.parse())
             .collect::<Result<Vec<f64>, _>>()
-            .unwrap_or(vec![0., 0., 0.]);
+            .unwrap_or_else(|_| vec![0., 0., 0.]);
 
         let emittance = if emittancevec.len() != 3 {
             Vector::new(0., 0., 0.)

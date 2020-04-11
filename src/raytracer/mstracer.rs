@@ -2,7 +2,6 @@ use crate::datastructure::DataStructure;
 use crate::raytracer::RayTracer;
 use crate::shader::Shader;
 use crate::util::camera::Camera;
-use crate::util::outputbuffer::OutputBuffer;
 use crate::util::vector::Vector;
 
 #[derive(Debug)]
@@ -28,7 +27,7 @@ impl RayTracer for MSTracer {
         let mut out = Vector::repeated(0f64);
         for _ in 0..self.samples_per_pixel {
             let ray = camera.generate_ray(x as f64, y as f64);
-            out = out + shader.shade(&ray, datastructure);
+            out += shader.shade(&ray, datastructure);
         }
 
         out / self.samples_per_pixel as f64

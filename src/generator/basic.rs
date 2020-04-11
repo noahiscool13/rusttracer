@@ -1,8 +1,6 @@
 use crate::generator::{Callback, Generator};
-use crate::raytracer::RayTracer;
 use crate::util::camera::Camera;
 use crate::util::outputbuffer::OutputBuffer;
-use crate::util::vector::Vector;
 
 #[derive(Debug)]
 pub struct BasicGenerator;

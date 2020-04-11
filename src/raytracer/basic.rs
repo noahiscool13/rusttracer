@@ -2,7 +2,6 @@ use crate::datastructure::DataStructure;
 use crate::raytracer::RayTracer;
 use crate::shader::Shader;
 use crate::util::camera::Camera;
-use crate::util::outputbuffer::OutputBuffer;
 use crate::util::vector::Vector;
 
 #[derive(Debug)]

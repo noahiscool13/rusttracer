@@ -20,14 +20,16 @@ impl TextureAtlasBuilder {
         filename: impl AsRef<Path>,
         basepath: impl AsRef<Path>,
     ) -> Result<(), TextureError> {
-        Ok(self.add_texture(
+        self.add_texture(
             filename
                 .as_ref()
                 .to_str()
                 .ok_or(TextureError::FileName)?
                 .into(),
             Texture::new(basepath.as_ref().join(filename))?,
-        ))
+        );
+
+        Ok(())
     }
 
     pub fn add_texture(&mut self, name: String, texture: Texture) {
@@ -65,13 +67,15 @@ impl TextureAtlasBuilder {
     }
 }
 
+#[allow(unused)]
 pub struct TextureAtlas<'t> {
     pub(self) atlas: HashMap<String, &'t Texture>,
+
     pub(self) textures: Pin<Box<[Texture]>>,
 }
 
 impl<'t> TextureAtlas<'t> {
-    pub fn get_texture(&self, name: &String) -> Option<&'t Texture> {
-        self.atlas.get(name).map(|&i| i)
+    pub fn get_texture(&self, name: &str) -> Option<&'t Texture> {
+        self.atlas.get(name).copied()
     }
 }

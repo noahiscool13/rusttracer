@@ -28,8 +28,8 @@ impl<'d> BVHNode<'d> {
     fn print(&self, f: &mut Formatter<'_>, depth: usize) -> fmt::Result {
         match self {
             BVHNode::Leaf {
-                bounding_box: _,
                 triangles,
+                ..
             } => {
                 write!(f, "{}", "\t".repeat(depth))?;
                 writeln!(f, "leaf node with {} triangles:", triangles.len(),)?;
@@ -37,7 +37,7 @@ impl<'d> BVHNode<'d> {
             BVHNode::Node {
                 left,
                 right,
-                bounding_box: _,
+                ..
             } => {
                 write!(f, "{}", "\t".repeat(depth))?;
                 writeln!(f, ">>")?;
@@ -57,20 +57,9 @@ impl<'d> BVHNode<'d> {
         Self::new_internal(triangles, bb, 0)
     }
 
-    fn average<'a>(triangles: impl Iterator<Item = &'a Triangle<'a>>) -> Vector {
-        let mut total = Vector::default();
-        let mut length = 0.;
-        for i in triangles {
-            total += i.midpoint();
-            length += 1.;
-        }
-
-        total / length
-    }
-
     fn divide_triangles_over_boundingboxes<'a>(
         (leftbox, rightbox): (&BoundingBox, &BoundingBox),
-        triangles: &Vec<&'a Triangle<'a>>,
+        triangles: &[&'a Triangle<'a>],
     ) -> (Vec<&'a Triangle<'a>>, Vec<&'a Triangle<'a>>) {
         let mut leftset = Vec::new();
         let mut rightset = Vec::new();
@@ -92,7 +81,7 @@ impl<'d> BVHNode<'d> {
         bounding_box: BoundingBox,
         depth: usize,
     ) -> Self {
-        if triangles.len() == 0 {
+        if triangles.is_empty() {
             return BVHNode::Leaf {
                 bounding_box: BoundingBox::EMPTY,
                 triangles,

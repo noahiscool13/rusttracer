@@ -97,38 +97,32 @@ impl BoundingBox {
     }
 
     pub fn cost(&self, numtriangles: usize) -> f64 {
-        let res = self.surface_area() * numtriangles as f64;
-        res
+        self.surface_area() * numtriangles as f64
     }
 
     //Todo optimize contains function to get rid of false positives
     pub fn contains(&self, triangle: &Triangle) -> bool {
-        if triangle.a().x < self.min.x && triangle.b().x < self.min.x && triangle.c().x < self.min.x
-        {
+        if triangle.a().x < self.min.x && triangle.b().x < self.min.x && triangle.c().x < self.min.x {
             return false;
         }
-        if triangle.a().y < self.min.y && triangle.b().y < self.min.y && triangle.c().y < self.min.y
-        {
+        if triangle.a().y < self.min.y && triangle.b().y < self.min.y && triangle.c().y < self.min.y {
             return false;
         }
-        if triangle.a().z < self.min.z && triangle.b().z < self.min.z && triangle.c().z < self.min.z
-        {
+        if triangle.a().z < self.min.z && triangle.b().z < self.min.z && triangle.c().z < self.min.z {
             return false;
         }
 
-        if triangle.a().x > self.max.x && triangle.b().x > self.max.x && triangle.c().x > self.max.x
-        {
+        if triangle.a().x > self.max.x && triangle.b().x > self.max.x && triangle.c().x > self.max.x {
             return false;
         }
-        if triangle.a().y > self.max.y && triangle.b().y > self.max.y && triangle.c().y > self.max.y
-        {
+        if triangle.a().y > self.max.y && triangle.b().y > self.max.y && triangle.c().y > self.max.y {
             return false;
         }
-        if triangle.a().z > self.max.z && triangle.b().z > self.max.z && triangle.c().z > self.max.z
-        {
+        if triangle.a().z > self.max.z && triangle.b().z > self.max.z && triangle.c().z > self.max.z {
             return false;
         }
-        return true;
+
+        true
     }
 
     pub fn split_at(&self, axis: Axis) -> (BoundingBox, BoundingBox) {
@@ -203,15 +197,13 @@ impl BoundingBox {
             return false;
         }
 
-        return true;
+        true
     }
 }
 
 #[cfg(test)]
 pub mod tests {
     use crate::datastructure::bvh::boundingbox::BoundingBox;
-    use crate::scene::scene::Mesh;
-    use crate::scene::triangle::Triangle;
     use crate::util::vector::Vector;
 
     #[test]

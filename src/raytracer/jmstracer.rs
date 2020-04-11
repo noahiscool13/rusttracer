@@ -2,7 +2,6 @@ use crate::datastructure::DataStructure;
 use crate::raytracer::RayTracer;
 use crate::shader::Shader;
 use crate::util::camera::Camera;
-use crate::util::outputbuffer::OutputBuffer;
 use crate::util::rng::get_rng;
 use crate::util::vector::Vector;
 use rand::Rng;
@@ -34,7 +33,7 @@ impl RayTracer for JMSTracer {
                 y as f64 + get_rng(|mut r| r.gen::<f64>()),
             );
 
-            out = out + shader.shade(&ray, datastructure);
+            out += shader.shade(&ray, datastructure);
         }
 
         out / self.samples_per_pixel as f64

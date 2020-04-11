@@ -1,10 +1,10 @@
-use crate::scene::scene::Scene;
+use crate::scene::Scene;
 use crate::scene::triangle::Triangle;
 use crate::util::rng::get_rng;
 use rand::distributions::weighted::alias_method::WeightedIndex;
 use rand::distributions::WeightedError;
 use rand::Rng;
-use serde::export::fmt::{Debug, Error};
+use serde::export::fmt::Debug;
 use serde::export::Formatter;
 use core::fmt;
 

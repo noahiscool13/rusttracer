@@ -3,15 +3,14 @@ use crate::datastructure::bvh::boxintersection::BoxIntersection;
 use crate::datastructure::bvh::node::BVHNode;
 use crate::datastructure::intersection::Intersection;
 use crate::datastructure::DataStructure;
-use crate::scene::scene::Scene;
+use crate::scene::Scene;
 use crate::scene::triangle::Triangle;
 use crate::util::ray::Ray;
-use crate::util::vector::Vector;
 use log::debug;
 //use core::num::dec2flt::rawfp::RawFloat;
 use crate::util::consts::INTERSECTION_EPSILON;
 use core::fmt;
-use serde::export::fmt::{Debug, Error};
+use serde::export::fmt::Debug;
 use serde::export::Formatter;
 
 mod boundingbox;
@@ -28,6 +27,7 @@ impl<'d> Debug for KDTreeDataStructure<'d> {
     }
 }
 
+#[allow(clippy::many_single_char_names)]
 fn intersects_triangle<'a>(ray: &'a Ray, triangle: &'a Triangle) -> Option<Intersection<'a>> {
     let edge1 = triangle.b() - triangle.a();
     let edge2 = triangle.c() - triangle.a();
@@ -104,14 +104,14 @@ impl<'d> KDTreeDataStructure<'d> {
                 None
             }
             BVHNode::Node {
-                bounding_box: _,
                 left,
                 right,
+                ..
             } => {
                 let dist_l = intersects_bhv(&left, ray);
                 let dist_r = intersects_bhv(&right, ray);
 
-                return match (dist_l, dist_r) {
+                match (dist_l, dist_r) {
                     (None, None) => None,
                     (Some(_), None) => Self::intersect_internal(ray, left),
                     (None, Some(_)) => Self::intersect_internal(ray, right),
@@ -134,7 +134,7 @@ impl<'d> KDTreeDataStructure<'d> {
                             Self::intersect_internal(ray, left)
                         }
                     }
-                };
+                }
             }
         }
     }
@@ -150,12 +150,11 @@ pub fn intersects_bhv<'a>(node: &'a BVHNode, ray: &'a Ray) -> Option<BoxIntersec
     match node {
         BVHNode::Leaf {
             bounding_box,
-            triangles: _,
+            ..
         } => intersects_boundingbox(bounding_box, ray),
         BVHNode::Node {
             bounding_box,
-            left: _,
-            right: _,
+            ..
         } => intersects_boundingbox(bounding_box, ray),
     }
 }

@@ -1,5 +1,5 @@
 use crate::scene::material::Material;
-use crate::scene::scene::Mesh;
+use crate::scene::Mesh;
 use crate::scene::texturecoordinate::TextureCoordinate;
 use crate::util::vector::Vector;
 use std::fmt;
@@ -83,7 +83,4 @@ impl<'t> Triangle<'t> {
         (s * (s - side1) * (s - side2) * (s - side3)).sqrt()
     }
 
-    pub fn midpoint(&self) -> Vector {
-        (self.a() + self.b() + self.c()) / 3.
-    }
 }

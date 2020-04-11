@@ -12,13 +12,12 @@ use crate::raytracer::jmstracer::JMSTracer;
 use crate::raytracer::mstracer::MSTracer;
 use crate::raytracer::RayTracer;
 use crate::renderer::RendererBuilder;
-use crate::scene::scene::SceneBuilder;
+use crate::scene::SceneBuilder;
 use crate::shader::mcshader::McShader;
 use crate::shader::mtlshader::MtlShader;
 use crate::shader::vmcshader::VMcShader;
 use crate::shader::Shader;
 use crate::util::camera::Camera;
-use std::borrow::Borrow;
 use std::path::Path;
 
 impl Config {

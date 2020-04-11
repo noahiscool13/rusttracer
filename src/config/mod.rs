@@ -130,6 +130,7 @@ impl Default for Config {
 }
 
 impl Config {
+    #[allow(unused)]
     pub fn dump(&self, filename: impl AsRef<Path>) -> Result<(), ConfigError> {
         let yamlstring = serde_yaml::to_string(self)?;
 

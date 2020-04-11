@@ -1,4 +1,3 @@
-use crate::config::corecount::ThreadCount;
 use crate::config::{
     CameraConfig, DatastructureConfig, GeneralConfig, GeneratorConfig, RaytracerConfig,
     ShaderConfig,

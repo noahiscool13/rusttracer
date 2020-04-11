@@ -41,10 +41,6 @@ impl OutputBuffer {
         res
     }
 
-    pub fn from_buffer(buffer: Vec<Vec<Vector>>) -> Self {
-        Self { buffer }
-    }
-
     pub fn to_bmp(&self) -> Image {
         let height = self.buffer.len();
         let width = if height > 0 { self.buffer[0].len() } else { 0 };

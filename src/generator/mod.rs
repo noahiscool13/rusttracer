@@ -31,5 +31,5 @@ pub trait Generator: Debug {
         })
     }
 
-    fn generate<'g>(&self, camera: &Camera, callback: &Callback) -> OutputBuffer;
+    fn generate(&self, camera: &Camera, callback: &Callback) -> OutputBuffer;
 }
