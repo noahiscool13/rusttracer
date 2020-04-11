@@ -3,6 +3,7 @@ use crate::util::outputbuffer::OutputBuffer;
 
 /// This postprocessor returns the same image as it got in.
 /// Useful if you don't want to postprocess at all.
+#[derive(Debug)]
 pub struct Gamma;
 
 impl PostProcessor for Gamma {

@@ -1,29 +1,31 @@
 
+use log::info;
+use log::LevelFilter;
+use simple_logging;
+use crate::config::Config;
 
+mod config;
 mod datastructure;
 mod postprocessors;
 mod raytracer;
 mod renderer;
 mod scene;
-mod setup;
+// mod setup;
 mod shader;
 mod util;
-
-#[allow(unused_imports)]
-mod child {
-    use log::LevelFilter;
-    use crate::setup::monte_carlo_bvh::MonteCarloBVH;
-    use crate::setup::Setup;
-    use crate::setup::house_bvh::HouseBVH;
-    use crate::setup::hard_box_bhv::HardBoxBHV;
-
-    pub fn main() {
-        simple_logging::log_to_stderr(LevelFilter::Debug);
-
-        HardBoxBHV.run()
-    }
-}
+mod generator;
 
 fn main() {
-    child::main()
+    simple_logging::log_to_stderr(LevelFilter::Debug);
+
+    // Config::default().dump("config.yml")
+    //     .unwrap();
+
+    Config::load("configurations/monte-carlo.yml")
+        .unwrap()
+        .run()
+        .unwrap();
+
+
+    // GlowStoneGamma.run()
 }

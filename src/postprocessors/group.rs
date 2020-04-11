@@ -4,6 +4,7 @@ use crate::util::outputbuffer::OutputBuffer;
 /// Post Processes an OutputBuffer by applying multiple other postprocessors.
 /// Will apply Processors based on the order in which they are
 /// added with `add_postprocessor`
+#[derive(Debug)]
 pub struct PostProcessorGroup<'p> {
     processors: Vec<&'p dyn PostProcessor>,
 }

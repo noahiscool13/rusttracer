@@ -8,38 +8,38 @@ mod builder;
 
 use crate::postprocessors::PostProcessor;
 pub use builder::RendererBuilder;
-use std::marker::PhantomData;
+use crate::generator::Generator;
 
-pub struct Renderer<'r, DS: DataStructure<'r>, S: Shader<'r, DS>, RT: RayTracer<'r, DS, S>> {
-    datastructure: DS,
-    tracer: RT,
-    shader: S,
+#[derive(Debug)]
+pub struct Renderer<'r> {
+    generator: &'r dyn Generator,
+    raytracer: &'r dyn RayTracer,
+    shader: &'r dyn Shader,
+    datastructure: &'r dyn DataStructure,
     postprocessor: &'r dyn PostProcessor,
-    phantom: PhantomData<&'r DS>,
 }
 
-impl<'r, DS: DataStructure<'r>, RT: RayTracer<'r, DS, S>, S: Shader<'r, DS>>
-    Renderer<'r, DS, S, RT>
-{
+impl<'r> Renderer<'r> {
     pub(self) fn new(
-        datastructure: DS,
-        shader: S,
-        tracer: RT,
+        generator: &'r dyn Generator,
+        raytracer: &'r dyn RayTracer,
+        shader: &'r dyn Shader,
+        datastructure: &'r dyn DataStructure,
         postprocessor: &'r dyn PostProcessor,
     ) -> Self {
         Self {
-            datastructure,
-            tracer,
+            generator,
+            raytracer,
             shader,
+            datastructure,
             postprocessor,
-            phantom: PhantomData,
         }
     }
 
     pub fn render(&self, camera: &Camera) -> OutputBuffer {
         let output = self
-            .tracer
-            .raytrace(&self.datastructure, &self.shader, camera);
+            .generator
+            .generate_internal(self.raytracer, self.datastructure, self.shader, camera);
 
         self.postprocessor.process(output)
     }

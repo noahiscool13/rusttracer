@@ -41,7 +41,7 @@ impl<'d> BVHNode<'d> {
             BVHNode::Node {
                 left,
                 right,
-                bounding_box,
+                bounding_box: _,
             } => {
                 write!(f, "{}", "\t".repeat(depth))?;
                 writeln!(f, ">>")?;

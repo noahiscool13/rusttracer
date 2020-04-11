@@ -5,11 +5,16 @@ use crate::scene::triangle::Triangle;
 use crate::util::consts::INTERSECTION_EPSILON;
 use crate::util::ray::Ray;
 
+#[derive(Debug)]
 pub struct BasicDataStructure<'d> {
     data: &'d Scene<'d>,
 }
 
 impl<'d> BasicDataStructure<'d> {
+    pub fn new(scene: &'d Scene<'d>) -> Self {
+        Self { data: scene }
+    }
+
     fn intersects_triangle<'a>(
         &self,
         ray: &'a Ray,
@@ -55,11 +60,7 @@ impl<'d> BasicDataStructure<'d> {
     }
 }
 
-impl<'d> DataStructure<'d> for BasicDataStructure<'d> {
-    fn new(scene: &'d Scene<'d>) -> Self {
-        Self { data: scene }
-    }
-
+impl<'d> DataStructure for BasicDataStructure<'d> {
     fn intersects<'a>(&'a self, ray: &'a Ray) -> Option<Intersection<'a>> {
         let mut min = None;
 
@@ -74,10 +75,5 @@ impl<'d> DataStructure<'d> for BasicDataStructure<'d> {
         }
 
         return min;
-        // let hit_pos = ray.origin + ray.direction*tm;
-        // let dif = diffuse(&self.scene.faces[idm],hit_pos,Vector::new(0f64,0.5f64,5f64));
-        // let spec = specular(&self.scene.faces[idm],hit_pos,Vector::new(0f64,0.5f64,5f64),ray.origin);
-        // let col =(255f64*(dif+spec)*0.5f64).floor() as u8;
-        // return Color{r: col, g:col, b: col};
     }
 }

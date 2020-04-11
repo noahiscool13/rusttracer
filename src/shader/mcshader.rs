@@ -4,14 +4,15 @@ use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 
+#[derive(Debug)]
 pub struct McShader;
 
 impl McShader {
-    pub fn shade_internal<'a, DS: DataStructure<'a>>(
+    pub fn shade_internal<'a>(
         &self,
         ray: &Ray,
         depth: usize,
-        datastructure: &DS,
+        datastructure: &'a (dyn DataStructure + 'a),
     ) -> Vector {
         //        let pointlight = Vector::new(0f64, 0.2f64, 1f64);
         //        let brightness = Vector::repeated(0f64);
@@ -48,8 +49,8 @@ impl McShader {
     }
 }
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for McShader {
-    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
+impl Shader for McShader {
+    fn shade<'s>(&self, ray: &Ray, datastructure: &'s (dyn DataStructure + 's)) -> Vector {
         self.shade_internal(ray, 4, datastructure)
     }
 }

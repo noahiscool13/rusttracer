@@ -2,6 +2,7 @@ use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 use std::f64;
 
+#[derive(Debug)]
 pub struct Camera {
     pub pos: Vector,
     pub width: usize,
@@ -37,8 +38,8 @@ impl Camera {
         let ydir = (1f64 - 2f64 * y as f64 * self.inf_height) * self.angle;
 
         let mut raydir = Vector::new(xdir, ydir, -1f64);
-        raydir = raydir.rotated(Vector::new(0.,0.,1.)).rotated(Vector::new(-1.,0.,0.)).rotated(Vector::new(0.,0.,-1.));
-//        raydir = raydir.rotated(Vector::new(0., 1., -0.35).unit());
+        // raydir = raydir.rotated(Vector::new(0.,0.,1.)).rotated(Vector::new(-1.,0.,0.)).rotated(Vector::new(0.,0.,-1.));
+       // raydir = raydir.rotated(Vector::new(0., 1., -0.35).unit());
         raydir.normalize();
 
         Ray::new(self.pos, raydir)
