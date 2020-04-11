@@ -41,9 +41,9 @@ camera:
 # * all                     // Use all threads available
 # * left: n                 // Use threads threads minus n
 # * count: n                // Use exactky n cores.
-generator: basic
-#  crossbeam:
-#    threads: all
+generator:
+  crossbeam:
+    threads: all
 
 
 # What raytracer should be used.
@@ -56,9 +56,9 @@ generator: basic
 # * jmstracer               // Use a multisampling raytracer that jitters (randomizes) the rays
 #                           // slightly. Samples every pixel n times.
 #     samples_per_pixel: n
-raytracer: basic
-#  jmstracer:
-#    samples_per_pixel: 100
+raytracer:
+  jmstracer:
+    samples_per_pixel: 100
 
 # What shader should be used.
 # Possible values:
@@ -70,13 +70,13 @@ raytracer: basic
 #     air_density: f64            // Defines how many particles are in the air per meter of ray travel.
 #                                 // Typical value ~0.3
 #     particle_reflectivity: f64  // Defines how reflective a particle is when hit.
-shader: mtlshader
-#  vmcshader:
-#    air_density: 0.3
-#    particle_reflectivity: 0.4
+shader:
+  vmcshader:
+    air_density: 0.3
+    particle_reflectivity: 0.4
 
 # What datastructure should be used.
 # Possible values:
 # * kdtree                  // Use a kdtree as a datastructure to speed up rendering of large scenes.
 # * basic                   // Don't use any datastructure. Just iterate through the triangles of the scene.
-datastructure: basic
+datastructure: kdtree
