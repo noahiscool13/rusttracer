@@ -1,9 +1,9 @@
 use crate::util::color::Color;
 use crate::util::rng::get_rng;
 use rand::Rng;
+use serde::{Deserialize, Serialize};
 use std::f64;
 use std::ops::{Add, AddAssign, Div, Mul, Sub};
-use serde::{Serialize, Deserialize};
 
 const EPSILON: f64 = 0.00001;
 

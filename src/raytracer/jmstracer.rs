@@ -13,7 +13,9 @@ pub struct JMSTracer {
 }
 
 impl JMSTracer {
-    pub fn new(samples_per_pixel: usize) -> Self { Self { samples_per_pixel } }
+    pub fn new(samples_per_pixel: usize) -> Self {
+        Self { samples_per_pixel }
+    }
 }
 
 impl RayTracer for JMSTracer {
@@ -25,7 +27,6 @@ impl RayTracer for JMSTracer {
         shader: &'r (dyn Shader + 'r),
         camera: &Camera,
     ) -> Vector {
-
         let mut out = Vector::repeated(0f64);
         for _ in 0..self.samples_per_pixel {
             let ray = camera.generate_ray(
@@ -35,7 +36,6 @@ impl RayTracer for JMSTracer {
 
             out = out + shader.shade(&ray, datastructure);
         }
-
 
         out / self.samples_per_pixel as f64
     }

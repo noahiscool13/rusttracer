@@ -1,5 +1,9 @@
+use crate::config::corecount::ThreadCount;
+use crate::config::{
+    CameraConfig, DatastructureConfig, GeneralConfig, GeneratorConfig, RaytracerConfig,
+    ShaderConfig,
+};
 use crate::util::vector::Vector;
-use crate::config::{CameraConfig, DatastructureConfig, GeneralConfig, ShaderConfig, RaytracerConfig, GeneratorConfig};
 
 impl Default for GeneralConfig {
     fn default() -> Self {
@@ -16,6 +20,7 @@ impl Default for CameraConfig {
     fn default() -> Self {
         Self {
             position: Vector::default(),
+            direction: Vector::new(0.0,0.0,-1.0),
             width: 1000,
             height: 1000,
             fov: 60.,

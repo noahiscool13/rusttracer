@@ -15,7 +15,6 @@ impl Shader for MtlShader {
             return Vector::repeated(0f64);
         };
 
-
         // let pointlight = Vector::new(3., 1.0, 0.);
         let pointlight = Vector::new(100., 100., 100.);
 

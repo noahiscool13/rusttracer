@@ -5,6 +5,7 @@ use std::f64;
 #[derive(Debug)]
 pub struct Camera {
     pub pos: Vector,
+    pub direction: Vector,
     pub width: usize,
     pub height: usize,
     pub fov: f64,
@@ -15,14 +16,16 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new(pos: Vector, width: usize, height: usize, fov: f64) -> Self {
+    pub fn new(pos: Vector, direction: Vector, width: usize, height: usize, fov: f64) -> Self {
         let inf_width = 1f64 / (width as f64);
         let inf_height = 1f64 / (height as f64);
         let angle = (f64::consts::PI * 0.5f64 * fov / 180f64).tan();
         let aspect_ratio = width as f64 / height as f64;
+        let internal_direction = direction.rotated(Vector::new(0., 0., 1.)).unit();
 
         Self {
             pos,
+            direction: internal_direction,
             width,
             height,
             fov,
@@ -37,10 +40,13 @@ impl Camera {
         let xdir = (2f64 * x as f64 * self.inf_width - 1f64) * self.angle * self.aspect_ratio;
         let ydir = (1f64 - 2f64 * y as f64 * self.inf_height) * self.angle;
 
-        let mut raydir = Vector::new(xdir, ydir, -1f64);
+        let mut raydir = Vector::new(xdir, ydir, -1f64)
+            .rotated(Vector::new(0., 0., 1.))
+            .rotated(self.direction)
+            .rotated(Vector::new(0., 0., -1.));
         // raydir = raydir.rotated(Vector::new(0.,0.,1.)).rotated(Vector::new(-1.,0.,0.)).rotated(Vector::new(0.,0.,-1.));
-       // raydir = raydir.rotated(Vector::new(0., 1., -0.35).unit());
-        raydir.normalize();
+        // raydir = raydir.rotated(Vector::new(0., 1., -0.35).unit());
+//        raydir.normalize();
 
         Ray::new(self.pos, raydir)
     }

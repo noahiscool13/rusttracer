@@ -11,7 +11,9 @@ pub struct MSTracer {
 }
 
 impl MSTracer {
-    pub fn new(samples_per_pixel: usize) -> Self { Self { samples_per_pixel } }
+    pub fn new(samples_per_pixel: usize) -> Self {
+        Self { samples_per_pixel }
+    }
 }
 
 impl RayTracer for MSTracer {

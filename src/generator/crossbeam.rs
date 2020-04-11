@@ -1,17 +1,19 @@
-use crate::generator::{Generator, Callback};
+use crate::generator::{Callback, Generator};
 use crate::util::camera::Camera;
-use crate::util::vector::Vector;
 use crate::util::outputbuffer::OutputBuffer;
-use log::info;
+use crate::util::vector::Vector;
 use crossbeam::thread;
+use log::info;
 
 #[derive(Debug)]
 pub struct CrossbeamGenerator {
-    threads: usize
+    threads: usize,
 }
 
 impl CrossbeamGenerator {
-    pub fn new(threads: usize) -> Self { Self { threads } }
+    pub fn new(threads: usize) -> Self {
+        Self { threads }
+    }
 }
 
 impl Generator for CrossbeamGenerator {
@@ -19,8 +21,12 @@ impl Generator for CrossbeamGenerator {
         let mut output = OutputBuffer::with_size(camera.width, camera.height);
 
         thread::scope(|s| {
-            let rows_per_thread =
-                (camera.height / self.threads) + if camera.height % self.threads == 0 { 0 } else { 1 };
+            let rows_per_thread = (camera.height / self.threads)
+                + if camera.height % self.threads == 0 {
+                    0
+                } else {
+                    1
+                };
 
             for (index, chunk) in output.chunks_mut(rows_per_thread).enumerate() {
                 let start_y = index * rows_per_thread;
@@ -37,7 +43,7 @@ impl Generator for CrossbeamGenerator {
                 });
             }
         })
-            .expect("One of the threads in the threadpool has panicked!");
+        .expect("One of the threads in the threadpool has panicked!");
 
         output
     }

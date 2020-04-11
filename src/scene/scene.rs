@@ -6,11 +6,11 @@ use crate::scene::texture::{TextureAtlas, TextureAtlasBuilder};
 use crate::scene::texturecoordinate::TextureCoordinate;
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
-use std::{mem, fmt};
-use std::path::Path;
-use std::pin::Pin;
 use serde::export::fmt::{Debug, Error};
 use serde::export::Formatter;
+use std::path::Path;
+use std::pin::Pin;
+use std::{fmt, mem};
 use std::sync::Arc;
 
 #[derive(Debug)]

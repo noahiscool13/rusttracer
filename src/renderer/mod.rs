@@ -6,9 +6,9 @@ use crate::util::outputbuffer::OutputBuffer;
 
 mod builder;
 
+use crate::generator::Generator;
 use crate::postprocessors::PostProcessor;
 pub use builder::RendererBuilder;
-use crate::generator::Generator;
 
 #[derive(Debug)]
 pub struct Renderer<'r> {
@@ -37,9 +37,12 @@ impl<'r> Renderer<'r> {
     }
 
     pub fn render(&self, camera: &Camera) -> OutputBuffer {
-        let output = self
-            .generator
-            .generate_internal(self.raytracer, self.datastructure, self.shader, camera);
+        let output = self.generator.generate_internal(
+            self.raytracer,
+            self.datastructure,
+            self.shader,
+            camera,
+        );
 
         self.postprocessor.process(output)
     }
