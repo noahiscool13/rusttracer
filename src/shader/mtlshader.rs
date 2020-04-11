@@ -4,18 +4,20 @@ use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::vector::Vector;
 
+#[derive(Debug)]
 pub struct MtlShader;
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader {
-    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
+impl Shader for MtlShader {
+    fn shade<'s>(&self, ray: &Ray, datastructure: &'s (dyn DataStructure + 's)) -> Vector {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
         } else {
             return Vector::repeated(0f64);
         };
 
-        let pointlight = Vector::new(3., 1.0, 0.);
-//        let pointlight = Vector::new(100., 100., 100.);
+
+        // let pointlight = Vector::new(3., 1.0, 0.);
+        let pointlight = Vector::new(100., 100., 100.);
 
         let brightness = Vector::repeated(1f64);
 
@@ -27,8 +29,6 @@ impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for MtlShader {
         let part_spec =
             specular(&intersection, hit_pos, pointlight, intersection.ray.origin) * brightness;
 
-        let total = part_amb + part_emi + part_diff + part_spec;
-
-        return total;
+        part_amb + part_emi + part_diff + part_spec
     }
 }

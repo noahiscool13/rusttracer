@@ -1,0 +1,82 @@
+---
+general:
+  # Very small float value.
+  # Two floats that are closer together than this value will be equal.
+  epsilon: 0.00001
+
+  # Filename of the scene that will render
+  scenename: scenes/monte-carlo.obj
+
+  # Filename of the generated bitmap
+  outputname: render.bmp
+
+  # Path to search for texture files
+  texturepath: scenes
+camera:
+  # The position of the camera in 3d space
+  # 3 floats
+  position:
+    x: 0.0
+    y: 1.0
+    z: 3.0
+  # The width of the image to be generated
+  width: 1000
+  # The height of the image to be generated
+  height: 1000
+  # The field of view of the camera
+  fov: 60.0
+
+# what kind of generator should be used.
+# Possible values:
+# * basic                   // Don't use any multithreading
+#
+# * crossbeam:              // Make use of the crossbeam library to spawn threads.
+#                           // This can have an advantage over rayon since there's no need for scheduling.
+#     threads: threadcount
+#
+# * rayon:                  // Make use of the rayon library by parallel-iterating over the pixels that have to be rendered.
+#     threads: threadcount
+#
+# where threadcount can be any of these values:
+# * all                     // Use all threads available
+# * left: n                 // Use threads threads minus n
+# * count: n                // Use exactky n cores.
+generator:
+  crossbeam:
+    threads: all
+
+
+# What raytracer should be used.
+# Possible values:
+# * basic                   // Simple raytracing. Cast one ray per pixel
+#
+# * mstracer                // Use a multisampling raytracer. Samples every pixel n times.
+#     samples_per_pixel: n
+#
+# * jmstracer               // Use a multisampling raytracer that jitters (randomizes) the rays
+#                           // slightly. Samples every pixel n times.
+#     samples_per_pixel: n
+raytracer:
+  jmstracer:
+    samples_per_pixel: 100
+
+# What shader should be used.
+# Possible values:
+# * mtlshader                     // Simple shader that shades based on the material of the triangle that was hit
+#
+# * mcshader                      // More advanced shader that uses monte carlo raytracing or pathtracing.
+#                                 // (https://en.wikipedia.org/wiki/Path_tracing)
+# * vmcshader:
+#     air_density: f64            // Defines how many particles are in the air per meter of ray travel.
+#                                 // Typical value ~0.3
+#     particle_reflectivity: f64  // Defines how reflective a particle is when hit.
+shader:
+  vmcshader:
+    air_density: 0.3
+    particle_reflectivity: 0.4
+
+# What datastructure should be used.
+# Possible values:
+# * kdtree                  // Use a kdtree as a datastructure to speed up rendering of large scenes.
+# * basic                   // Don't use any datastructure. Just iterate through the triangles of the scene.
+datastructure: kdtree

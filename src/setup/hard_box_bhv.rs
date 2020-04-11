@@ -27,10 +27,11 @@ impl Setup for HardBoxBHV {
                 process::exit(1);
             });
 
-        let renderer = RendererBuilder::new(&scene)
-            .with_datastructure::<KDTreeDataStructure>()
-            .with_shader(VMcShader)
-            .with_tracer(JMSTracer)
+        let ds = KDTreeDataStructure::new(&scene);
+
+        let renderer = RendererBuilder::new(&ds)
+            .with_shader(&VMcShader)
+            .with_tracer(&JMSTracer)
             .without_postprocessor();
 
         let camera = Camera::new(Vector::new(3., 1.0, 0.), 1000, 1000, 60f64);

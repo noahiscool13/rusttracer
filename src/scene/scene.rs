@@ -6,9 +6,11 @@ use crate::scene::texture::{TextureAtlas, TextureAtlasBuilder};
 use crate::scene::texturecoordinate::TextureCoordinate;
 use crate::scene::triangle::Triangle;
 use crate::util::vector::Vector;
-use std::mem;
+use std::{mem, fmt};
 use std::path::Path;
 use std::pin::Pin;
+use serde::export::fmt::{Debug, Error};
+use serde::export::Formatter;
 
 #[derive(Debug)]
 pub struct Mesh<'m> {
@@ -43,6 +45,12 @@ pub struct Scene<'s> {
     materials: Pin<Box<[Material<'s>]>>,
 
     pub lightsourcemanager: LightSourceManager<'s>,
+}
+
+impl<'s> Debug for Scene<'s> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "<Scene...>")
+    }
 }
 
 impl<'s> Scene<'s> {

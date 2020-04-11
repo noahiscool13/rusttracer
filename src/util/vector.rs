@@ -3,6 +3,7 @@ use crate::util::rng::get_rng;
 use rand::Rng;
 use std::f64;
 use std::ops::{Add, AddAssign, Div, Mul, Sub};
+use serde::{Serialize, Deserialize};
 
 const EPSILON: f64 = 0.00001;
 
@@ -16,7 +17,7 @@ impl Clamp01 for f64 {
     }
 }
 
-#[derive(PartialEq, Debug, Clone, Copy, Default)]
+#[derive(PartialEq, Debug, Clone, Copy, Default, Serialize, Deserialize)]
 pub struct Vector {
     pub x: f64,
     pub y: f64,

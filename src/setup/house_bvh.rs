@@ -27,10 +27,11 @@ impl Setup for HouseBVH {
                 process::exit(1);
             });
 
-        let renderer = RendererBuilder::new(&scene)
-            .with_datastructure::<KDTreeDataStructure>()
-            .with_shader(MtlShader)
-            .with_tracer(JMSTracer)
+        let ds = KDTreeDataStructure::new(&scene);
+
+        let renderer = RendererBuilder::new(&ds)
+            .with_shader(&MtlShader)
+            .with_tracer(&JMSTracer)
             .without_postprocessor();
 
         let camera = Camera::new(Vector::new(-30., 20., 90.), 800, 800, 60f64);

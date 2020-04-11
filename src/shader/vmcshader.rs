@@ -7,45 +7,51 @@ use crate::util::vector::Vector;
 use rand::Rng;
 use std::f64;
 
-const AIR_DENS: f64 = 0.3f64;
-const PARTICLE_REFLECT: f64 = 0.4;
-
-pub struct VMcShader;
+#[derive(Debug)]
+pub struct VMcShader {
+    air_density: f64,
+    particle_reflectivity: f64,
+}
 
 impl VMcShader {
-    pub fn shade_internal<'a, DS: DataStructure<'a>>(
+    pub fn new(air_density: f64, particle_reflectivity: f64) -> Self{
+        Self {
+            air_density,
+            particle_reflectivity,
+        }
+    }
+
+    pub fn shade_internal<'a>(
         &self,
         ray: &Ray,
         depth: usize,
-        datastructure: &DS,
+        datastructure: &'a (dyn DataStructure + 'a),
     ) -> Vector {
         let intersection = if let Some(intersection) = datastructure.intersects(&ray) {
             intersection
         } else {
-            if depth > 0 {
+            return if depth > 0 {
                 let reflec_type = get_rng(|mut r| r.gen::<f64>());
-                if PARTICLE_REFLECT > reflec_type {
-                    let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / AIR_DENS;
+                if self.particle_reflectivity > reflec_type {
+                    let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / self.air_density;
                     let hit_point = ray.origin + ray.direction * breakdist;
                     let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
-                    return self.shade_internal(&scatter_ray, depth - 1, datastructure);
+                    self.shade_internal(&scatter_ray, depth - 1, datastructure)
                 } else {
-                    return Vector::repeated(0f64);
+                    Vector::repeated(0f64)
                 }
             } else {
-                return Vector::repeated(0f64);
+                Vector::repeated(0f64)
             }
         };
-        //
+
         let hit_pos = intersection.hit_pos();
-
         let dist = (ray.origin - hit_pos).length();
-
-        let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / AIR_DENS;
+        let breakdist = -get_rng(|mut r| r.gen::<f64>()).ln() / self.air_density;
 
         if breakdist < dist {
             let reflec_type = get_rng(|mut r| r.gen::<f64>());
-            if PARTICLE_REFLECT > reflec_type {
+            if self.particle_reflectivity > reflec_type {
                 let hit_point = ray.origin + ray.direction * breakdist;
                 let scatter_ray = Ray::new(hit_point, Vector::point_on_sphere());
                 if depth > 0 {
@@ -94,14 +100,13 @@ impl VMcShader {
         } else {
             Vector::repeated(0f64)
         };
-        let total = indirect + part_emi;
 
-        return total.into();
+        indirect + part_emi
     }
 }
 
-impl<'s, DS: DataStructure<'s>> Shader<'s, DS> for VMcShader {
-    fn shade(&self, ray: &Ray, datastructure: &DS) -> Vector {
+impl Shader for VMcShader {
+    fn shade<'s>(&self, ray: &Ray, datastructure: &'s (dyn DataStructure + 's)) -> Vector {
         self.shade_internal(ray, 6, datastructure)
     }
 }

@@ -27,10 +27,11 @@ impl Setup for GlowStoneGamma {
                 process::exit(1);
             });
 
-        let renderer = RendererBuilder::new(&scene)
-            .with_datastructure::<BasicDataStructure>()
-            .with_shader(VMcShader)
-            .with_tracer(JMSTracer)
+        let ds = BasicDataStructure::new(&scene);
+
+        let renderer = RendererBuilder::new(&ds)
+            .with_shader(&VMcShader)
+            .with_tracer(&JMSTracer)
             .with_postprocessor(&Gamma);
 
         let camera = Camera::new(Vector::new(0.5, 2.2, 3.), 1000, 1000, 60f64);
