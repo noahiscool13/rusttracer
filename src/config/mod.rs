@@ -11,6 +11,8 @@ pub mod corecount;
 pub mod run;
 
 #[derive(Serialize, Deserialize)]
+// allow because names here are converted to yml keys which I want lowercase
+#[allow(non_camel_case_types)]
 pub struct Config {
     general: GeneralConfig,
     camera: CameraConfig,
@@ -21,6 +23,8 @@ pub struct Config {
 }
 
 #[derive(Serialize, Deserialize)]
+// allow because names here are converted to yml keys which I want lowercase
+#[allow(non_camel_case_types)]
 pub enum RaytracerConfig {
     /// Simple raytracing. Cast one ray per pixel
     basic,
@@ -36,6 +40,8 @@ pub enum RaytracerConfig {
 }
 
 #[derive(Serialize, Deserialize)]
+// allow because names here are converted to yml keys which I want lowercase
+#[allow(non_camel_case_types)]
 pub enum GeneratorConfig {
     /// Don't use any multithreading
     basic,
@@ -86,6 +92,8 @@ pub struct CameraConfig {
 }
 
 #[derive(Serialize, Deserialize)]
+// allow because names here are converted to yml keys which I want lowercase
+#[allow(non_camel_case_types)]
 pub enum ShaderConfig {
     /// Simple shader that shades based on the material of the triangle that was hit
     mtlshader,
@@ -100,6 +108,8 @@ pub enum ShaderConfig {
 }
 
 #[derive(Serialize, Deserialize)]
+// allow because names here are converted to yml keys which I want lowercase
+#[allow(non_camel_case_types)]
 pub enum DatastructureConfig {
     /// Don't use any datastructure. Just iterate through the triangles of the scene.
     basic,

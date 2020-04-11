@@ -1,5 +1,4 @@
 
-use log::info;
 use log::LevelFilter;
 use simple_logging;
 use crate::config::Config;

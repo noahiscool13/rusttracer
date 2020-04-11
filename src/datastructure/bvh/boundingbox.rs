@@ -226,8 +226,8 @@ pub mod tests {
         let bb = BoundingBox::EMPTY;
 
         let ibb = bb
-            .includes_point(&Vector::new(0., 0., 0.))
-            .includes_point(Vector::new(1., 1., 1.));
+            .include_point(Vector::new(0., 0., 0.))
+            .include_point(Vector::new(1., 1., 1.));
 
         assert_eq!(ibb.min, Vector::new(0., 0., 0.));
         assert_eq!(ibb.max, Vector::new(1., 1., 1.));

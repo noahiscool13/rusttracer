@@ -22,5 +22,4 @@ pub trait RayTracer: Send + Sync + Debug {
         shader: &'r dyn Shader,
         camera: &Camera,
     ) -> Vector;
-
 }

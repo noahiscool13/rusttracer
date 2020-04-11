@@ -12,7 +12,6 @@ use crate::shader::mcshader::McShader;
 use crate::shader::vmcshader::VMcShader;
 use crate::datastructure::DataStructure;
 use crate::shader::Shader;
-use std::borrow::Borrow;
 use crate::raytracer::RayTracer;
 use crate::generator::Generator;
 use crate::generator::basic::BasicGenerator;

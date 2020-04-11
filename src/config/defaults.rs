@@ -1,6 +1,5 @@
 use crate::util::vector::Vector;
 use crate::config::{CameraConfig, DatastructureConfig, GeneralConfig, ShaderConfig, RaytracerConfig, GeneratorConfig};
-use crate::config::corecount::ThreadCount;
 
 impl Default for GeneralConfig {
     fn default() -> Self {

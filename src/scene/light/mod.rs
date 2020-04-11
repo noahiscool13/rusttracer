@@ -4,6 +4,9 @@ use crate::util::rng::get_rng;
 use rand::distributions::weighted::alias_method::WeightedIndex;
 use rand::distributions::WeightedError;
 use rand::Rng;
+use serde::export::fmt::{Debug, Error};
+use serde::export::Formatter;
+use core::fmt;
 
 #[derive(Debug)]
 pub enum LightError {
@@ -13,6 +16,12 @@ pub enum LightError {
 pub struct LightSourceManager<'l> {
     lightsources: Vec<&'l Triangle<'l>>,
     weights: WeightedIndex<f64>,
+}
+
+impl<'l> Debug for LightSourceManager<'l> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Lightsource manager")
+    }
 }
 
 impl<'l> LightSourceManager<'l> {

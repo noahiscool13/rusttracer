@@ -1,6 +1,8 @@
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
+// allow because names here are converted to yml keys which I want lowercase
+#[allow(non_camel_case_types)]
 pub enum ThreadCount {
     /// use all cores
     all,

@@ -11,6 +11,7 @@ use std::path::Path;
 use std::pin::Pin;
 use serde::export::fmt::{Debug, Error};
 use serde::export::Formatter;
+use std::sync::Arc;
 
 #[derive(Debug)]
 pub struct Mesh<'m> {
@@ -20,6 +21,15 @@ pub struct Mesh<'m> {
     pub texcoords: Box<[TextureCoordinate]>,
 
     pub material: &'m Material<'m>,
+
+    // Private by design. This option is actually always Some()
+    lightsourcemanager: Option<Arc<LightSourceManager<'m>>>
+}
+
+impl<'m> Mesh<'m> {
+    pub fn lightsourcemanager(&self) -> &Arc<LightSourceManager<'m>> {
+        self.lightsourcemanager.as_ref().unwrap()
+    }
 }
 
 impl<'m> Default for Mesh<'m> {
@@ -30,6 +40,7 @@ impl<'m> Default for Mesh<'m> {
             triangles: vec![].into_boxed_slice(),
             texcoords: vec![].into_boxed_slice(),
             material: &DEFAULT_MATERIAL,
+            lightsourcemanager: None,
         }
     }
 }
@@ -43,8 +54,6 @@ pub struct Scene<'s> {
 
     meshes: Pin<Box<[Mesh<'s>]>>,
     materials: Pin<Box<[Material<'s>]>>,
-
-    pub lightsourcemanager: LightSourceManager<'s>,
 }
 
 impl<'s> Debug for Scene<'s> {
@@ -182,10 +191,11 @@ impl<'s> SceneBuilder<'s> {
                 normals: normals.collect::<Vec<_>>().into_boxed_slice(),
                 texcoords: texcoords.collect::<Vec<_>>().into_boxed_slice(),
                 material,
+                lightsourcemanager: None,
             }
         }
 
-        let lightsourcemanager = LightSourceManager::from_triangle_iter(
+        let lightsourcemanager = Arc::new(LightSourceManager::from_triangle_iter(
             meshes
                 .iter()
                 .flat_map(move |i| i.triangles.iter())
@@ -193,13 +203,17 @@ impl<'s> SceneBuilder<'s> {
                     let ptr: &'a Triangle = unsafe { mem::transmute(i) };
                     ptr
                 }),
-        )?;
+        )?);
+
+        for i in meshes.iter_mut() {
+            i.lightsourcemanager = Some(lightsourcemanager.clone())
+        }
+
 
         Ok(Scene {
             textureatlas,
             meshes,
             materials,
-            lightsourcemanager,
         })
     }
 }
