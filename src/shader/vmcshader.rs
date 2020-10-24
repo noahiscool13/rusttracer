@@ -3,7 +3,7 @@ use crate::shader::shaders::{emittance, map_uv};
 use crate::shader::Shader;
 use crate::util::ray::Ray;
 use crate::util::rng::get_rng;
-use crate::util::vector::Vector;
+use crate::util::vector::{Vector, EPSILON};
 use rand::Rng;
 use std::f64;
 
@@ -67,6 +67,10 @@ impl VMcShader {
         //        let part_amb = ambient(&intersection.face, self.scene) * Vector::repeated(0.1);
         let part_emi = emittance(&intersection);
 
+//        let direct = Vector::default();
+//
+//        let sample_light = intersection.triangle.mesh.
+
         //        let part_diff = diffuse(&intersection.face, self.scene, hit_pos, pointlight) * brightness;
         //        let part_spec = specular(&intersection.face, self.scene, hit_pos, pointlight, intersection.ray.origin) * brightness;
         //
@@ -76,6 +80,14 @@ impl VMcShader {
         let indirect = if depth > 0 {
             let reflec_type = get_rng(|mut r| r.gen::<f64>());
             let diffuse_max = intersection.triangle.material().diffuse.max_item();
+//            let dissolve = intersection.triangle.material().dissolve;
+//            let transparency_type = get_rng(|mut r| r.gen::<f64>());
+//
+//            if transparency_type > dissolve{
+//                dbg!(dissolve);
+//                let transparant_ray = Ray::new(hit_pos+ray.direction*4.*EPSILON,ray.direction);
+//                return self.shade_internal(&transparant_ray, depth - 1, datastructure)
+//            }
             if diffuse_max > reflec_type {
                 let fliped_normal = if intersection.triangle.normal().dot(ray.direction) < 0. {
                     intersection.triangle.normal()

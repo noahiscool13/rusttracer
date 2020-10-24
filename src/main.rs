@@ -20,7 +20,7 @@ fn main() {
     // Config::default().dump("config.yml")
     //     .unwrap();
 
-    Config::load("configurations/monte-carlo.yml")
+    Config::load("configurations/hard-box.yml")
         .unwrap()
         .run()
         .unwrap();

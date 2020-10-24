@@ -5,7 +5,7 @@ general:
   epsilon: 0.00001
 
   # Filename of the scene that will render
-  scenename: scene/test.obj
+  scenename: scenes/hard-box.obj
 
   # Filename of the generated bitmap
   outputname: render.bmp
@@ -16,19 +16,19 @@ camera:
   # The position of the camera in 3d space
   # 3 floats
   position:
-    x: 0.0
-    y: 0.0
+    x: 3.0
+    y: 1.0
     z: 0.0
   # The rotation of the camera in 3d space
   # 3 floats
   direction:
-    x: 0.0
+    x: -1.0
     y: 0.0
-    z: -1.0
+    z: 0.0
   # The width of the image to be generated
-  width: 1000
+  width: 200
   # The height of the image to be generated
-  height: 1000
+  height: 200
   # The field of view of the camera
   fov: 60.0
 
@@ -64,7 +64,7 @@ generator:
 #     samples_per_pixel: n
 raytracer:
   jmstracer:                # Use the jmstracer
-    samples_per_pixel: 100  # with 100 samples per pixel
+    samples_per_pixel: 4000  # with 100 samples per pixel
 
 # What shader should be used.
 # Possible values:

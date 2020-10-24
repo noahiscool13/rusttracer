@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::f64;
 use std::ops::{Add, AddAssign, Div, Mul, Sub};
 
-const EPSILON: f64 = 0.00001;
+pub const EPSILON: f64 = 0.00001;
 
 trait Clamp01 {
     fn clamp01(self) -> Self;
